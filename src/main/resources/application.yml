@@ -1,0 +1,13 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: ENTER-BE
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
+  profiles:
+    include:
+      - db
+      - openapi
+    active: local
