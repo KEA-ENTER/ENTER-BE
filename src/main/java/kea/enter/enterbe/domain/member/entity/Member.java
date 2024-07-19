@@ -2,12 +2,17 @@ package kea.enter.enterbe.domain.member.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import kea.enter.enterbe.domain.penalty.entity.Penalty;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,6 +41,9 @@ public class Member extends BaseEntity {
     private MemberRole role;
     @Column(name = "state", nullable = false)
     private MemberState state;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Penalty> penaltyList = new ArrayList<>();
 
     @Builder
     public Member(
