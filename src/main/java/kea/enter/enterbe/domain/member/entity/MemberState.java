@@ -1,4 +1,4 @@
-package kea.enter.enterbe.domain.member;
+package kea.enter.enterbe.domain.member.entity;
 
 
 public enum MemberState {
