@@ -2,6 +2,8 @@ package kea.enter.enterbe.domain.question.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -30,9 +32,11 @@ public class Question extends BaseEntity {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
     private QuestionCategory category;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
     private QuestionState state;
 
