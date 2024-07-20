@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "answer")
 public class Answer extends BaseEntity {
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question questionId;
 
