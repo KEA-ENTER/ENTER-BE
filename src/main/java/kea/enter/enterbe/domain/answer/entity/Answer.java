@@ -25,11 +25,11 @@ public class Answer extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
+    private Question question;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
-    private Member authorId;
+    private Member member;
 
     @Column(name = "answer", nullable = false)
     private String answer;
@@ -39,17 +39,17 @@ public class Answer extends BaseEntity {
     private AnswerState state;
 
     @Builder
-    public Answer(Question questionId, Member authorId, String answer, AnswerState state) {
-        this.questionId = questionId;
-        this.authorId = authorId;
+    public Answer(Question question, Member member, String answer, AnswerState state) {
+        this.question = question;
+        this.member = member;
         this.answer = answer;
         this.state = state;
     }
 
-    public static Answer of(Question questionId, Member authorId, String answer, AnswerState state) {
+    public static Answer of(Question question, Member member, String answer, AnswerState state) {
         return Answer.builder()
-            .questionId(questionId)
-            .authorId(authorId)
+            .question(question)
+            .member(member)
             .answer(answer)
             .state(state)
             .build();
