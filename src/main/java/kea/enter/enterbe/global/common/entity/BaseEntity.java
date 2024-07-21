@@ -17,7 +17,7 @@ public class BaseEntity {
     @Id()
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt = LocalDateTime.now();
