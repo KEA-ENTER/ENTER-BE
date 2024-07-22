@@ -23,14 +23,18 @@ public class Penalty extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "reason", nullable = false)
     private PenaltyReason reason;
+
     @Column(name = "etc")
     private String etc;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "level", nullable = false)
     private PenaltyLevel level;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
     private PenaltyState state;
