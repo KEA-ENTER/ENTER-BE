@@ -68,4 +68,3 @@ public class Penalty extends BaseEntity {
             .build();
     }
 }
-
