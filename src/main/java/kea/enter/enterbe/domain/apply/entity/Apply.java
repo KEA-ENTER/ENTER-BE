@@ -11,6 +11,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.round.entity.ApplyRound;
+import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,14 +26,15 @@ public class Apply extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id", nullable = false)
-    private Member memberId;
+    private Member member;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="apply_round_id", nullable = false)
-    private ApplyRound applyRoundId;
+    private ApplyRound applyRound;
 
-    @Column(name="vehicle_id", nullable = false)
-    private Long vehicleId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="vehicle_id", nullable = false)
+    private Vehicle vehicle;
 
     @Column(name="departures", nullable = false)
     private String departures;
@@ -43,22 +45,22 @@ public class Apply extends BaseEntity {
     @Column(name="state", nullable = false)
     private ApplyState state;
     @Builder
-    public Apply(Member memberId, ApplyRound applyRoundId, Long vehicleId, String departures,
+    public Apply(Member member, ApplyRound applyRound, Vehicle vehicle, String departures,
         String arrivals, ApplyState state){
-        this.memberId = memberId;
-        this.applyRoundId = applyRoundId;
-        this.vehicleId = vehicleId;
+        this.member = member;
+        this.applyRound = applyRound;
+        this.vehicle = vehicle;
         this.departures = departures;
         this.arrivals = arrivals;
         this.state = state;
     }
 
-    public static Apply of(Member memberId, ApplyRound applyRoundId, Long vehicleId, String departures,
+    public static Apply of(Member member, ApplyRound applyRound, Vehicle vehicle, String departures,
         String arrivals, ApplyState state){
         return Apply.builder()
-            .memberId(memberId)
-            .applyRoundId(applyRoundId)
-            .vehicleId(vehicleId)
+            .member(member)
+            .applyRound(applyRound)
+            .vehicle(vehicle)
             .departures(departures)
             .arrivals(arrivals)
             .state(state)

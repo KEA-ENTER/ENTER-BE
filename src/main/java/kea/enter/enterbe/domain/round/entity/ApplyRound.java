@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 public class ApplyRound extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="vehicle_id", nullable = false)
-    private Vehicle vehicleId;
+    private Vehicle vehicle;
 
     @Column(name="applu_round", nullable = false)
     private Integer applyRound;
@@ -32,15 +32,15 @@ public class ApplyRound extends BaseEntity {
     private ApplyRoundState state;
 
     @Builder
-    public ApplyRound(Vehicle vehicleId, Integer applyRound, ApplyRoundState state){
-        this.vehicleId = vehicleId;
+    public ApplyRound(Vehicle vehicle, Integer applyRound, ApplyRoundState state){
+        this.vehicle = vehicle;
         this.applyRound = applyRound;
         this.state = state;
     }
 
-    public static ApplyRound of(Vehicle vehicleId, Integer applyRound, ApplyRoundState state){
+    public static ApplyRound of(Vehicle vehicle, Integer applyRound, ApplyRoundState state){
         return ApplyRound.builder()
-            .vehicleId(vehicleId)
+            .vehicle(vehicle)
             .applyRound(applyRound)
             .state(state)
             .build();
