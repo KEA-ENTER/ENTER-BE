@@ -32,6 +32,10 @@ public class Apply extends BaseEntity {
     @JoinColumn(name="apply_round_id", nullable = false)
     private ApplyRound applyRound;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="vehicle_id", nullable = false)
+    private Vehicle vehicle;
+
     @Column(name="departures", nullable = false)
     private String departures;
 
@@ -41,20 +45,22 @@ public class Apply extends BaseEntity {
     @Column(name="state", nullable = false)
     private ApplyState state;
     @Builder
-    public Apply(Member member, ApplyRound applyRound, String departures,
+    public Apply(Member member, ApplyRound applyRound, Vehicle vehicle, String departures,
         String arrivals, ApplyState state){
         this.member = member;
         this.applyRound = applyRound;
+        this.vehicle = vehicle;
         this.departures = departures;
         this.arrivals = arrivals;
         this.state = state;
     }
 
-    public static Apply of(Member member, ApplyRound applyRound, String departures,
+    public static Apply of(Member member, ApplyRound applyRound, Vehicle vehicle, String departures,
         String arrivals, ApplyState state){
         return Apply.builder()
             .member(member)
             .applyRound(applyRound)
+            .vehicle(vehicle)
             .departures(departures)
             .arrivals(arrivals)
             .state(state)
