@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "vehicle")
 public class Vehicle extends BaseEntity {
-    @Column(name = "car_number", nullable = false)
-    private int carNumber;
+    @Column(name = "vehicle_no", nullable = false)
+    private String vehicleNo;
 
-    @Column(name = "manufacturing_company", nullable = false)
-    private String manufacturingCompany;
+    @Column(name = "company", nullable = false)
+    private String company;
 
     @Column(name = "model", nullable = false)
     private String model;
@@ -32,34 +32,34 @@ public class Vehicle extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private VehicleFuel fuel;
 
-    @Column(name = "image", nullable = false)
-    private String image;
+    @Column(name = "img", nullable = false)
+    private String img;
 
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
     private VehicleState state;
 
     @Builder
-    public Vehicle(int carNumber, String manufacturingCompany, String model, int seats,
-        VehicleFuel fuel, String image, VehicleState state) {
-        this.carNumber = carNumber;
-        this.manufacturingCompany = manufacturingCompany;
+    public Vehicle(String vehicleNo, String company, String model, int seats, VehicleFuel fuel,
+        String img, VehicleState state) {
+        this.vehicleNo = vehicleNo;
+        this.company = company;
         this.model = model;
         this.seats = seats;
         this.fuel = fuel;
-        this.image = image;
+        this.img = img;
         this.state = state;
     }
 
-    public static Vehicle of(int carNumber, String manufacturingCompany, String model, int seats,
-        VehicleFuel fuel, String image, VehicleState state) {
+    public static Vehicle of(String vehicleNo, String company, String model, int seats,
+        VehicleFuel fuel, String img, VehicleState state) {
         return Vehicle.builder()
-            .carNumber(carNumber)
-            .manufacturingCompany(manufacturingCompany)
+            .vehicleNo(vehicleNo)
+            .company(company)
             .model(model)
             .seats(seats)
             .fuel(fuel)
-            .image(image)
+            .img(img)
             .state(state)
             .build();
     }
