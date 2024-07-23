@@ -20,6 +20,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
+
 public class Member extends BaseEntity {
     @Column(name = "employee_no", nullable = false)
     private String employeeNo;
@@ -45,9 +46,8 @@ public class Member extends BaseEntity {
     @Column(name = "is_agree_terms", nullable = false)
     private boolean isAgreeTerms;
 
-    @Builder.Default
     @Column(name = "score", nullable = false)
-    private int score = 20;
+    private int score;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
