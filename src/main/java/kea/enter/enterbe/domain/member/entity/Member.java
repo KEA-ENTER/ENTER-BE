@@ -45,8 +45,9 @@ public class Member extends BaseEntity {
     @Column(name = "is_agree_terms", nullable = false)
     private boolean isAgreeTerms;
 
+    @Builder.Default
     @Column(name = "score", nullable = false)
-    private int score;
+    private int score = 20;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
