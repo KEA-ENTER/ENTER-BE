@@ -21,27 +21,37 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
 public class Member extends BaseEntity {
-    @Column(name = "employee_number", nullable = false)
-    private String employeeNumber;
+    @Column(name = "employee_no", nullable = false)
+    private String employeeNo;
+
     @Column(name = "name", nullable = false)
     private String name;
+
     @Column(name = "email", nullable = false)
     private String email;
+
     @Column(name = "password", nullable = false)
     private String password;
+
     @Column(name = "license_id")
     private String licenseId;
+
     @Column(name = "license_password")
     private String licensePassword;
-    @Column(name = "license_valid")
-    private boolean licenseValid;
-    @Column(name = "privacy_consent", nullable = false)
-    private boolean privacyConsent;
+
+    @Column(name = "is_license_valid")
+    private boolean isLicenseValid;
+
+    @Column(name = "is_agree_terms", nullable = false)
+    private boolean isAgreeTerms;
+
     @Column(name = "score", nullable = false)
     private int score;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private MemberRole role;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
     private MemberState state;
@@ -51,44 +61,44 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(
-        String employeeNumber,
-        String name, String email, String password, String licenseId, String licensePassword, boolean licenseValid,
-        boolean privacyConsent,
+        String employeeNo,
+        String name, String email, String password,
+        String licenseId, String licensePassword, boolean isLicenseValid,
+        boolean isAgreeTerms,
         int score, MemberRole role, MemberState state
     ) {
-        this.employeeNumber = employeeNumber;
+        this.employeeNo = employeeNo;
         this.name = name;
         this.email = email;
         this.password = password;
         this.licenseId = licenseId;
         this.licensePassword = licensePassword;
-        this.licenseValid = licenseValid;
-        this.privacyConsent = privacyConsent;
+        this.isLicenseValid = isLicenseValid;
+        this.isAgreeTerms = isAgreeTerms;
         this.score = score;
         this.role = role;
         this.state = state;
     }
 
     public static Member of(
-        String employeeNumber,
+        String employeeNo,
         String name, String email, String password,
-        String licenseId, String licensePassword, boolean licenseValid,
-        boolean privacyConsent,
+        String licenseId, String licensePassword, boolean isLicenseValid,
+        boolean isAgreeTerms,
         int score, MemberRole role, MemberState state
     ) {
         return Member.builder()
-            .employeeNumber(employeeNumber)
+            .employeeNo(employeeNo)
             .name(name)
             .email(email)
             .password(password)
             .licenseId(licenseId)
             .licensePassword(licensePassword)
-            .licenseValid(licenseValid)
-            .privacyConsent(privacyConsent)
+            .isLicenseValid(isLicenseValid)
+            .isAgreeTerms(isAgreeTerms)
             .score(score)
             .role(role)
             .state(state)
             .build();
     }
 }
-
