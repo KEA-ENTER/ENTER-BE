@@ -20,7 +20,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
-
 public class Member extends BaseEntity {
     @Column(name = "employee_no", nullable = false)
     private String employeeNo;
