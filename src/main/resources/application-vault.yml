@@ -1,0 +1,25 @@
+---
+spring:
+    config:
+        activate:
+            on-profile: local
+    cloud:
+        vault:
+            enabled: false
+---
+spring:
+    config:
+        activate:
+            on-profile: dev
+        import:
+            - vault://secret/database
+    cloud:
+        vault:
+            token: ${dev-vault-token}
+            scheme: http
+            host: vault
+            port: 8200
+            kv:
+                enabled: true
+                backend: secret
+                profiles:
