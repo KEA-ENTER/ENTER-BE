@@ -10,4 +10,5 @@ spring:
     include:
       - db
       - openapi
+      - vault
     active: local
