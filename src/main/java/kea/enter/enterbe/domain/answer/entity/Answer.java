@@ -28,29 +28,29 @@ public class Answer extends BaseEntity {
     private Question question;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(name = "answer", nullable = false)
-    private String answer;
+    @Column(name = "content", nullable = false)
+    private String content;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
     private AnswerState state;
 
     @Builder
-    public Answer(Question question, Member member, String answer, AnswerState state) {
+    public Answer(Question question, Member member, String content, AnswerState state) {
         this.question = question;
         this.member = member;
-        this.answer = answer;
+        this.content = content;
         this.state = state;
     }
 
-    public static Answer of(Question question, Member member, String answer, AnswerState state) {
+    public static Answer of(Question question, Member member, String content, AnswerState state) {
         return Answer.builder()
             .question(question)
             .member(member)
-            .answer(answer)
+            .content(content)
             .state(state)
             .build();
     }

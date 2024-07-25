@@ -23,11 +23,8 @@ import lombok.NoArgsConstructor;
 public class Question extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-
-    @Column(name = "title", nullable = false)
-    private String title;
 
     @Column(name = "content", nullable = false)
     private String content;
@@ -41,20 +38,18 @@ public class Question extends BaseEntity {
     private QuestionState state;
 
     @Builder
-    public Question(Member member, String title, String content, QuestionCategory category,
+    public Question(Member member, String content, QuestionCategory category,
         QuestionState state) {
         this.member = member;
-        this.title = title;
         this.content = content;
         this.category = category;
         this.state = state;
     }
 
-    public static Question of(Member member, String title, String content, QuestionCategory category,
+    public static Question of(Member member, String content, QuestionCategory category,
         QuestionState state) {
         return Question.builder()
             .member(member)
-            .title(title)
             .content(content)
             .category(category)
             .state(state)
