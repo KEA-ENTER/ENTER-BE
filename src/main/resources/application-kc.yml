@@ -1,0 +1,10 @@
+kakao:
+    cloud:
+        access: ${kakao-cloud-access}
+        secret: ${kakao-cloud-secret}
+        region: ${kakao-cloud-region}
+        bucket:
+            name: ${kakao-cloud-bucket-name}
+            endpoint: ${kakao-cloud-bucket-endpoint}
+        cdn:
+            endpoint: ${kakao-cloud-cdn-endpoint}
