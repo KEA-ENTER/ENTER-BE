@@ -11,3 +11,7 @@ spring:
       - db
       - openapi
     active: local
+
+jwt:
+    expiration_time: 3600000
+    secret: nuyiHUIHiuHuuiuhuHuiHuhuiHui
