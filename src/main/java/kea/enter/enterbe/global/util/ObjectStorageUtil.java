@@ -14,12 +14,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
 public class ObjectStorageUtil {
+
     @Value("${kakao.cloud.bucket.name}")
     private String bucketName;
     @Value("${kakao.cloud.cdn.endpoint}")
@@ -37,8 +39,18 @@ public class ObjectStorageUtil {
             log.error(e.getMessage(), e);
             throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
         }
-        return upload(uploadFile, StringUtils.getFilenameExtension(multipartFile.getOriginalFilename()), multipartFile.getContentType());
+        return upload(uploadFile,
+            StringUtils.getFilenameExtension(multipartFile.getOriginalFilename()),
+            multipartFile.getContentType());
 
+    }
+
+    public void delete(String imageUrl) {
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+            .bucket(bucketName)
+            .key(imageUrl.substring(cloudFrontDistribution.length()))
+            .build();
+        s3Client.deleteObject(deleteObjectRequest);
     }
 
     private String upload(File uploadFile, String extension, String contentType) {
@@ -50,17 +62,18 @@ public class ObjectStorageUtil {
 
     private String putS3(File uploadFile, String fileName, String contentType) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
-                .key(fileName)
-                .contentType(contentType)
-                .build();
+            .bucket(bucketName)
+            .key(fileName)
+            .contentType(contentType)
+            .build();
         s3Client.putObject(putObjectRequest, RequestBody.fromFile(uploadFile));
-        return cloudFrontDistribution + "/" +fileName;
+        return cloudFrontDistribution + "/" + fileName;
     }
 
     private void removeNewFile(File targetFile) {
-        if (!targetFile.delete())
+        if (!targetFile.delete()) {
             log.info("파일이 삭제되었습니다.");
+        }
     }
 
     private File convert(MultipartFile file) throws IOException {
@@ -72,5 +85,4 @@ public class ObjectStorageUtil {
         }
         return convertFile;
     }
-
 }
