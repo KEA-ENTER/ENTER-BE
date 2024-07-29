@@ -1,7 +1,3 @@
-spring:
-  config:
-    activate:
-      on-profile: local
 openapi:
   service:
     title: enter-documentation

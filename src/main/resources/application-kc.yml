@@ -1,3 +1,7 @@
+spring:
+    config:
+        activate:
+            on-profile: local
 kakao:
     cloud:
         access: ${kakao-cloud-access}
@@ -8,3 +12,18 @@ kakao:
             endpoint: ${kakao-cloud-bucket-endpoint}
         cdn:
             endpoint: ${kakao-cloud-cdn-endpoint}
+---
+spring:
+    config:
+        activate:
+            on-profile: test
+kakao:
+    cloud:
+        access: test
+        secret: test
+        region: test
+        bucket:
+            name: test
+            endpoint: test
+        cdn:
+            endpoint: test
