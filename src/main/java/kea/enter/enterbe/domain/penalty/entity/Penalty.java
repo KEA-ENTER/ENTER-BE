@@ -64,4 +64,13 @@ public class Penalty extends BaseEntity {
             .etc(etc)
             .build();
     }
+
+    public static Penalty create(Member member, PenaltyReason reason, PenaltyLevel level, String etc) {
+        return Penalty.builder()
+            .member(member)
+            .reason(reason)
+            .level(level)
+            .etc(etc)
+            .build();
+    }
 }

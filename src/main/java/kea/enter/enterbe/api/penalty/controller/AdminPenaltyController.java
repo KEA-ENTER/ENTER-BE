@@ -3,7 +3,7 @@ package kea.enter.enterbe.api.penalty.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kea.enter.enterbe.api.penalty.controller.request.PenaltyRequest;
+import kea.enter.enterbe.api.penalty.controller.request.PostPenaltyRequest;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +27,9 @@ public class AdminPenaltyController {
     @PostMapping("/{memberId}")
     public ResponseEntity<String> createPenalty(
         @PathVariable Long memberId,
-        @Valid @RequestBody PenaltyRequest penaltyRequest) {
+        @Valid @RequestBody PostPenaltyRequest postPenaltyRequest) {
         // TODO: 어드민 권한 검사
-        adminPenaltyService.createPenalty(memberId, penaltyRequest.toService());
+        adminPenaltyService.createPenalty(postPenaltyRequest.toService(memberId));
         return ResponseEntity.ok(SUCCESS.getMessage());
     }
 }

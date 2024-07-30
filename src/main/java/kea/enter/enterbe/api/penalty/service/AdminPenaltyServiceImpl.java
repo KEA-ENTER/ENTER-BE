@@ -1,6 +1,6 @@
 package kea.enter.enterbe.api.penalty.service;
 
-import kea.enter.enterbe.api.penalty.service.dto.PenaltyDto;
+import kea.enter.enterbe.api.penalty.service.dto.PostPenaltyServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
@@ -23,9 +23,9 @@ public class AdminPenaltyServiceImpl implements AdminPenaltyService {
     private final MemberRepository memberRepository;
 
     /* 페널티 부여 API */
-    public void createPenalty(Long memberId, PenaltyDto service) {
+    public void createPenalty(PostPenaltyServiceDto service) {
         // MemberId로 멤버 존재 여부를 검사하고 페널티를 부여한다
-        Member member = findMemberById(memberId);
+        Member member = findMemberById(service.getMemberId());
         penaltyRepository.save(Penalty.of(member, service.getReason(), service.getLevel(), service.getEtc()));
     }
 
