@@ -6,6 +6,8 @@ import kea.enter.enterbe.api.controller.vehicle.dto.response.VehicleResponse;
 import kea.enter.enterbe.api.service.vehicle.dto.VehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
+import kea.enter.enterbe.global.common.exception.CustomException;
+import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,9 +28,7 @@ public class VehicleServiceImpl implements VehicleService{
     public Long createVehicle(VehicleDto dto) {
         // 유효성 검사
         if(!Pattern.matches(VEHICLE_NO_PATTERN, dto.getVehicleNo())) {
-            // 오류 메시지
-
-            return 0l;
+            throw new CustomException(ResponseCode.VEHICLE_NO_NOT_ALLOWED);
         }
 
         // 중복 확인
