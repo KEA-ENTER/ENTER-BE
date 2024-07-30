@@ -1,4 +1,4 @@
-package kea.enter.enterbe.api.service.penalty.dto;
+package kea.enter.enterbe.api.penalty.service.dto;
 
 import kea.enter.enterbe.domain.penalty.entity.PenaltyReason;
 import lombok.Builder;

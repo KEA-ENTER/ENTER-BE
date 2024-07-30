@@ -1,9 +1,9 @@
-package kea.enter.enterbe.api.controller.penalty.request;
+package kea.enter.enterbe.api.penalty.controller.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import kea.enter.enterbe.api.service.penalty.dto.PenaltyDto;
+import kea.enter.enterbe.api.penalty.service.dto.PenaltyDto;
 import kea.enter.enterbe.domain.penalty.entity.PenaltyReason;
 import lombok.Builder;
 import lombok.Getter;

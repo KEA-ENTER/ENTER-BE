@@ -1,6 +1,6 @@
-package kea.enter.enterbe.api.service.penalty;
+package kea.enter.enterbe.api.penalty.service;
 
-import kea.enter.enterbe.api.service.penalty.dto.PenaltyDto;
+import kea.enter.enterbe.api.penalty.service.dto.PenaltyDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;

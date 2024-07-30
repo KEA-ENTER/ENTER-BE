@@ -1,10 +1,10 @@
-package kea.enter.enterbe.api.controller.penalty;
+package kea.enter.enterbe.api.penalty.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kea.enter.enterbe.api.controller.penalty.request.PenaltyRequest;
-import kea.enter.enterbe.api.service.penalty.AdminPenaltyServiceImpl;
+import kea.enter.enterbe.api.penalty.controller.request.PenaltyRequest;
+import kea.enter.enterbe.api.penalty.service.AdminPenaltyServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
