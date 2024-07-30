@@ -1,5 +1,6 @@
 package kea.enter.enterbe.api.controller.question;
 
+import jakarta.validation.Valid;
 import kea.enter.enterbe.api.controller.question.dto.request.QuestionRequestDto;
 import kea.enter.enterbe.api.service.question.QuestionService;
 import kea.enter.enterbe.domain.question.entity.Question;
@@ -19,8 +20,10 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping
-    public ResponseEntity<Question> createQuestion(@RequestBody QuestionRequestDto dto) {
+    public ResponseEntity<Question> createQuestion(@Valid @RequestBody QuestionRequestDto dto) {
+
         Question question = questionService.createQuestion(dto);
+
         return new ResponseEntity<>(question, HttpStatus.CREATED);
     }
 }

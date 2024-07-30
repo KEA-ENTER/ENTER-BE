@@ -111,12 +111,4 @@ public class GlobalExceptionHandler {
             .body(errorResponse);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    protected ResponseEntity<ErrorResponse> handleIllegalArgumentException(final IllegalArgumentException e) {
-        log.error("handleIllegalArgumentException: {}", e.getMessage());
-        final ErrorResponse errorResponse = ErrorResponse.of(ResponseCode.ILLEGAL_ARGUMENT_EXCEPTION, e.getMessage());
-        return ResponseEntity
-            .status(ResponseCode.ILLEGAL_ARGUMENT_EXCEPTION.getStatus())
-            .body(errorResponse);
-    }
 }
