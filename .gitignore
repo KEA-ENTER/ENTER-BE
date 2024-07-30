@@ -7,6 +7,12 @@ build/
 .sql
 .DS_Store
 
+*.sql
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
+
 ### STS ###
 .apt_generated
 .classpath
