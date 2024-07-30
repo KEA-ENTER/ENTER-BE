@@ -11,4 +11,5 @@ spring:
       - db
       - openapi
       - vault
+      - kc
     active: local

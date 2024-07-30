@@ -24,3 +24,30 @@ spring:
 logging:
   level:
     org.hibernate.sql: debug
+---
+spring:
+    config:
+        activate:
+            on-profile: test
+    datasource:
+        driver-class-name: org.h2.Driver
+        url: jdbc:h2:mem:query;MODE=MySQL;
+        username: sa
+        password:
+    jpa:
+        database: H2
+        generate-ddl: true
+        show-sql: true
+        defer-datasource-initialization: true
+        properties:
+            hibernate:
+                format_sql: true
+    sql:
+        init:
+            mode: always
+    h2:
+        console:
+            enabled: true
+logging:
+    level:
+        org.hibernate.sql: debug

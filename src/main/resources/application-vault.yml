@@ -1,8 +1,16 @@
----
 spring:
     config:
         activate:
             on-profile: local
+    cloud:
+        vault:
+            enabled: false
+---
+
+spring:
+    config:
+        activate:
+            on-profile: test
     cloud:
         vault:
             enabled: false

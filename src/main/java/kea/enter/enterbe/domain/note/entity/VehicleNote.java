@@ -54,4 +54,13 @@ public class VehicleNote extends BaseEntity {
             .state(state)
             .build();
     }
+
+    public static VehicleNote create(Vehicle vehicle, VehicleReport vehicleReport, String content) {
+        return VehicleNote.builder()
+            .vehicle(vehicle)
+            .vehicleReport(vehicleReport)
+            .content(content)
+            .state(VehicleNoteState.ACTIVE)
+            .build();
+    }
 }
