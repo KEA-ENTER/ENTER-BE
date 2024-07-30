@@ -1,0 +1,37 @@
+package kea.enter.enterbe.api.service.penalty;
+
+import kea.enter.enterbe.api.service.penalty.dto.PenaltyDto;
+import kea.enter.enterbe.domain.member.entity.Member;
+import kea.enter.enterbe.domain.member.entity.MemberState;
+import kea.enter.enterbe.domain.member.repository.MemberRepository;
+import kea.enter.enterbe.domain.penalty.entity.Penalty;
+import kea.enter.enterbe.domain.penalty.entity.PenaltyLevel;
+import kea.enter.enterbe.domain.penalty.repository.PenaltyRepository;
+import kea.enter.enterbe.global.common.exception.CustomException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static kea.enter.enterbe.global.common.exception.ResponseCode.MEMBER_NOT_FOUND;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class AdminPenaltyServiceImpl implements AdminPenaltyService {
+    private final PenaltyRepository penaltyRepository;
+    private final MemberRepository memberRepository;
+
+    /* 페널티 부여 API */
+    public void createPenalty(Long memberId, PenaltyDto service) {
+        // MemberId로 멤버 존재 여부를 검사하고 페널티를 부여한다
+        Member member = findMemberById(memberId);
+        penaltyRepository.save(Penalty.of(member, service.getReason(), PenaltyLevel.BLACKLIST, service.getEtc()));
+    }
+
+    public Member findMemberById(Long memberId) {
+        return memberRepository.findByIdAndState(memberId, MemberState.ACTIVE)
+            .orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+    }
+}

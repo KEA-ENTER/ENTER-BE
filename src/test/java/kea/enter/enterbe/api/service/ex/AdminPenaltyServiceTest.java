@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-class ExServiceTest extends IntegrationTestSupport {
+class AdminPenaltyServiceTest extends IntegrationTestSupport {
 
     @DisplayName(value="두 수를 더한 후 값을 저장한다.")
     @Test
