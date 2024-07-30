@@ -28,7 +28,7 @@ public class AdminPenaltyController {
     public ResponseEntity<String> createPenalty(
         @PathVariable Long memberId,
         @Valid @RequestBody PenaltyRequest penaltyRequest) {
-        // TODO: 어드민 권한 검사, level 추가
+        // TODO: 어드민 권한 검사
         adminPenaltyService.createPenalty(memberId, penaltyRequest.toService());
         return ResponseEntity.ok(SUCCESS.getMessage());
     }

@@ -5,7 +5,6 @@ import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
 import kea.enter.enterbe.domain.penalty.entity.Penalty;
-import kea.enter.enterbe.domain.penalty.entity.PenaltyLevel;
 import kea.enter.enterbe.domain.penalty.repository.PenaltyRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class AdminPenaltyServiceImpl implements AdminPenaltyService {
     public void createPenalty(Long memberId, PenaltyDto service) {
         // MemberId로 멤버 존재 여부를 검사하고 페널티를 부여한다
         Member member = findMemberById(memberId);
-        penaltyRepository.save(Penalty.of(member, service.getReason(), PenaltyLevel.BLACKLIST, service.getEtc()));
+        penaltyRepository.save(Penalty.of(member, service.getReason(), service.getLevel(), service.getEtc()));
     }
 
     public Member findMemberById(Long memberId) {
