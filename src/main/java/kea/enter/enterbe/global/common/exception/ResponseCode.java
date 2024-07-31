@@ -10,6 +10,9 @@ import java.util.function.Predicate;
 @Getter
 @RequiredArgsConstructor
 public enum ResponseCode {
+
+    // AUTh
+    PASSWORD_INCORRECT("AUT-ERR-001", HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다"),
     //MEMBER
     MEMBER_NOT_FOUND("MEM-ERR-001", HttpStatus.NOT_FOUND, "멤버를 찾을 수 없습니다."),
     // PENALTY

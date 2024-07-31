@@ -4,26 +4,29 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
+import io.jsonwebtoken.security.SecurityException;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import kea.enter.enterbe.domain.member.entity.Member;
+import javax.crypto.SecretKey;
+import kea.enter.enterbe.api.auth.dto.MemberInfoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * [JWT 관련 메서드를 제공하는 클래스]
+ */
 @Slf4j
 @Component
 public class JwtUtil {
 
-    private long accessTokenExpTime;
-    private Key key;
+    private final SecretKey key;
+    private final long accessTokenExpTime;
 
-    public void JwtUtil(
+    public JwtUtil(
         @Value("${jwt.secret}") String secretKey,
         @Value("${jwt.expiration_time}") long accessTokenExpTime
     ) {
@@ -33,14 +36,14 @@ public class JwtUtil {
     }
 
 
-    public String createAccessToken(Member loginUser) {
-        return createToken(loginUser, accessTokenExpTime);
+    public String createAccessToken(MemberInfoDto member) {
+        return createToken(member, accessTokenExpTime);
     }
 
 
-    private String createToken(Member member, long expireTime) {
-        Claims claims = Jwts.claims();
-        claims.put("memberId", member.getId());
+    private String createToken(MemberInfoDto member, long expireTime) {
+        Claims claims = (Claims) Jwts.claims();
+        claims.put("memberId", member.getMemberId());
         claims.put("email", member.getEmail());
         claims.put("role", member.getRole());
 
@@ -49,27 +52,24 @@ public class JwtUtil {
 
 
         return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(Date.from(now.toInstant()))
-            .setExpiration(Date.from(tokenValidity.toInstant()))
-            .signWith(key, SignatureAlgorithm.HS256)
+            .claims(claims)
+            .issuedAt(Date.from(now.toInstant()))
+            .expiration(Date.from(tokenValidity.toInstant()))
+            .signWith(key)
             .compact();
     }
+
 
     public Long getUserId(String token) {
         return parseClaims(token).get("memberId", Long.class);
     }
 
-    public String getUserRole(String token) {
-        return parseClaims(token).get("role", String.class);
-    }
-
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+        } catch (SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
@@ -83,9 +83,11 @@ public class JwtUtil {
 
     public Claims parseClaims(String accessToken) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            return Jwts.parser().verifyWith(key).build().parseSignedClaims(accessToken).getPayload();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
     }
+
+
 }

@@ -1,5 +1,8 @@
 server:
   port: 8090
+jwt:
+  expiration_time: 360000
+  secret: "NsWdPaheBaGjRYuXQ1nTrTVmFRrjFvzONsWdPaheBaGjRYuXQ1nTrTVmFRrjFvzONsWdPaheBaGjRYuXQ1nTrTVmFRrjFvzONsWdPaheBaGjRYuXQ1nTrTVmFRrjFvzONsWdPaheBaGjRYuXQ1nTrTVmFRrjFvzO"
 spring:
   application:
     name: ENTER-BE
