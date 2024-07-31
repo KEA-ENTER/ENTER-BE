@@ -1,16 +1,16 @@
-package kea.enter.enterbe.api.controller.vehicle.dto.request;
+package kea.enter.enterbe.api.vehicle.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Positive;
-import kea.enter.enterbe.api.service.vehicle.dto.VehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
+import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-public class VehicleRequest {
+public class AdminVehicleResponse {
+    @Schema(description = "차량 아이디", example = "1")
+    private Long vehicleId;
+
     @Schema(description = "차량 번호", example = "12가 3456")
     private String vehicleNo;
 
@@ -21,7 +21,6 @@ public class VehicleRequest {
     private String model;
 
     @Schema(description = "차량 탑승 정원", example = "5")
-    @Positive(message = "양수만 가능합니다.")
     private int seats;
 
     @Schema(description = "차량 연료", example = "가솔린")
@@ -30,29 +29,36 @@ public class VehicleRequest {
     @Schema(description = "차량 이미지", example = "")
     private String img;
 
+    @Schema(description = "차량 상태", example = "AVAILABLE")
+    private VehicleState state;
+
 
     @Builder
-    public VehicleRequest(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, String img) {
+    public AdminVehicleResponse(Long vehicleId, String vehicleNo, String company, String model,
+        int seats, VehicleFuel fuel, String img, VehicleState state) {
+
+        this.vehicleId = vehicleId;
         this.vehicleNo = vehicleNo;
         this.company = company;
         this.model = model;
         this.seats = seats;
         this.fuel = fuel;
         this.img = img;
+        this.state = state;
     }
 
-    public static VehicleRequest of(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, String img) {
-        return VehicleRequest.builder()
+    public static AdminVehicleResponse of(Long vehicleId, String vehicleNo, String company, String model,
+        int seats, VehicleFuel fuel, String img, VehicleState state) {
+
+        return AdminVehicleResponse.builder()
+            .vehicleId(vehicleId)
             .vehicleNo(vehicleNo)
             .company(company)
             .model(model)
             .seats(seats)
             .fuel(fuel)
             .img(img)
+            .state(VehicleState.AVAILABLE)
             .build();
-    }
-
-    public VehicleDto toService() {
-        return VehicleDto.of(vehicleNo, company, model, seats, fuel, img);
     }
 }

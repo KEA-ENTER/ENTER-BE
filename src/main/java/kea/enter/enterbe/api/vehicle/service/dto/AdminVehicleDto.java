@@ -1,4 +1,4 @@
-package kea.enter.enterbe.api.service.vehicle.dto;
+package kea.enter.enterbe.api.vehicle.service.dto;
 
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class VehicleDto {
+public class AdminVehicleDto {
     private Long vehicleId;
     private String vehicleNo;
     private String company;
@@ -17,7 +17,7 @@ public class VehicleDto {
     private VehicleState state;
 
     @Builder
-    public VehicleDto(Long vehicleId, String vehicleNo, String company, String model,
+    public AdminVehicleDto(Long vehicleId, String vehicleNo, String company, String model,
         int seats, VehicleFuel fuel, String img, VehicleState state) {
 
         this.vehicleId = vehicleId;
@@ -30,10 +30,10 @@ public class VehicleDto {
         this.state = state;
     }
 
-    public static VehicleDto of(String vehicleNo, String company, String model,
+    public static AdminVehicleDto of(String vehicleNo, String company, String model,
         int seats, VehicleFuel fuel, String img) {
 
-        return VehicleDto.builder()
+        return AdminVehicleDto.builder()
             .vehicleNo(vehicleNo)
             .company(company)
             .model(model)
