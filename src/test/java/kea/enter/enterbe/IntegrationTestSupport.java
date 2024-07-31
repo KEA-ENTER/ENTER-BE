@@ -13,6 +13,7 @@ import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.domain.winning.repository.WinningRepository;
 import kea.enter.enterbe.global.config.ClockConfig;
 import kea.enter.enterbe.global.config.ObjectStorageConfig;
+import kea.enter.enterbe.global.util.FileUtil;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.mockito.Mock;
@@ -43,6 +44,8 @@ public abstract class IntegrationTestSupport {
     protected MemberRepository memberRepository;
     @Autowired
     protected VehicleService vehicleService;
+    @Autowired
+    protected FileUtil fileUtil;
     @MockBean
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean

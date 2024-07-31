@@ -6,7 +6,7 @@ import kea.enter.enterbe.api.service.ex.ExService;
 import kea.enter.enterbe.api.vehicle.controller.VehicleController;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.global.security.SecurityConfig;
-import org.springdoc.core.service.SecurityService;
+import kea.enter.enterbe.global.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,4 +28,7 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected VehicleService vehicleService;
+
+    @MockBean
+    protected FileUtil fileUtil;
 }
