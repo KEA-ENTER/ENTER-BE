@@ -39,6 +39,10 @@ public class Penalty extends BaseEntity {
     @Column(name = "state", nullable = false)
     private PenaltyState state;
 
+    public void deletePenalty() {
+        this.state = PenaltyState.INACTIVE;
+    }
+
     @Builder
     public Penalty(
         Member member,
