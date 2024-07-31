@@ -43,4 +43,4 @@ out/
 .vscode/
 
 ### Temp Data ###
-/src/main/resources/data.sql
+src/main/resources/data.sql
