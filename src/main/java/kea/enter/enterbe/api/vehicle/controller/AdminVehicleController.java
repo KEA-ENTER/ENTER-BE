@@ -51,28 +51,4 @@ public class AdminVehicleController {
 
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }
-
-    @Operation(summary = "법인 차량 수정 API")
-    @PatchMapping("/{vehicleId}")
-    public ResponseEntity<AdminVehicleResponse> modifyVehicle(@Valid @RequestBody AdminVehicleRequest adminVehicleRequest) {
-        return ResponseEntity.ok(adminVehicleService.deleteVehicle(adminVehicleRequest.toService()));
-    }
-
-    @Operation(summary = "법인 차량 삭제 API")
-    @DeleteMapping("/{vehicleId}")
-    public ResponseEntity<AdminVehicleResponse> deleteVehicle(@Valid @RequestBody AdminVehicleRequest adminVehicleRequest) {
-        return ResponseEntity.ok(adminVehicleService.deleteVehicle(adminVehicleRequest.toService()));
-    }
-
-    @Operation(summary = "법인 차량 목록 조회 API")
-    @GetMapping()
-    public ResponseEntity<AdminVehicleResponse> getVehicleList(@Valid @RequestBody AdminVehicleRequest adminVehicleRequest) {
-        return ResponseEntity.ok(adminVehicleService.getVehicleList(adminVehicleRequest.toService()));
-    }
-
-    @Operation(summary = "법인 차량 상세 정보 조회 API")
-    @GetMapping("/{vehicleId}")
-    public ResponseEntity<AdminVehicleResponse> getVehicle(@Valid @RequestBody AdminVehicleRequest adminVehicleRequest) {
-        return ResponseEntity.ok(adminVehicleService.getVehicle(adminVehicleRequest.toService()));
-    }
 }
