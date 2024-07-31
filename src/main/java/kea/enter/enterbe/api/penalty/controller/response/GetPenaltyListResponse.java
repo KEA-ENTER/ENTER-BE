@@ -19,7 +19,7 @@ public class GetPenaltyListResponse {
     @Schema(description = "페널티 사유 (TAKE, RETURN, BROKEN, FUEL, ETC)", example = "FUEL")
     private PenaltyReason reason;
 
-    @Schema(description = "페널티 레벨 (LOW, MEDIUM, HIGH, BLACKLIST)", example = "LOW")
+    @Schema(description = "페널티 수준 (LOW, MEDIUM, HIGH, BLACKLIST)", example = "LOW")
     private PenaltyLevel level;
 
     @Schema(description = "비고", example = "자동차를 박살냈습니다.")
