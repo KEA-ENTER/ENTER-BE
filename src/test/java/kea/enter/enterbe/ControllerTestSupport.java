@@ -21,17 +21,14 @@ public abstract class ControllerTestSupport {
 
     @Autowired
     protected MockMvc mockMvc;
-
     @Autowired
     protected ObjectMapper objectMapper;
-
     @MockBean
     protected ExService exService;
-
     @MockBean
     protected VehicleService vehicleService;
-
     @MockBean
     protected FileUtil fileUtil;
+    @MockBean
     protected AdminPenaltyService adminPenaltyService;
 }
