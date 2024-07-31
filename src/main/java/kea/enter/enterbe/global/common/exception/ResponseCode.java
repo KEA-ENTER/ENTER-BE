@@ -30,7 +30,7 @@ public enum ResponseCode {
 
     public String getMessage(String message) {
         return Optional.ofNullable(message)
-                .filter(Predicate.not(String::isBlank))
-                .orElse(this.getMessage());
+            .filter(Predicate.not(String::isBlank))
+            .orElse(this.getMessage());
     }
 }

@@ -1,6 +1,6 @@
-package kea.enter.enterbe.api.service.question;
+package kea.enter.enterbe.api.question.service;
 
-import kea.enter.enterbe.api.controller.question.dto.request.QuestionRequestDto;
+import kea.enter.enterbe.api.question.controller.dto.request.QuestionRequestDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
 import kea.enter.enterbe.domain.question.entity.Question;
@@ -20,13 +20,13 @@ public class QuestionService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Question createQuestion(QuestionRequestDto dto) {
+    public void createQuestion(QuestionRequestDto dto) {
         Member member = memberRepository.findById(dto.getMemberId())
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_MEMBER));
 
         // state는 작성시에 WAIT로 기본값 고정
-        Question question = Question.of(member, dto.getContent(), dto.getCategory(), QuestionState.WAIT);
-
-        return questionRepository.save(question);
+        Question question = Question.of(member, dto.getContent(), dto.getCategory(),
+            QuestionState.WAIT);
+        questionRepository.save(question);
     }
 }

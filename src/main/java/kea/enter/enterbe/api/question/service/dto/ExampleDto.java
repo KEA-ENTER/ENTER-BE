@@ -1,4 +1,4 @@
-package kea.enter.enterbe.api.service.question.dto;
+package kea.enter.enterbe.api.question.service.dto;
 
 import lombok.Builder;
 import lombok.Getter;

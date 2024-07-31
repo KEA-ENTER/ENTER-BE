@@ -1,10 +1,9 @@
-package kea.enter.enterbe.api.controller.question;
+package kea.enter.enterbe.api.question.controller;
 
 import jakarta.validation.Valid;
-import kea.enter.enterbe.api.controller.question.dto.request.QuestionRequestDto;
-import kea.enter.enterbe.api.controller.question.dto.response.QuestionResponseDto;
-import kea.enter.enterbe.api.service.question.QuestionService;
-import kea.enter.enterbe.domain.question.entity.Question;
+import kea.enter.enterbe.api.question.controller.dto.request.QuestionRequestDto;
+import kea.enter.enterbe.api.question.controller.dto.response.QuestionResponseDto;
+import kea.enter.enterbe.api.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,8 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping
-    public ResponseEntity<QuestionResponseDto> createQuestion(@Valid @RequestBody QuestionRequestDto dto) {
+    public ResponseEntity<QuestionResponseDto> createQuestion(
+        @Valid @RequestBody QuestionRequestDto dto) {
 
         questionService.createQuestion(dto);
 
