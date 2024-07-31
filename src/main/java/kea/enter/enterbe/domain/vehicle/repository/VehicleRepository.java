@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
-    List<Vehicle> findAllByVehicleModel(String model);
+    List<Vehicle> findAllByModel(String model);
     Optional<Vehicle> findByVehicleNo(String vehicleNo);
-    List<Vehicle> findAllByVehicleState(VehicleState state);
+    List<Vehicle> findAllByState(VehicleState state);
 }

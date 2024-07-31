@@ -11,6 +11,7 @@ import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     private final VehicleRepository vehicleRepository;
 
     // 차량 번호 형식 : 두 자리 또는 세 자리 숫자 + 한글 한 글자 + 네 자리 숫자
-    private static final String VEHICLE_NO_PATTERN = "^[0-9]{2,3}[가-힣][0-9]{4}$";
+    private String VEHICLE_NO_PATTERN = "^[0-9]{2,3}[가-힣][0-9]{4}$";
 
     public Optional<Vehicle> checkVehicle(String vehicleNo) {
         // 유효성 검사

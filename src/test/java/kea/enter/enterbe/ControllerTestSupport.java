@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kea.enter.enterbe.api.controller.ex.ExController;
 import kea.enter.enterbe.api.service.ex.ExService;
 import kea.enter.enterbe.api.vehicle.controller.VehicleController;
+import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.global.security.SecurityConfig;
 import org.springdoc.core.service.SecurityService;
@@ -28,4 +29,7 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected VehicleService vehicleService;
+
+    @MockBean
+    protected AdminVehicleService adminVehicleService;
 }

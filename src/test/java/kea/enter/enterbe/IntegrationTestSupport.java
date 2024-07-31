@@ -2,6 +2,7 @@ package kea.enter.enterbe;
 
 import java.time.Clock;
 import kea.enter.enterbe.api.service.ex.ExService;
+import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.ex.repository.ExRepository;
@@ -51,6 +52,8 @@ public abstract class IntegrationTestSupport {
     protected Clock clock;
     @MockBean
     protected ClockConfig clockConfig;
+    @MockBean
+    protected AdminVehicleService adminVehicleService;
 
     @AfterEach
     void tearDown() {
