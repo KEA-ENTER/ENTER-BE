@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "예제", description = "예제 API 명세서")
+@Tag(name = "차량", description = "차량 API 명세서")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/vehicles")
