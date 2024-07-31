@@ -23,6 +23,7 @@ public class AdminPenaltyServiceImpl implements AdminPenaltyService {
     private final MemberRepository memberRepository;
 
     /* 페널티 부여 API */
+    @Transactional
     public void createPenalty(PostPenaltyServiceDto service) {
         // MemberId로 멤버 존재 여부를 검사하고 페널티를 부여한다
         Member member = findMemberById(service.getMemberId());
