@@ -1,5 +1,6 @@
 package kea.enter.enterbe.api.vehicle.service;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -25,10 +26,10 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     private final VehicleRepository vehicleRepository;
     private final ObjectStorageUtil objectStorageUtil;
 
-    // 차량 번호 형식 : 두 자리 또는 세 자리 숫자 + 한글 한 글자 + 네 자리 숫자
-    private final String VEHICLE_NO_PATTERN = "^[0-9]{2,3}[가-힣][0-9]{4}$";
-
     public Optional<Vehicle> checkVehicle(String vehicleNo) {
+        // 차량 번호 형식 : 두 자리 또는 세 자리 숫자 + 한글 한 글자 + 네 자리 숫자
+        String VEHICLE_NO_PATTERN = "^[0-9]{2,3}[가-힣][0-9]{4}$";
+
         // 유효성 검사
         if (!Pattern.matches(VEHICLE_NO_PATTERN, vehicleNo)) {
             throw new CustomException(ResponseCode.VEHICLE_NO_NOT_ALLOWED);
@@ -51,14 +52,14 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
         else {
             String img = "";
             img = uploadS3Image(dto.getImg());
-            System.out.println(img);
+
             try {
                 img = uploadS3Image(dto.getImg());
-                System.out.println(img);
+
                 vehicle = Optional.of(vehicleRepository.save(Vehicle.of(
                     dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
                     dto.getFuel(), img, VehicleState.AVAILABLE)));
-                System.out.println(vehicle);
+
             } catch (Exception e) {
                 deleteS3Image(img);
                 throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
