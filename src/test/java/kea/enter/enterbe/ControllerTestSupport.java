@@ -2,6 +2,8 @@ package kea.enter.enterbe;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kea.enter.enterbe.api.controller.ex.ExController;
+import kea.enter.enterbe.api.penalty.controller.AdminPenaltyController;
+import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.service.ex.ExService;
 import kea.enter.enterbe.api.vehicle.controller.VehicleController;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
@@ -13,7 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = {
-    ExController.class, SecurityConfig.class, VehicleController.class
+    ExController.class, SecurityConfig.class, VehicleController.class, AdminPenaltyController.class
 })
 public abstract class ControllerTestSupport {
 
@@ -31,4 +33,5 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected FileUtil fileUtil;
+    protected AdminPenaltyService adminPenaltyService;
 }
