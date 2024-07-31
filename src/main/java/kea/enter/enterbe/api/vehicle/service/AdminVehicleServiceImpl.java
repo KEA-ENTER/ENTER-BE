@@ -67,26 +67,6 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
         }
     }
 
-    @Override
-    public AdminVehicleResponse modifyVehicle(CreateVehicleDto service) {
-        return null;
-    }
-
-    @Override
-    public AdminVehicleResponse deleteVehicle(CreateVehicleDto service) {
-        return null;
-    }
-
-    @Override
-    public AdminVehicleResponse getVehicleList(CreateVehicleDto service) {
-        return null;
-    }
-
-    @Override
-    public AdminVehicleResponse getVehicle(CreateVehicleDto service) {
-        return null;
-    }
-
     private void deleteS3Image(String imageUrl) {
         objectStorageUtil.delete(imageUrl);
     }
