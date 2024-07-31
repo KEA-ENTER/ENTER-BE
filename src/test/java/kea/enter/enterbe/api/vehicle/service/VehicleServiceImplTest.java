@@ -36,7 +36,7 @@ class VehicleServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName(value = "인수 보고서를 제출한다. ")
     @Test
-    public void postTakeVehicleReport() throws Exception {
+    public void postTakeVehicleReport() {
         //given
         LocalDate takeDate = LocalDate.of(1999, 8, 20);
         LocalDate returnDate = LocalDate.of(1999, 8, 30);
@@ -68,7 +68,7 @@ class VehicleServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName(value = "인수 보고서를 제출할때 인수 수령일과 맞는 당첨 내역이 없으면 예외가 발생한다.")
     @Test
-    public void postTakeVehicleReportExceptionWithDifferentTakeDate() throws Exception {
+    public void postTakeVehicleReportExceptionWithDifferentTakeDate() {
         //given
         LocalDate takeDate = LocalDate.of(1999, 8, 20);
         LocalDate wrongDate = LocalDate.of(1999, 8, 10);
@@ -97,7 +97,7 @@ class VehicleServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName(value = "인수 보고서를 제출할때 예외가 발생하면 업로드한 이미지를 삭제한다.")
     @Test
-    public void postTakeVehicleReportHasExceptionThenDeleteImage() throws Exception {
+    public void postTakeVehicleReportHasExceptionThenDeleteImage() {
         //given
         LocalDate takeDate = LocalDate.of(1999, 8, 20);
         LocalDate returnDate = LocalDate.of(1999, 8, 30);

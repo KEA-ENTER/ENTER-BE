@@ -15,6 +15,7 @@ import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.domain.winning.repository.WinningRepository;
 import kea.enter.enterbe.global.config.ClockConfig;
 import kea.enter.enterbe.global.config.ObjectStorageConfig;
+import kea.enter.enterbe.global.util.FileUtil;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,12 @@ public abstract class IntegrationTestSupport {
     protected MemberRepository memberRepository;
     @Autowired
     protected PenaltyRepository penaltyRepository;
-
     @Autowired
     protected VehicleService vehicleService;
     @Autowired
+    protected FileUtil fileUtil;
+    @Autowired
     protected AdminPenaltyService adminPenaltyService;
-
     @MockBean
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean
