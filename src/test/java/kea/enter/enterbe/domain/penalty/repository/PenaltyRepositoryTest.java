@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import static kea.enter.enterbe.domain.penalty.entity.PenaltyLevel.BLACKLIST;
 import static kea.enter.enterbe.domain.penalty.entity.PenaltyReason.BROKEN;
@@ -114,6 +115,76 @@ class PenaltyRepositoryTest extends IntegrationTestSupport {
                 penalty1.getId(),
                 penalty3.getId()
             );
+    }
+
+    @DisplayName(value = "페널티 아이디와 멤버 아이디로 페널티를 조회한다.")
+    @Test
+    public void findByIdAndMemberIdAndState() {
+        // given
+        Member member = memberRepository.save(createMember(MemberState.ACTIVE));
+        Long memberId = member.getId();
+
+        Penalty newPenalty = penaltyRepository.save(createPenalty(member));
+        Long newPenaltyId = newPenalty.getId();
+
+        // when
+        Optional<Penalty> penalty = penaltyRepository.findByIdAndMemberIdAndState(newPenaltyId, memberId, PenaltyState.ACTIVE);
+
+        // then
+        assertThat(penalty).isPresent();
+    }
+
+    @DisplayName(value = "페널티 아이디가 다를 경우 페널티가 조회되지 않는다.")
+    @Test
+    public void findByIdAndMemberIdAndStateWithOtherPenaltyId() {
+        // given
+        Member member = memberRepository.save(createMember(MemberState.ACTIVE));
+        Long memberId = member.getId();
+
+        Penalty newPenalty = penaltyRepository.save(createPenalty(member));
+        Long newPenaltyId = newPenalty.getId();
+
+        // when
+        Optional<Penalty> penalty = penaltyRepository.findByIdAndMemberIdAndState(newPenaltyId + 1, memberId, PenaltyState.ACTIVE);
+
+        // then
+        assertThat(penalty).isEmpty();
+    }
+
+    @DisplayName(value = "멤버 아이디가 다를 경우 페널티가 조회되지 않는다.")
+    @Test
+    public void findByIdAndMemberIdAndStateWithOtherMemberId() {
+        // given
+        Member member1 = memberRepository.save(createMember(MemberState.ACTIVE));
+
+        Member member2 = memberRepository.save(createMember(MemberState.ACTIVE));
+        Long member2Id = member2.getId();
+
+        Penalty newPenalty = penaltyRepository.save(createPenalty(member1));
+        Long penaltyId = newPenalty.getId();
+
+        // when
+        Optional<Penalty> penalty = penaltyRepository.findByIdAndMemberIdAndState(penaltyId, member2Id, PenaltyState.ACTIVE);
+
+        // then
+        assertThat(penalty).isEmpty();
+    }
+
+    @DisplayName(value = "페널티 아이디와 멤버 아이디로 페널티를 조회한다.")
+    @Test
+    public void findByIdAndMemberId() {
+        // given
+        Member member = memberRepository.save(createMember(MemberState.ACTIVE));
+        Long memberId = member.getId();
+
+        Penalty newPenalty = penaltyRepository.save(createPenalty(member));
+        Long newPenaltyId = newPenalty.getId();
+
+        // when
+        Optional<Penalty> penalty = penaltyRepository.findByIdAndMemberId(newPenaltyId, memberId);
+
+        // then
+        assertThat(penalty).isPresent();
     }
 
     private Member createMember(MemberState state) {
