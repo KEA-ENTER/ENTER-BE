@@ -4,14 +4,6 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-.sql
-.DS_Store
-
-*.sql
-.DS_Store
-._.DS_Store
-**/.DS_Store
-**/._.DS_Store
 
 *.sql
 .DS_Store
