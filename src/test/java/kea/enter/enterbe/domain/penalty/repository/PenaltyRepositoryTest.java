@@ -170,6 +170,23 @@ class PenaltyRepositoryTest extends IntegrationTestSupport {
         assertThat(penalty).isEmpty();
     }
 
+    @DisplayName(value = "페널티 아이디와 멤버 아이디로 페널티를 조회한다.")
+    @Test
+    public void findByIdAndMemberId() {
+        // given
+        Member member = memberRepository.save(createMember(MemberState.ACTIVE));
+        Long memberId = member.getId();
+
+        Penalty newPenalty = penaltyRepository.save(createPenalty(member));
+        Long newPenaltyId = newPenalty.getId();
+
+        // when
+        Optional<Penalty> penalty = penaltyRepository.findByIdAndMemberId(newPenaltyId, memberId);
+
+        // then
+        assertThat(penalty).isPresent();
+    }
+
     private Member createMember(MemberState state) {
         return Member.of("1234", "name", "test@naver.com", "password", "licenseId",
             "licensePassword", true, true, 1, MemberRole.USER, state);

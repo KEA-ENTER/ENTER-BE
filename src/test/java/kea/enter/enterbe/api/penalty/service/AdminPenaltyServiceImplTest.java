@@ -85,8 +85,12 @@ class AdminPenaltyServiceImplTest extends IntegrationTestSupport {
         adminPenaltyService.deletePenalty(dto);
 
         //then
-        Optional<Penalty> result = penaltyRepository.findByIdAndMemberIdAndState(penaltyId, memberId, PenaltyState.ACTIVE);
-        assertThat(result).isEmpty();
+        Optional<Penalty> result = penaltyRepository.findByIdAndMemberId(penaltyId, memberId);
+        assertThat(result).isPresent();
+
+        assertThat(result.get())
+            .extracting("state")
+            .isEqualTo(PenaltyState.INACTIVE);
     }
 
     private Member createMember() {
