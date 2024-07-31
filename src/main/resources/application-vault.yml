@@ -1,8 +1,16 @@
----
 spring:
     config:
         activate:
             on-profile: local
+    cloud:
+        vault:
+            enabled: false
+---
+
+spring:
+    config:
+        activate:
+            on-profile: test
     cloud:
         vault:
             enabled: false
@@ -13,12 +21,13 @@ spring:
             on-profile: dev
         import:
             - vault://secret/database
+            - vault://secret/kc
     cloud:
         vault:
             token: ${dev-vault-token}
             scheme: http
-            host: vault
-            port: 8200
+            host: ${dev-vault-host}
+            port: ${dev-vault-port}
             kv:
                 enabled: true
                 backend: secret

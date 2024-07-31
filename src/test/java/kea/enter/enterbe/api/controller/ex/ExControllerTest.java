@@ -12,19 +12,19 @@ import org.springframework.http.MediaType;
 
 class ExControllerTest extends ControllerTestSupport {
 
-    @DisplayName(value="a와 b의 합을 저장한다.")
+    @DisplayName(value = "a와 b의 합을 저장한다.")
     @Test
     void example() throws Exception {
         //given
         Long a = 1L;
         Long b = 2L;
-        ExampleRequest request = ExampleRequest.of(a,b);
+        ExampleRequest request = ExampleRequest.of(a, b);
         //when
         mockMvc.perform(
-                        post("/api/ex")
-                                .content(objectMapper.writeValueAsString(request))
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk());
+                post("/api/ex")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk());
     }
 }

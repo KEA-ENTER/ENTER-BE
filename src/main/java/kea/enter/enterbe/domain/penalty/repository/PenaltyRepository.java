@@ -1,0 +1,13 @@
+package kea.enter.enterbe.domain.penalty.repository;
+
+import kea.enter.enterbe.domain.penalty.entity.Penalty;
+import kea.enter.enterbe.domain.penalty.entity.PenaltyState;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+@Repository
+public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
+    // 사용자의 페널티 목록을 조회한다
+    List<Penalty> findAllByMemberIdAndStateOrderByCreatedAt(Long memberId, PenaltyState state);
+}

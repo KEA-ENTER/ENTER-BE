@@ -81,4 +81,18 @@ public class VehicleReport extends BaseEntity {
             .state(state)
             .build();
     }
+
+    public static VehicleReport takeCreate(Winning winning, String frontImg, String leftImg,
+        String rightImg, String backImg, String dashboardImg) {
+        return VehicleReport.builder()
+            .winning(winning)
+            .frontImg(frontImg)
+            .leftImg(leftImg)
+            .rightImg(rightImg)
+            .backImg(backImg)
+            .dashboardImg(dashboardImg)
+            .type(VehicleReportType.TAKE)
+            .state(VehicleReportState.ACTIVE)
+            .build();
+    }
 }
