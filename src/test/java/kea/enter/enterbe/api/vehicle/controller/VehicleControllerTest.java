@@ -1,12 +1,14 @@
 package kea.enter.enterbe.api.vehicle.controller;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import kea.enter.enterbe.ControllerTestSupport;
 import org.apache.hc.core5.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,6 +36,7 @@ class VehicleControllerTest extends ControllerTestSupport {
             "test file".getBytes(StandardCharsets.UTF_8));
         MockMultipartFile notice = new MockMultipartFile("note", "note", ContentType.TEXT_PLAIN.getMimeType(),
             "note".getBytes(StandardCharsets.UTF_8));
+        given(fileUtil.isImageFileList(List.of(image1,image2,image3,image4,image5))).willReturn(true);
         //when
         mockMvc.perform(
             multipart("/vehicles/reports/take")
