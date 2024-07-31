@@ -24,7 +24,7 @@ public class AdminPenaltyController {
 
     /* 페널티 부여 API */
     @Operation(summary = "사용자 페널티 부여 API", description = "사용자에게 페널티를 부여합니다.")
-    @PostMapping("/{memberId}")
+    @PostMapping("/members/{memberId}")
     public ResponseEntity<String> createPenalty(
         @PathVariable Long memberId,
         @Valid @RequestBody PostPenaltyRequest postPenaltyRequest) {
