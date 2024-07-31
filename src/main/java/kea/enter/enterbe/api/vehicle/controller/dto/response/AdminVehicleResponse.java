@@ -5,6 +5,7 @@ import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class AdminVehicleResponse {
@@ -23,11 +24,11 @@ public class AdminVehicleResponse {
     @Schema(description = "차량 탑승 정원", example = "5")
     private int seats;
 
-    @Schema(description = "차량 연료", example = "가솔린")
+    @Schema(description = "차량 연료", example = "GASOLINE")
     private VehicleFuel fuel;
 
     @Schema(description = "차량 이미지", example = "")
-    private String img;
+    private MultipartFile img;
 
     @Schema(description = "차량 상태", example = "AVAILABLE")
     private VehicleState state;
@@ -35,7 +36,7 @@ public class AdminVehicleResponse {
 
     @Builder
     public AdminVehicleResponse(Long vehicleId, String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, String img, VehicleState state) {
+        int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
 
         this.vehicleId = vehicleId;
         this.vehicleNo = vehicleNo;
@@ -48,7 +49,7 @@ public class AdminVehicleResponse {
     }
 
     public static AdminVehicleResponse of(Long vehicleId, String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, String img, VehicleState state) {
+        int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
 
         return AdminVehicleResponse.builder()
             .vehicleId(vehicleId)
@@ -58,7 +59,7 @@ public class AdminVehicleResponse {
             .seats(seats)
             .fuel(fuel)
             .img(img)
-            .state(VehicleState.AVAILABLE)
+            .state(state)
             .build();
     }
 }

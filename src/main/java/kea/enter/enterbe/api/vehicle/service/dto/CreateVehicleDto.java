@@ -1,24 +1,28 @@
 package kea.enter.enterbe.api.vehicle.service.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-public class AdminVehicleDto {
+public class CreateVehicleDto {
     private Long vehicleId;
     private String vehicleNo;
     private String company;
     private String model;
     private int seats;
     private VehicleFuel fuel;
-    private String img;
+    private MultipartFile img;
     private VehicleState state;
 
     @Builder
-    public AdminVehicleDto(Long vehicleId, String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, String img, VehicleState state) {
+    public CreateVehicleDto(Long vehicleId, String vehicleNo, String company, String model,
+        int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
 
         this.vehicleId = vehicleId;
         this.vehicleNo = vehicleNo;
@@ -30,17 +34,17 @@ public class AdminVehicleDto {
         this.state = state;
     }
 
-    public static AdminVehicleDto of(String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, String img) {
+    public static CreateVehicleDto of(String vehicleNo, String company, String model,
+        int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
 
-        return AdminVehicleDto.builder()
+        return CreateVehicleDto.builder()
             .vehicleNo(vehicleNo)
             .company(company)
             .model(model)
             .seats(seats)
             .fuel(fuel)
             .img(img)
-            .state(VehicleState.AVAILABLE)
+            .state(state)
             .build();
     }
 }

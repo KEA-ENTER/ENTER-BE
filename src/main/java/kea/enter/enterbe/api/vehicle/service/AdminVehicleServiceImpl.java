@@ -1,19 +1,21 @@
 package kea.enter.enterbe.api.vehicle.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
-import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
-import kea.enter.enterbe.api.vehicle.service.dto.AdminVehicleDto;
+import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
+import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
+import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -21,9 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AdminVehicleServiceImpl implements AdminVehicleService {
     private final VehicleRepository vehicleRepository;
+    private final ObjectStorageUtil objectStorageUtil;
 
     // 차량 번호 형식 : 두 자리 또는 세 자리 숫자 + 한글 한 글자 + 네 자리 숫자
-    private String VEHICLE_NO_PATTERN = "^[0-9]{2,3}[가-힣][0-9]{4}$";
+    private final String VEHICLE_NO_PATTERN = "^[0-9]{2,3}[가-힣][0-9]{4}$";
 
     public Optional<Vehicle> checkVehicle(String vehicleNo) {
         // 유효성 검사
@@ -32,46 +35,62 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
         }
 
         // 중복 확인
-        Optional<Vehicle> vehicle = vehicleRepository.findByVehicleNo(vehicleNo);
-        if (vehicle.isEmpty()) {
-            return vehicle;
-        }
-
-        vehicle = vehicleRepository.findByVehicleNo(vehicleNo);
+        Optional<Vehicle> vehicle = vehicleRepository.findByVehicleNoAndStateNot(vehicleNo, VehicleState.INACTIVE);
 
         return vehicle;
     }
 
     @Override
     @Transactional
-    public void createVehicle(AdminVehicleDto dto) {
+    public void createVehicle(CreateVehicleDto dto) {
         Optional<Vehicle> vehicle = checkVehicle(dto.getVehicleNo());
 
-        if (vehicle.isEmpty()) {
-            vehicle = Optional.of(vehicleRepository.save(Vehicle.of(
-                dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(), dto.getFuel(), dto.getImg(), dto.getState())));
+        if (vehicle.isPresent()) {
+            throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
+        }
+        else {
+            String img = "";
+            img = uploadS3Image(dto.getImg());
+            System.out.println(img);
+            try {
+                img = uploadS3Image(dto.getImg());
+                System.out.println(img);
+                vehicle = Optional.of(vehicleRepository.save(Vehicle.of(
+                    dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
+                    dto.getFuel(), img, VehicleState.AVAILABLE)));
+                System.out.println(vehicle);
+            } catch (Exception e) {
+                deleteS3Image(img);
+                throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
+            }
         }
     }
 
     @Override
-    @Transactional
-    public AdminVehicleResponse modifyVehicle(AdminVehicleDto dto) {
+    public AdminVehicleResponse modifyVehicle(CreateVehicleDto service) {
         return null;
     }
 
     @Override
-    @Transactional
-    public AdminVehicleResponse deleteVehicle(AdminVehicleDto service) {
+    public AdminVehicleResponse deleteVehicle(CreateVehicleDto service) {
         return null;
     }
 
     @Override
-    public AdminVehicleResponse getVehicleList(AdminVehicleDto service) {
+    public AdminVehicleResponse getVehicleList(CreateVehicleDto service) {
         return null;
     }
 
     @Override
-    public AdminVehicleResponse getVehicle(AdminVehicleDto service) {
+    public AdminVehicleResponse getVehicle(CreateVehicleDto service) {
         return null;
+    }
+
+    private void deleteS3Image(String imageUrl) {
+        objectStorageUtil.delete(imageUrl);
+    }
+
+    private String uploadS3Image(MultipartFile images) {
+        return objectStorageUtil.uploadFileToS3(images);
     }
 }
