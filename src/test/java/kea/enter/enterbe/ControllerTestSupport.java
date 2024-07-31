@@ -6,6 +6,7 @@ import kea.enter.enterbe.api.penalty.controller.AdminPenaltyController;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.service.ex.ExService;
 import kea.enter.enterbe.api.vehicle.controller.VehicleController;
+import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.global.security.SecurityConfig;
 import kea.enter.enterbe.global.util.FileUtil;
