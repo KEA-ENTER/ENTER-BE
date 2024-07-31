@@ -6,9 +6,11 @@ import jakarta.validation.Valid;
 import kea.enter.enterbe.api.penalty.controller.request.PostPenaltyRequest;
 import kea.enter.enterbe.api.penalty.controller.response.GetPenaltyListResponse;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
+import kea.enter.enterbe.api.penalty.service.dto.DeletePenaltyServiceDto;
 import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,5 +47,14 @@ public class AdminPenaltyController {
         // TODO: 어드민 권한 검사
         List<GetPenaltyListResponse> response =  adminPenaltyService.getPenaltyList(GetPenaltyListServiceDto.of(memberId));
         return ResponseEntity.ok(response);
+    }
+
+    /* 페널티 삭제 API */
+    @Operation(summary = "사용자 페널티 삭제 API", description = "사용자의 페널티를 삭제합니다.")
+    @DeleteMapping("/members/{memberId}/{penaltyId}")
+    public ResponseEntity<String> getPenaltyList(@PathVariable Long memberId, @PathVariable Long penaltyId) {
+        // TODO: 어드민 권한 검사
+        adminPenaltyService.deletePenalty(DeletePenaltyServiceDto.of(memberId, penaltyId));
+        return ResponseEntity.ok(SUCCESS.getMessage());
     }
 }
