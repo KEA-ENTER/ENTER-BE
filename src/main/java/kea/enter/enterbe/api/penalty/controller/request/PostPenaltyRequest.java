@@ -17,8 +17,8 @@ public class PostPenaltyRequest {
     @Schema(description = "페널티 사유 (TAKE, RETURN, BROKEN, FUEL, ETC)", example = "FUEL")
     private PenaltyReason reason;
 
-    @NotNull(message = "페널티 사유를 입력해야 합니다.")
-    @Schema(description = "페널티 사유 (LOW, MEDIUM, HIGH, BLACKLIST)", example = "LOW")
+    @NotNull(message = "페널티 수준을 입력해야 합니다.")
+    @Schema(description = "페널티 수준 (LOW, MEDIUM, HIGH, BLACKLIST)", example = "LOW")
     private PenaltyLevel level;
 
     @Size(max = 200)
