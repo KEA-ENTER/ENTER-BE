@@ -7,13 +7,13 @@ import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
 import kea.enter.enterbe.domain.member.entity.MemberState;
-import kea.enter.enterbe.domain.round.entity.ApplyRound;
-import kea.enter.enterbe.domain.round.entity.ApplyRoundState;
+import kea.enter.enterbe.domain.apply.entity.ApplyRound;
+import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
-import kea.enter.enterbe.domain.winning.entity.Winning;
-import kea.enter.enterbe.domain.winning.entity.WinningState;
+import kea.enter.enterbe.domain.lottery.entity.Winning;
+import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
