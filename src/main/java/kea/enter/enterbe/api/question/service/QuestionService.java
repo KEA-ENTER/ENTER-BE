@@ -34,6 +34,17 @@ public class QuestionService {
             QuestionState.WAIT);
         questionRepository.save(question);
 
+        // 테스트용 추후 삭제 해야함.
+        List<Question> questions = questionRepository.findAll();
+        for (Question question2 : questions) {
+            System.out.println("Question: " +
+                "id=" + question2.getId() +
+                ", memberId=" + question2.getMember().getId() +
+                ", content=" + question2.getContent() +
+                ", category=" + question2.getCategory() +
+                ", state=" + question2.getState());
+        }
+
     }
 
     /* 문의사항 삭제 API */
@@ -50,6 +61,17 @@ public class QuestionService {
 
         // 문의사항 삭제
         question.deleteQuestion();
+
+        // 테스트용 추후 삭제 해야함.
+        List<Question> questions = questionRepository.findAll();
+        for (Question question2 : questions) {
+            System.out.println("Question: " +
+                "id=" + question2.getId() +
+                ", memberId=" + question2.getMember().getId() +
+                ", content=" + question2.getContent() +
+                ", category=" + question2.getCategory() +
+                ", state=" + question2.getState());
+        }
 
     }
 }
