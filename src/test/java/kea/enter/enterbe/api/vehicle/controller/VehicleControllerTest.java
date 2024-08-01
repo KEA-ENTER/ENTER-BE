@@ -3,6 +3,7 @@ package kea.enter.enterbe.api.vehicle.controller;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import kea.enter.enterbe.ControllerTestSupport;
+import kea.enter.enterbe.domain.report.entity.VehicleReportType;
 import org.apache.hc.core5.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,14 +11,15 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 class VehicleControllerTest extends ControllerTestSupport {
 
-    @DisplayName(value = "")
+    @DisplayName(value = "보고서를 작성한다.")
     @Test
-    public void postTakeVehicleReport() throws Exception {
+    public void postVehicleReport() throws Exception {
         //given
         MockMultipartFile image1 = new MockMultipartFile("front_img", "test.jpg",
             ContentType.IMAGE_JPEG.getMimeType(),
@@ -39,14 +41,19 @@ class VehicleControllerTest extends ControllerTestSupport {
         given(fileUtil.isImageFileList(List.of(image1,image2,image3,image4,image5))).willReturn(true);
         //when
         mockMvc.perform(
-            multipart("/vehicles/reports/take")
+            multipart("/vehicles/reports")
                 .file(image1)
                 .file(image2)
                 .file(image3)
                 .file(image4)
                 .file(image5)
                 .file(notice)
-        ).andExpect(status().isOk());
+                .file("note","note".getBytes())
+                .file("parking_loc","parking_loc".getBytes())
+                .param("type", VehicleReportType.TAKE.name())
+        )
+            .andDo(print())
+            .andExpect(status().isOk());
         //then
 
     }
