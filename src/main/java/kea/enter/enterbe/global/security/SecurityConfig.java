@@ -2,17 +2,22 @@ package kea.enter.enterbe.global.security;
 
 import java.util.List;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -21,12 +26,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
-    
-    private static final String[] USER_ROLE = {};
-    private static final String[] ADMIN_ROLE = {};
-    private static final String[] ANONYMOUS_ROLE = {};
+
     private static final List<String> CORS_WHITELIST = List.of("http://localhost:3000");
 
     private final CustomUserDetailsService customUserDetailsService;
@@ -34,19 +36,39 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-            .cors(AbstractHttpConfigurer::disable)
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
-            .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
-//            .authorizeHttpRequests(authorize -> authorize.requestMatchers(ANONYMOUS_ROLE).permitAll().anyRequest().permitAll())
-//            .authorizeHttpRequests(authorize -> authorize.requestMatchers(ADMIN_ROLE).hasRole("ADMIN"))
-//            .authorizeHttpRequests(authorize -> authorize.requestMatchers(USER_ROLE).hasRole("USER"))
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-
+            .authorizeHttpRequests(requests-> requests.anyRequest().permitAll())
+            .formLogin(AbstractAuthenticationFilterConfigurer::disable)
+            .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+    @Bean
+    public UserDetailsService userDetailsService(){
+
+
+        UserDetails test1 = User.builder()
+            .username("test1")
+            .password(passwordEncoder().encode("test1"))
+            .roles("USER")
+            .build();
+
+        UserDetails test2 = User.builder()
+            .username("test2")
+            .password(passwordEncoder().encode("test2"))
+            .roles("ADMIN")
+            .build();
+
+        UserDetails test3 = User.withUserDetails(customUserDetailsService.loadUserByUsername("test3")).build();
+
+        return new InMemoryUserDetailsManager(test1,test2, test3);
+    }
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -57,8 +79,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOriginPatterns(CORS_WHITELIST);
-        corsConfiguration.addAllowedMethod("GET, POST, DELETE, PATCH");
-        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
+        corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
         corsConfiguration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
@@ -67,10 +89,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "spring.h2.console.enabled",havingValue = "true")
+    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
     public WebSecurityCustomizer configureH2ConsoleEnable() {
-        return web -> web.ignoring()
-            .requestMatchers(PathRequest.toH2Console());
-    }
 
+        return web -> web.ignoring()
+            .requestMatchers("/h2-console/**")
+            .requestMatchers("favicon.ico");
+
+    }
 }
