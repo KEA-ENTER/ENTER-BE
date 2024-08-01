@@ -8,7 +8,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import kea.enter.enterbe.IntegrationTestSupport;
-import kea.enter.enterbe.api.vehicle.service.dto.PostTakeVehicleReportServiceDto;
+import kea.enter.enterbe.api.vehicle.service.dto.PostVehicleReportServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.member.entity.Member;
@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
-class VehicleServiceImplTest extends IntegrationTestSupport {
+class VehicleServiceTest extends IntegrationTestSupport {
 
     @DisplayName(value = "인수 보고서를 제출한다. ")
     @Test
@@ -47,16 +47,18 @@ class VehicleServiceImplTest extends IntegrationTestSupport {
         Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
         Winning winning = winningRepository.save(createWinning(vehicle, apply));
         String note = "note";
-        PostTakeVehicleReportServiceDto dto = PostTakeVehicleReportServiceDto.of(member.getId(),
+        String parkingLoc = null;
+        VehicleReportType type = VehicleReportType.TAKE;
+        PostVehicleReportServiceDto dto = PostVehicleReportServiceDto.of(member.getId(),
             mock(MultipartFile.class), mock(MultipartFile.class), mock(MultipartFile.class),
-            mock(MultipartFile.class), mock(MultipartFile.class), note);
+            mock(MultipartFile.class), mock(MultipartFile.class), note, parkingLoc, type);
         Clock fixedClock = Clock.fixed(takeDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
             ZoneId.systemDefault());
         willReturn(fixedClock.instant()).given(clock).instant();
         willReturn(fixedClock.getZone()).given(clock).getZone();
 
         //when
-        vehicleService.postTakeVehicleReport(dto);
+        vehicleService.postVehicleReport(dto);
 
         //then
         VehicleReport vehicleReport = vehicleReportRepository.findByWinningIdAndState(
@@ -64,6 +66,42 @@ class VehicleServiceImplTest extends IntegrationTestSupport {
         assertThat(vehicleReport)
             .extracting("type")
             .isEqualTo(VehicleReportType.TAKE);
+    }
+
+    @DisplayName(value = "반납 보고서를 제출한다. ")
+    @Test
+    public void postReturnVehicleReport() {
+        //given
+        LocalDate takeDate = LocalDate.of(1999, 8, 20);
+        LocalDate returnDate = LocalDate.of(1999, 8, 30);
+        Member member = memberRepository.save(createMember());
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+        ApplyRound applyRound = applyRoundRepository.save(
+            createApplyRound(vehicle, takeDate, returnDate));
+        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
+        Winning winning = winningRepository.save(createWinning(vehicle, apply));
+
+        String note = "note";
+        String parkingLoc = "parkingLoc";
+        VehicleReportType type = VehicleReportType.RETURN;
+
+        PostVehicleReportServiceDto dto = PostVehicleReportServiceDto.of(member.getId(),
+            mock(MultipartFile.class), mock(MultipartFile.class), mock(MultipartFile.class),
+            mock(MultipartFile.class), mock(MultipartFile.class), note, parkingLoc, type);
+        Clock fixedClock = Clock.fixed(returnDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
+            ZoneId.systemDefault());
+        willReturn(fixedClock.instant()).given(clock).instant();
+        willReturn(fixedClock.getZone()).given(clock).getZone();
+
+        //when
+        vehicleService.postVehicleReport(dto);
+
+        //then
+        VehicleReport vehicleReport = vehicleReportRepository.findByWinningIdAndState(
+            winning.getId(), VehicleReportState.ACTIVE);
+        assertThat(vehicleReport)
+            .extracting("type")
+            .isEqualTo(VehicleReportType.RETURN);
     }
 
     @DisplayName(value = "인수 보고서를 제출할때 인수 수령일과 맞는 당첨 내역이 없으면 예외가 발생한다.")
@@ -80,24 +118,57 @@ class VehicleServiceImplTest extends IntegrationTestSupport {
         Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
         winningRepository.save(createWinning(vehicle, apply));
         String note = "note";
-        PostTakeVehicleReportServiceDto dto = PostTakeVehicleReportServiceDto.of(member.getId(),
+        String parkingLoc = "parkingLoc";
+        VehicleReportType type = VehicleReportType.TAKE;
+        PostVehicleReportServiceDto dto = PostVehicleReportServiceDto.of(member.getId(),
             mock(MultipartFile.class), mock(MultipartFile.class), mock(MultipartFile.class),
-            mock(MultipartFile.class), mock(MultipartFile.class), note);
+            mock(MultipartFile.class), mock(MultipartFile.class), note, parkingLoc, type);
         Clock fixedClock = Clock.fixed(wrongDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
             ZoneId.systemDefault());
         willReturn(fixedClock.instant()).given(clock).instant();
         willReturn(fixedClock.getZone()).given(clock).getZone();
 
         //when then
-        assertThatThrownBy(() -> vehicleService.postTakeVehicleReport(dto))
+        assertThatThrownBy(() -> vehicleService.postVehicleReport(dto))
             .isInstanceOf(CustomException.class)
             .extracting("responseCode")
             .isEqualTo(ResponseCode.WINNING_NOT_FOUND);
     }
 
-    @DisplayName(value = "인수 보고서를 제출할때 예외가 발생하면 업로드한 이미지를 삭제한다.")
+    @DisplayName(value = "반납 보고서를 제출할때 반납일과 맞는 당첨 내역이 없으면 예외가 발생한다.")
     @Test
-    public void postTakeVehicleReportHasExceptionThenDeleteImage() {
+    public void postReturnVehicleReportExceptionWithDifferentReturnDate() {
+        //given
+        LocalDate takeDate = LocalDate.of(1999, 8, 20);
+        LocalDate returnDate = LocalDate.of(1999, 8, 30);
+        LocalDate wrongDate = LocalDate.of(1999, 9, 10);
+        Member member = memberRepository.save(createMember());
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+        ApplyRound applyRound = applyRoundRepository.save(
+            createApplyRound(vehicle, takeDate, returnDate));
+        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
+        winningRepository.save(createWinning(vehicle, apply));
+        String note = "note";
+        String parkingLoc = "parkingLoc";
+        VehicleReportType type = VehicleReportType.RETURN;
+        PostVehicleReportServiceDto dto = PostVehicleReportServiceDto.of(member.getId(),
+            mock(MultipartFile.class), mock(MultipartFile.class), mock(MultipartFile.class),
+            mock(MultipartFile.class), mock(MultipartFile.class), note, parkingLoc, type);
+        Clock fixedClock = Clock.fixed(wrongDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
+            ZoneId.systemDefault());
+        willReturn(fixedClock.instant()).given(clock).instant();
+        willReturn(fixedClock.getZone()).given(clock).getZone();
+
+        //when then
+        assertThatThrownBy(() -> vehicleService.postVehicleReport(dto))
+            .isInstanceOf(CustomException.class)
+            .extracting("responseCode")
+            .isEqualTo(ResponseCode.WINNING_NOT_FOUND);
+    }
+
+    @DisplayName(value = "보고서를 제출할때 예외가 발생하면 업로드한 이미지를 삭제한다.")
+    @Test
+    public void postVehicleReportHasExceptionThenDeleteImage() {
         //given
         LocalDate takeDate = LocalDate.of(1999, 8, 20);
         LocalDate returnDate = LocalDate.of(1999, 8, 30);
@@ -108,9 +179,11 @@ class VehicleServiceImplTest extends IntegrationTestSupport {
         Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
         winningRepository.save(createWinning(vehicle, apply));
         String note = "note";
-        PostTakeVehicleReportServiceDto dto = PostTakeVehicleReportServiceDto.of(member.getId(),
+        String parkingLoc = "parkingLoc";
+        VehicleReportType type = VehicleReportType.TAKE;
+        PostVehicleReportServiceDto dto = PostVehicleReportServiceDto.of(member.getId(),
             mock(MultipartFile.class), mock(MultipartFile.class), mock(MultipartFile.class),
-            mock(MultipartFile.class), mock(MultipartFile.class), note);
+            mock(MultipartFile.class), mock(MultipartFile.class), note, parkingLoc, type);
         Clock fixedClock = Clock.fixed(takeDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
             ZoneId.systemDefault());
         willReturn(fixedClock.instant()).given(clock).instant();
@@ -123,7 +196,7 @@ class VehicleServiceImplTest extends IntegrationTestSupport {
             .willReturn("dashboardImgUrl"); // 다섯 번째 호출 (실행되지 않음)
 
         //when then
-        assertThatThrownBy(() -> vehicleService.postTakeVehicleReport(dto))
+        assertThatThrownBy(() -> vehicleService.postVehicleReport(dto))
             .isInstanceOf(CustomException.class)
             .extracting("responseCode")
             .isEqualTo(ResponseCode.INTERNAL_SERVER_ERROR);

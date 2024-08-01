@@ -82,8 +82,9 @@ public class VehicleReport extends BaseEntity {
             .build();
     }
 
-    public static VehicleReport takeCreate(Winning winning, String frontImg, String leftImg,
-        String rightImg, String backImg, String dashboardImg) {
+    public static VehicleReport create(Winning winning, String frontImg, String leftImg,
+        String rightImg, String backImg, String dashboardImg, String parkingLoc,
+        VehicleReportType type) {
         return VehicleReport.builder()
             .winning(winning)
             .frontImg(frontImg)
@@ -91,7 +92,8 @@ public class VehicleReport extends BaseEntity {
             .rightImg(rightImg)
             .backImg(backImg)
             .dashboardImg(dashboardImg)
-            .type(VehicleReportType.TAKE)
+            .parkingLoc(parkingLoc)
+            .type(type)
             .state(VehicleReportState.ACTIVE)
             .build();
     }

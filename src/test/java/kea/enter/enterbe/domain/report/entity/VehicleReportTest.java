@@ -33,8 +33,8 @@ class VehicleReportTest extends IntegrationTestSupport {
         Apply apply = createApply(member, applyRound, vehicle);
         Winning winning = createWinning(vehicle, apply);
         //when
-        VehicleReport vehicleReport = VehicleReport.takeCreate(winning, "image",
-            "image", "image", "image", "image");
+        VehicleReport vehicleReport = VehicleReport.create(winning, "image",
+            "image", "image", "image", "image",null,VehicleReportType.TAKE);
         //then
         assertThat(vehicleReport)
             .extracting("type", "state")
