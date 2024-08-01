@@ -12,6 +12,9 @@ import java.util.function.Predicate;
 public enum ResponseCode {
     //MEMBER
     MEMBER_NOT_FOUND("MEM-ERR-001", HttpStatus.BAD_REQUEST, "멤버를 찾을 수 없습니다."),
+    LICENSE_NOT_FOUND("MEM-ERR-002", HttpStatus.BAD_REQUEST, "면허 정보를 찾을 수 없습니다."),
+    LICENSE_VALIDATION_FALSE("MEM-ERR-003", HttpStatus.BAD_REQUEST, "면허 진위여부 검사가 필요합니다."),
+    LICENSE_AUTHENTICITY_INCORRECT("MEM-ERR-004", HttpStatus.BAD_REQUEST, "면허 정보가 유효하지 않습니다."),
     //APPLY
     APPLY_NOT_FOUND("APL-ERR-001",HttpStatus.BAD_REQUEST ,"지원 정보를 찾을 수 없습니다."),
     //WINNING
