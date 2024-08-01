@@ -5,6 +5,7 @@ import kea.enter.enterbe.api.controller.ex.ExController;
 import kea.enter.enterbe.api.penalty.controller.AdminPenaltyController;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.service.ex.ExService;
+import kea.enter.enterbe.api.vehicle.controller.AdminVehicleController;
 import kea.enter.enterbe.api.vehicle.controller.VehicleController;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
@@ -16,7 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = {
-    ExController.class, SecurityConfig.class, VehicleController.class, AdminPenaltyController.class
+    ExController.class, SecurityConfig.class, VehicleController.class, AdminPenaltyController.class, AdminVehicleController.class
 })
 public abstract class ControllerTestSupport {
 
@@ -32,4 +33,6 @@ public abstract class ControllerTestSupport {
     protected FileUtil fileUtil;
     @MockBean
     protected AdminPenaltyService adminPenaltyService;
+    @MockBean
+    protected AdminVehicleService adminVehicleService;
 }

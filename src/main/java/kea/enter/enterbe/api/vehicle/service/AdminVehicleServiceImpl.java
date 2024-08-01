@@ -51,7 +51,6 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
         }
         else {
             String img = "";
-            img = uploadS3Image(dto.getImg());
 
             try {
                 img = uploadS3Image(dto.getImg());
