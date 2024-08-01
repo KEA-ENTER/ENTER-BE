@@ -25,19 +25,26 @@ public class JwtUtil {
 
     private final SecretKey key;
     private final long accessTokenExpTime;
+    private final long refreshTokenExpTime;
 
     public JwtUtil(
         @Value("${jwt.secret}") String secretKey,
-        @Value("${jwt.expiration_time}") long accessTokenExpTime
+        @Value("${jwt.access_exp}") long accessTokenExpTime,
+        @Value("${jwt.refresh_exp}") long refreshTokenExpTime
     ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenExpTime = accessTokenExpTime;
+        this.refreshTokenExpTime = refreshTokenExpTime;
     }
 
 
     public String createAccessToken(MemberInfoDto member) {
         return createToken(member, accessTokenExpTime);
+    }
+
+    public String createRefreshToken(MemberInfoDto member) {
+        return createToken(member, refreshTokenExpTime);
     }
 
 
