@@ -1,6 +1,6 @@
 package kea.enter.enterbe.api.vehicle.service.dto;
 
-import kea.enter.enterbe.domain.report.entity.VehicleReportType;
+import kea.enter.enterbe.domain.take.entity.VehicleReportType;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
