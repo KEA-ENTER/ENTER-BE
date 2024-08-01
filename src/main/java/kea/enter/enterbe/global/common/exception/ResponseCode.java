@@ -15,9 +15,11 @@ public enum ResponseCode {
     // PENALTY
     PENALTY_NOT_FOUND("PEN-ERR-001", HttpStatus.NOT_FOUND, "페널티를 찾을 수 없습니다."),
     //APPLY
-    APPLY_NOT_FOUND("APL-ERR-001",HttpStatus.NOT_FOUND ,"지원 정보를 찾을 수 없습니다."),
+    APPLY_NOT_FOUND("APL-ERR-001", HttpStatus.NOT_FOUND ,"지원 정보를 찾을 수 없습니다."),
     //WINNING
-    WINNING_NOT_FOUND("WIN-ERR-001",HttpStatus.NOT_FOUND,"당첨 정보를 찾을 수 없습니다."),
+    WINNING_NOT_FOUND("WIN-ERR-001", HttpStatus.NOT_FOUND,"당첨 정보를 찾을 수 없습니다."),
+    // APPLY_ROUND
+    APPLY_ROUND_NOT_FOUND("APR-ERR-001", HttpStatus.NOT_FOUND, "신청 회차를 찾을 수 없습니다."),
 
     //GLOBAL
     BAD_REQUEST("GLB-ERR-001", HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),

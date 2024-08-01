@@ -33,6 +33,10 @@ public class Winning extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private WinningState state;
 
+    public void deleteWinning() {
+        this.state = WinningState.INACTIVE;
+    }
+
     @Builder
     public Winning(Vehicle vehicle, Apply apply, WinningState state) {
         this.vehicle = vehicle;
