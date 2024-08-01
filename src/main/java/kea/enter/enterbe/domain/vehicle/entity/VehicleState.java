@@ -7,5 +7,6 @@ public enum VehicleState {
     ON_RENT,
     WAIT_RETURN,
     RETURN_COMPLETE,
+    RENT_UNAVAILABLE,
     INACTIVE
 }

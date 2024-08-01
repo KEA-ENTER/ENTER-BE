@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kea.enter.enterbe.domain.member.entity.Member;
+import kea.enter.enterbe.domain.penalty.entity.PenaltyState;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,6 +37,10 @@ public class Question extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
     private QuestionState state;
+
+    public void deleteQuestion() {
+        this.state = QuestionState.INACTIVE;
+    }
 
     @Builder
     public Question(Member member, String content, QuestionCategory category,

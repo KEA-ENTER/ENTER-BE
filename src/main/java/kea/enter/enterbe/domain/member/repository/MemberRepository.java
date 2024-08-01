@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional(readOnly = true)
 public interface MemberRepository extends JpaRepository<Member, Long> {
+
     Optional<Member> findByIdAndState(Long id, MemberState state);
     Optional<Member> findMemberByEmail(String email);
 }
+
