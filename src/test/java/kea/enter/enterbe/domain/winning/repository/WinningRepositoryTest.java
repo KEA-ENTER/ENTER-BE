@@ -1,8 +1,10 @@
 package kea.enter.enterbe.domain.winning.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.domain.apply.entity.Apply;
@@ -19,6 +21,7 @@ import kea.enter.enterbe.domain.winning.entity.Winning;
 import kea.enter.enterbe.domain.winning.entity.WinningState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 class WinningRepositoryTest extends IntegrationTestSupport {
 
@@ -79,6 +82,88 @@ class WinningRepositoryTest extends IntegrationTestSupport {
             member.getId(), wrongDate, WinningState.ACTIVE);
         //then
         assertThat(savedWinning).isEmpty();
+    }
+
+    @DisplayName(value = "해당 신청 회차의 당첨자 목록을 조회한다.")
+    @Test
+    public void findAllByApplyApplyRoundIdAndState() {
+        // given
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024, 7, 29), LocalDate.of(2024, 7, 30)));
+
+        Member member1 = memberRepository.save(createMember());
+        Member member2 = memberRepository.save(createMember());
+
+        Apply apply1 = createApply(member1, applyRound, vehicle);
+        Apply apply2 = createApply(member2, applyRound, vehicle);
+        applyRepository.saveAll(List.of(apply1, apply2));
+
+        Winning winning = winningRepository.save(createWinning(vehicle, apply1));
+
+        // when
+        List<Winning> winningList = winningRepository.findAllByApplyApplyRoundIdAndState(applyRound.getId(), WinningState.ACTIVE);
+
+        // then
+        assertThat(winningList).hasSize(1)
+            .extracting("id", "state")
+            .containsExactlyInAnyOrder(
+                tuple(winning.getId(), WinningState.ACTIVE)
+            );
+    }
+
+    @Transactional
+    @DisplayName(value = "해당 신청 회차의 당첨 취소자 목록을 조회한다.")
+    @Test
+    public void findAllByApplyApplyRoundIdAndStateWithInactive() {
+        // given
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024, 7, 29), LocalDate.of(2024, 7, 30)));
+
+        Member member1 = memberRepository.save(createMember());
+        Member member2 = memberRepository.save(createMember());
+
+        Apply apply1 = createApply(member1, applyRound, vehicle);
+        Apply apply2 = createApply(member2, applyRound, vehicle);
+        applyRepository.saveAll(List.of(apply1, apply2));
+
+        Winning winning = winningRepository.save(createWinning(vehicle, apply1));
+        winning.deleteWinning();
+
+        // when
+        List<Winning> winningList = winningRepository.findAllByApplyApplyRoundIdAndState(applyRound.getId(), WinningState.INACTIVE);
+
+        // then
+        assertThat(winningList).hasSize(1)
+            .extracting("id", "state")
+            .containsExactlyInAnyOrder(
+                tuple(winning.getId(), WinningState.INACTIVE)
+            );
+    }
+
+    @DisplayName(value = "해당 신청 회차의 당첨자 목록을 조회할 때 신청 회차가 다른 경우 조회되지 않는다.")
+    @Test
+    public void findAllByApplyRoundIdAndStateWithOtherApplyRound() {
+        // given
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+
+        ApplyRound applyRound1 = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024, 7, 29), LocalDate.of(2024, 7, 30)));
+        ApplyRound applyRound2 = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024, 7, 29), LocalDate.of(2024, 7, 30)));
+
+
+        Member member1 = memberRepository.save(createMember());
+        Member member2 = memberRepository.save(createMember());
+
+        Apply apply1 = createApply(member1, applyRound1, vehicle);
+        Apply apply2 = createApply(member2, applyRound1, vehicle);
+        applyRepository.saveAll(List.of(apply1, apply2));
+
+        // when
+        List<Apply> applyList = applyRepository.findAllByApplyRoundIdAndState(applyRound2.getId(), ApplyState.ACTIVE);
+
+        // then
+        assertThat(applyList).isEmpty();
     }
 
     private Winning createWinning(Vehicle vehicle, Apply apply) {

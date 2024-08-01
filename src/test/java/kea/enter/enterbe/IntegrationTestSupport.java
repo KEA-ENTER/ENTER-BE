@@ -1,6 +1,7 @@
 package kea.enter.enterbe;
 
 import java.time.Clock;
+import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.service.ex.ExService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
@@ -51,6 +52,8 @@ public abstract class IntegrationTestSupport {
     protected FileUtil fileUtil;
     @Autowired
     protected AdminPenaltyService adminPenaltyService;
+    @Autowired
+    protected AdminApplyService adminApplyService;
     @MockBean
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean
