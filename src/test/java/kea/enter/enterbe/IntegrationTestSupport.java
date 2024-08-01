@@ -3,10 +3,15 @@ package kea.enter.enterbe;
 import java.time.Clock;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.service.ex.ExService;
+import kea.enter.enterbe.api.question.service.QuestionService;
+import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.ex.repository.ExRepository;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
+import kea.enter.enterbe.domain.question.repository.QuestionRepository;
+import kea.enter.enterbe.api.vehicle.service.VehicleService;
+import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.note.repository.VehicleNoteRepository;
 import kea.enter.enterbe.domain.penalty.repository.PenaltyRepository;
 import kea.enter.enterbe.domain.report.repository.VehicleReportRepository;
@@ -27,6 +32,9 @@ public abstract class IntegrationTestSupport {
 
     @Autowired
     protected ExService exService;
+
+    @Autowired
+    protected QuestionService questionService;
     @Autowired
     protected ExRepository exRepository;
     @Autowired
@@ -59,10 +67,16 @@ public abstract class IntegrationTestSupport {
     protected Clock clock;
     @MockBean
     protected ClockConfig clockConfig;
+    @MockBean
+    protected AdminVehicleService adminVehicleService;
+
+    @Autowired
+    protected QuestionRepository questionRepository;
 
     @AfterEach
     void tearDown() {
         exRepository.deleteAllInBatch();
+        questionRepository.deleteAllInBatch();
         vehicleNoteRepository.deleteAllInBatch();
         vehicleReportRepository.deleteAllInBatch();
         winningRepository.deleteAllInBatch();
