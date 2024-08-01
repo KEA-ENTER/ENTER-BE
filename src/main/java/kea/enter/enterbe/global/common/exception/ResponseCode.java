@@ -10,6 +10,14 @@ import java.util.function.Predicate;
 @Getter
 @RequiredArgsConstructor
 public enum ResponseCode {
+    //MEMBER
+    MEMBER_NOT_FOUND("MEM-ERR-001", HttpStatus.NOT_FOUND, "멤버를 찾을 수 없습니다."),
+    // PENALTY
+    PENALTY_NOT_FOUND("PEN-ERR-001", HttpStatus.NOT_FOUND, "페널티를 찾을 수 없습니다."),
+    //APPLY
+    APPLY_NOT_FOUND("APL-ERR-001",HttpStatus.NOT_FOUND ,"지원 정보를 찾을 수 없습니다."),
+    //WINNING
+    WINNING_NOT_FOUND("WIN-ERR-001",HttpStatus.NOT_FOUND,"당첨 정보를 찾을 수 없습니다."),
 
     // AUTh
     PASSWORD_INCORRECT("AUT-ERR-001", HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다"),
