@@ -21,7 +21,7 @@ public class LicenseController {
 
     private final LicenseService licenseService;
 
-    // 면어 여부 조회
+    // 면허 여부 조회
     @GetMapping("/license")
     public ResponseEntity<CustomResponseCode> getLicenseInformation() {
         Long memberId = 1L;
