@@ -3,12 +3,10 @@ package kea.enter.enterbe;
 import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
-import kea.enter.enterbe.api.service.ex.ExService;
 import kea.enter.enterbe.api.question.service.QuestionService;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
-import kea.enter.enterbe.domain.ex.repository.ExRepository;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
 import kea.enter.enterbe.domain.question.repository.QuestionRepository;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleNoteRepository;
@@ -30,12 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 public abstract class IntegrationTestSupport {
 
     @Autowired
-    protected ExService exService;
-
-    @Autowired
     protected QuestionService questionService;
-    @Autowired
-    protected ExRepository exRepository;
     @Autowired
     protected WinningRepository winningRepository;
     @Autowired
@@ -76,7 +69,6 @@ public abstract class IntegrationTestSupport {
 
     @AfterEach
     void tearDown() {
-        exRepository.deleteAllInBatch();
         questionRepository.deleteAllInBatch();
         vehicleNoteRepository.deleteAllInBatch();
         vehicleReportRepository.deleteAllInBatch();
