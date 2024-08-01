@@ -26,5 +26,18 @@ public interface WinningRepository extends JpaRepository<Winning, Long> {
         @Param("state") WinningState state
     );
 
+    @Query(value = "SELECT w "
+        + "FROM Winning w "
+        + "left outer join w.apply a "
+        + "left outer join a.applyRound ar "
+        + "where a.member.id = :memberId "
+        + "and ar.returnDate = :returnDate "
+        + "and w.state = :state ")
+    Optional<Winning> findByMemberIdAndReturnDateAndState(
+        @Param("memberId") Long memberId,
+        @Param("returnDate") LocalDate returnDate,
+        @Param("state") WinningState state
+    );
+  
     List<Winning> findAllByApplyApplyRoundIdAndState(Long applyRoundId, WinningState state);
 }
