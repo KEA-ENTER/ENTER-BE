@@ -44,3 +44,6 @@ out/
 
 ### Temp Data ###
 src/main/resources/data.sql
+
+### Query DSL ###
+/src/main/generated/
