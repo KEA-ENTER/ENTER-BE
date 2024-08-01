@@ -1,9 +1,5 @@
 server:
   port: 8090
-jwt:
-  access_exp: 360000
-  refresh_exp: 8400000
-  secret: "NsWdPaheBaGjRYuXQ1nTrTVmFRrjFvzONsWdPaheBaGjRYuXQ1nTrTVmFRrjFvzONsWdPaheBaGjRYuXQ1nTrTVmFRrjFvzONsWdPaheBaGjRYuXQ1nTrTVmFRrjFvzONsWdPaheBaGjRYuXQ1nTrTVmFRrjFvzO"
 spring:
   application:
     name: ENTER-BE
@@ -16,6 +12,7 @@ spring:
       - openapi
       - vault
       - kc
+      - jwt
     active: local
   servlet:
       multipart:

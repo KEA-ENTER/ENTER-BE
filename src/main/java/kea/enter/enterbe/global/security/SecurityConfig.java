@@ -1,8 +1,8 @@
 package kea.enter.enterbe.global.security;
 
+import java.util.List;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +27,7 @@ public class SecurityConfig {
     private static final String[] USER_ROLE = {};
     private static final String[] ADMIN_ROLE = {};
     private static final String[] ANONYMOUS_ROLE = {};
-    private static final String[] CORS_WHITELIST = {"http://localhost:3000"};
+    private static final List<String> CORS_WHITELIST = List.of("http://localhost:3000");
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
@@ -54,14 +54,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
-    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin(CORS_WHITELIST[0]);
+        corsConfiguration.setAllowedOriginPatterns(CORS_WHITELIST);
         corsConfiguration.addAllowedMethod("GET, POST, DELETE, PATCH");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowCredentials(true);

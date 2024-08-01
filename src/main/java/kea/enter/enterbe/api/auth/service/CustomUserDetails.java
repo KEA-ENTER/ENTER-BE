@@ -6,13 +6,16 @@ import java.util.Collection;
 import java.util.List;
 import kea.enter.enterbe.api.auth.dto.MemberInfoDto;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
-public record CustomUserDetails(MemberInfoDto member) implements UserDetails {
+@RequiredArgsConstructor
+public class CustomUserDetails implements UserDetails {
 
+    private final MemberInfoDto member;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<String> roles = new ArrayList<>();

@@ -1,0 +1,26 @@
+spring:
+    config:
+        activate:
+            on-profile: local
+jwt:
+    access_exp: 360000
+    refresh_exp: 8400000
+    secret: "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"
+---
+spring:
+    config:
+        activate:
+            on-profile: test
+jwt:
+    access_exp: 360000
+    refresh_exp: 8400000
+    secret: "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"
+---
+spring:
+    config:
+        activate:
+            on-profile: dev
+jwt:
+    access_exp: 360000
+    refresh_exp: 8400000
+    secret: ${jwt-secret}
