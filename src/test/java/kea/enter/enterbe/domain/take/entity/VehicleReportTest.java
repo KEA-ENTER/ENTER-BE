@@ -1,4 +1,4 @@
-package kea.enter.enterbe.domain.note.entity;
+package kea.enter.enterbe.domain.take.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,46 +9,36 @@ import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
 import kea.enter.enterbe.domain.member.entity.MemberState;
-import kea.enter.enterbe.domain.take.entity.VehicleReport;
-import kea.enter.enterbe.domain.take.entity.VehicleReportState;
-import kea.enter.enterbe.domain.take.entity.VehicleReportType;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
-import kea.enter.enterbe.domain.vehicle.entity.VehicleNote;
-import kea.enter.enterbe.domain.vehicle.entity.VehicleNoteState;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class VehicleNoteTest extends IntegrationTestSupport {
+class VehicleReportTest extends IntegrationTestSupport {
 
-    @DisplayName("차량 특이사항을 생성한다.")
+    @DisplayName(value = "인수보고서를 생성한다.")
     @Test
-    void create() {
+    public void takeCreate() throws Exception {
         //given
-        LocalDate takeDate = LocalDate.of(1999,8,20);
-        LocalDate returnDate = LocalDate.of(1999,8,30);
+        LocalDate takeDate = LocalDate.of(1999, 8, 20);
+        LocalDate returnDate = LocalDate.of(1999, 8, 30);
         Vehicle vehicle = createVehicle();
         Member member = createMember();
         ApplyRound applyRound = createApplyRound(vehicle, takeDate, returnDate);
         Apply apply = createApply(member, applyRound, vehicle);
         Winning winning = createWinning(vehicle, apply);
-        VehicleReport vehicleReport = createVehicleReport(winning);
         //when
-        VehicleNote vehicleNote = VehicleNote.create(vehicle, vehicleReport, "content");
+        VehicleReport vehicleReport = VehicleReport.create(winning, "image",
+            "image", "image", "image", "image",null,VehicleReportType.TAKE);
         //then
-        assertThat(vehicleNote)
-            .extracting("state")
-            .isEqualTo(VehicleNoteState.ACTIVE);
-    }
-
-    private VehicleReport createVehicleReport(Winning winning) {
-        return VehicleReport.of(winning, "image", "image", "image", "image", "image",
-            "location", VehicleReportType.TAKE, VehicleReportState.ACTIVE);
+        assertThat(vehicleReport)
+            .extracting("type", "state")
+            .contains(VehicleReportType.TAKE, VehicleReportState.ACTIVE);
     }
 
     private Winning createWinning(Vehicle vehicle, Apply apply) {
@@ -63,14 +53,14 @@ class VehicleNoteTest extends IntegrationTestSupport {
         return ApplyRound.of(vehicle, 1, takeDate, returnDate, ApplyRoundState.ACTIVE);
     }
 
-    private Member createMember() {
-        return Member.of("employeeNo", "name", "email", "password", "licenseId",
-            "licensePassword", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
-    }
-
     private Vehicle createVehicle() {
         return Vehicle.of("vehicleNo", "company", "model", 4, VehicleFuel.DIESEL, "img",
             VehicleState.AVAILABLE);
+    }
+
+    private Member createMember() {
+        return Member.of("employeeNo", "name", "email", "password", "licenseId",
+            "licensePassword", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 
 }

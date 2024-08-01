@@ -1,8 +1,8 @@
 package kea.enter.enterbe.domain.round.repository;
 
 import kea.enter.enterbe.IntegrationTestSupport;
-import kea.enter.enterbe.domain.round.entity.ApplyRound;
-import kea.enter.enterbe.domain.round.entity.ApplyRoundState;
+import kea.enter.enterbe.domain.apply.entity.ApplyRound;
+import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;

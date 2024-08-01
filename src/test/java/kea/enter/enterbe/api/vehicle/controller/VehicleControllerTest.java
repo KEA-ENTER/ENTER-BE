@@ -3,7 +3,7 @@ package kea.enter.enterbe.api.vehicle.controller;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import kea.enter.enterbe.ControllerTestSupport;
-import kea.enter.enterbe.domain.report.entity.VehicleReportType;
+import kea.enter.enterbe.domain.take.entity.VehicleReportType;
 import org.apache.hc.core5.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
