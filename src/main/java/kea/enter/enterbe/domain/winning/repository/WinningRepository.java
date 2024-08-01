@@ -1,6 +1,7 @@
 package kea.enter.enterbe.domain.winning.repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import kea.enter.enterbe.domain.winning.entity.Winning;
 import kea.enter.enterbe.domain.winning.entity.WinningState;
@@ -37,4 +38,6 @@ public interface WinningRepository extends JpaRepository<Winning, Long> {
         @Param("returnDate") LocalDate returnDate,
         @Param("state") WinningState state
     );
+  
+    List<Winning> findAllByApplyApplyRoundIdAndState(Long applyRoundId, WinningState state);
 }

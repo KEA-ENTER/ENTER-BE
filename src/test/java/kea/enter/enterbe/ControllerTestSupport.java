@@ -1,6 +1,7 @@
 package kea.enter.enterbe;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.controller.ex.ExController;
 import kea.enter.enterbe.api.question.controller.QuestionController;
 import kea.enter.enterbe.api.question.service.QuestionService;
@@ -36,5 +37,7 @@ public abstract class ControllerTestSupport {
     protected FileUtil fileUtil;
     @MockBean
     protected AdminPenaltyService adminPenaltyService;
+    @MockBean
+    protected AdminApplyService adminApplyService;
 
 }

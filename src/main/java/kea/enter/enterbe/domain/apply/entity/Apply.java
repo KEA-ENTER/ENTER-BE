@@ -7,7 +7,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.round.entity.ApplyRound;
@@ -28,7 +27,7 @@ public class Apply extends BaseEntity {
     @JoinColumn(name="member_id", nullable = false)
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="apply_round_id", nullable = false)
     private ApplyRound applyRound;
 

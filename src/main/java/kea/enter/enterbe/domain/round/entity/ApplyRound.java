@@ -6,9 +6,13 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -22,11 +26,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "apply_round")
 public class ApplyRound extends BaseEntity {
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
-    @Column(name = "applu_round", nullable = false)
+    @Column(name = "apply_round", nullable = false)
     private Integer applyRound;
 
     @Column(name = "take_date")
@@ -38,6 +42,9 @@ public class ApplyRound extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
     private ApplyRoundState state;
+
+    @OneToMany(mappedBy = "applyRound", fetch = FetchType.LAZY)
+    private List<Apply> applyList = new ArrayList<>();
 
     @Builder
     public ApplyRound(Vehicle vehicle, Integer applyRound, LocalDate takeDate, LocalDate returnDate,
