@@ -34,7 +34,7 @@ public class AdminApplyServiceImpl implements AdminApplyService {
 
     /* 응모 현황 조회 API */
     public GetApplySituationResponse getApplySituation(GetApplySituationServiceDto dto) {
-        // 오늘을 기준으로 오늘이 몇요일인지 구한다
+        // 오늘을 기준으로 이번주 기간을 구한다
         LocalDate today = dto.getToday();
         LocalDate thisMonday = today.with(DayOfWeek.MONDAY);  // 이번주 월요일
         LocalDate thisSunday = thisMonday.plusDays(6);  // 이번주 일요일
