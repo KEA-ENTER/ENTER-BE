@@ -1,10 +1,7 @@
 package kea.enter.enterbe.global.common.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -54,13 +51,13 @@ public class GlobalExceptionHandler {
 
     //validation exception 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> processValidationError(MethodArgumentNotValidException e){
+    public ResponseEntity<ErrorResponse> processValidationError(MethodArgumentNotValidException e) {
         log.error("processValidationError: {}", e.getMessage());
         final ErrorResponse errorResponse = ErrorResponse.of(ResponseCode.BAD_REQUEST,
-                e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+            e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         return ResponseEntity
-                .status(e.getStatusCode())
-                .body(errorResponse);
+            .status(e.getStatusCode())
+            .body(errorResponse);
     }
 
     //잘못된 자료형으로 인한 에러
@@ -75,13 +72,15 @@ public class GlobalExceptionHandler {
 
     //잘못된 자료형으로 인한 에러
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
-        final ErrorResponse errorResponse = ErrorResponse.of(ResponseCode.BAD_REQUEST,e);
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(
+        HttpMessageNotReadableException e) {
+        final ErrorResponse errorResponse = ErrorResponse.of(ResponseCode.BAD_REQUEST, e);
         return ResponseEntity
-                .status(ResponseCode.BAD_REQUEST.getStatus())
-                .body(errorResponse);
+            .status(ResponseCode.BAD_REQUEST.getStatus())
+            .body(errorResponse);
 
     }
+
     //지원하지 않는 media type 에러
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ErrorResponse> httpMediaTypeNotSupportedExceptionError(
@@ -110,4 +109,5 @@ public class GlobalExceptionHandler {
             .status(e.getStatusCode())
             .body(errorResponse);
     }
+
 }
