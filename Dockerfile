@@ -8,4 +8,4 @@ EXPOSE 8090
 
 ENV TZ Asia/Seoul
 
-ENTRYPOINT ["java", "${JAVA_OPTS1} ${JAVA_OPTS2} ${JAVA_OPTS3}", "-jar", "-Dspring.profiles.active=dev /app.jar"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS1} ${JAVA_OPTS2} ${JAVA_OPTS2} -jar -Dspring.profiles.active=dev /app.jar"]
