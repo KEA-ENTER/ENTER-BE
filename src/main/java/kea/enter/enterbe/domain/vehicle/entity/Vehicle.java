@@ -37,7 +37,7 @@ public class Vehicle extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private VehicleFuel fuel;
 
-    @Column(name = "img", nullable = false)
+    @Column(name = "img")
     private String img;
 
     @Column(name = "state", nullable = false)
