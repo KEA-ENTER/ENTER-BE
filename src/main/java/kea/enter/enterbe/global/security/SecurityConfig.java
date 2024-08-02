@@ -30,6 +30,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private static final List<String> CORS_WHITELIST = List.of("http://localhost:3000");
+    private static final List<String> CORS_METHODS = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS");
+
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
@@ -75,7 +77,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOriginPatterns(CORS_WHITELIST);
-        corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
+        corsConfiguration.setAllowedMethods(CORS_METHODS);
         corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
         corsConfiguration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
