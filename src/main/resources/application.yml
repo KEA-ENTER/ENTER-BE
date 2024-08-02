@@ -1,5 +1,6 @@
 server:
   port: 8090
+
 spring:
   application:
     name: ENTER-BE
@@ -12,6 +13,7 @@ spring:
       - openapi
       - vault
       - kc
+      - jwt
     active: local
   servlet:
       multipart:

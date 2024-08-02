@@ -4,6 +4,7 @@ import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.question.service.QuestionService;
+import kea.enter.enterbe.api.take.service.AdminTakeService;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
@@ -26,7 +27,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 public abstract class IntegrationTestSupport {
-
     @Autowired
     protected QuestionService questionService;
     @Autowired
@@ -52,7 +52,11 @@ public abstract class IntegrationTestSupport {
     @Autowired
     protected AdminPenaltyService adminPenaltyService;
     @Autowired
+    protected AdminVehicleService adminVehicleService;
+    @Autowired
     protected AdminApplyService adminApplyService;
+    @Autowired
+    protected AdminTakeService adminTakeService;
     @MockBean
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean
@@ -61,8 +65,6 @@ public abstract class IntegrationTestSupport {
     protected Clock clock;
     @MockBean
     protected ClockConfig clockConfig;
-    @MockBean
-    protected AdminVehicleService adminVehicleService;
 
     @Autowired
     protected QuestionRepository questionRepository;

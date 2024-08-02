@@ -4,9 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.enter.enterbe.api.apply.controller.response.GetApplySituationResponse;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
+import kea.enter.enterbe.api.apply.service.dto.GetApplySituationServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 
 @Tag(name = "신청", description = "[관리자] Apply")
 @RestController
@@ -20,7 +22,8 @@ public class AdminApplyController {
     @PostMapping("")
     public ResponseEntity<GetApplySituationResponse> getApplySituation() {
         // TODO: 어드민 권한 검사
-        GetApplySituationResponse response = adminApplyService.getApplySituation();
+        GetApplySituationServiceDto dto = GetApplySituationServiceDto.of(LocalDate.now());
+        GetApplySituationResponse response = adminApplyService.getApplySituation(dto);
         return ResponseEntity.ok(response);
     }
 }
