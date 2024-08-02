@@ -22,7 +22,7 @@ import static kea.enter.enterbe.domain.penalty.entity.PenaltyReason.BROKEN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-class AdminPenaltyServiceImplTest extends IntegrationTestSupport {
+class AdminPenaltyServiceTest extends IntegrationTestSupport {
     @DisplayName(value = "사용자 페널티를 생성한다")
     @Test
     public void postPenalty() {
