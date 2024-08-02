@@ -137,7 +137,7 @@ pipeline {
                             sudo docker pull ${BACKEND_CR_ADDRESS}backend:latest &&
                             sudo docker stop app || true &&
                             sudo docker rm app || true &&
-                            sudo docker run -d -e JAVA_OPTS1=-Ddev-vault-token=${{VAULT-TOKEN}} -e JAVA_OPTS2=-Ddev-vault-host=${{VAULT-HOST}} -e JAVA_OPTS3=-Ddev-vault-port=${{VAULT-PORT}} --name app -p ${BACKEND_APP_PORT}:${BACKEND_APP_PORT} ${BACKEND_CR_ADDRESS}backend:latest
+                            sudo docker run -d -e JAVA_OPTS1=-Ddev-vault-token=${VAULT_TOKEN} -e JAVA_OPTS2=-Ddev-vault-host=${VAULT_HOST} -e JAVA_OPTS3=-Ddev-vault-port=${VAULT_PORT} --name app -p ${BACKEND_APP_PORT}:${BACKEND_APP_PORT} ${BACKEND_CR_ADDRESS}backend:latest
                             '
                         """
                     }
@@ -216,7 +216,7 @@ pipeline {
                             sudo docker pull ${BACKEND_CR_ADDRESS}backend:latest &&
                             sudo docker stop app || true &&
                             sudo docker rm app || true &&
-                            sudo docker run -d -e JAVA_OPTS1=-Ddev-vault-token=${{VAULT-TOKEN}} -e JAVA_OPTS2=-Ddev-vault-host=${{VAULT-HOST}} -e JAVA_OPTS3=-Ddev-vault-port=${{VAULT-PORT}} --name app -p ${BACKEND_APP_PORT}:${BACKEND_APP_PORT} ${BACKEND_CR_ADDRESS}backend:latest
+                            sudo docker run -d -e JAVA_OPTS1=-Ddev-vault-token=${VAULT_TOKEN} -e JAVA_OPTS2=-Ddev-vault-host=${VAULT_HOST} -e JAVA_OPTS3=-Ddev-vault-port=${VAULT_PORT} --name app -p ${BACKEND_APP_PORT}:${BACKEND_APP_PORT} ${BACKEND_CR_ADDRESS}backend:latest
                             '
                         """
                     }
