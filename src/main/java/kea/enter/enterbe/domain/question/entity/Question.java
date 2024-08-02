@@ -42,6 +42,11 @@ public class Question extends BaseEntity {
         this.state = QuestionState.INACTIVE;
     }
 
+    public void modifyQuestion(String content, QuestionCategory category) {
+        this.content = content;
+        this.category = category;
+    }
+
     @Builder
     public Question(Member member, String content, QuestionCategory category,
         QuestionState state) {
