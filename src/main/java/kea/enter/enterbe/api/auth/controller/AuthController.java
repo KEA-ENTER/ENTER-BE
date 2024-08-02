@@ -27,7 +27,7 @@ public class AuthController {
     public ResponseEntity<TokenDao> login(LoginRequestDto loginRequestDto, Authorization authorization) {
         if (authorization != null) {
             // 이미 로그인한 상태
-            throw new CustomException(ResponseCode.PASSWORD_INCORRECT);
+            throw new CustomException(ResponseCode.ALREADY_LOGGED_IN);
         }
         return ResponseEntity.ok(authService.login(loginRequestDto));
     }

@@ -6,6 +6,7 @@ import kea.enter.enterbe.api.auth.service.AuthService;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
 import kea.enter.enterbe.api.penalty.controller.AdminPenaltyController;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
+import kea.enter.enterbe.api.question.controller.QuestionController;
 import kea.enter.enterbe.api.vehicle.controller.VehicleController;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.global.security.JwtUtil;
@@ -19,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = {
     VehicleController.class, AdminPenaltyController.class,
-    AuthController.class
+    AuthController.class, QuestionController.class
 })
 @Import({SecurityConfig.class})
 public abstract class ControllerTestSupport {

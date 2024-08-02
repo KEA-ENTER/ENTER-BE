@@ -2,18 +2,18 @@ package kea.enter.enterbe.api.auth.dto;
 
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class LoginRequestDto {
-    @NotNull
+    @NotBlank
     @Email
-    private String email;
+    private final String email;
 
-    @NotNull
-    private String password;
+    @NotBlank
+    private final String password;
 
     @Builder
     public LoginRequestDto(
