@@ -54,6 +54,15 @@ public class AdminVehicleRequest {
         this.state = state;
     }
 
+    public AdminVehicleRequest(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, VehicleState state) {
+        this.vehicleNo = vehicleNo;
+        this.company = company;
+        this.model = model;
+        this.seats = seats;
+        this.fuel = fuel;
+        this.state = state;
+    }
+
     public static AdminVehicleRequest of(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
         return AdminVehicleRequest.builder()
             .vehicleNo(vehicleNo)

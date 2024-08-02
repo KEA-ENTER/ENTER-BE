@@ -27,7 +27,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 public abstract class IntegrationTestSupport {
-
     @Autowired
     protected QuestionService questionService;
     @Autowired
@@ -53,6 +52,8 @@ public abstract class IntegrationTestSupport {
     @Autowired
     protected AdminPenaltyService adminPenaltyService;
     @Autowired
+    protected AdminVehicleService adminVehicleService;
+    @Autowired
     protected AdminApplyService adminApplyService;
     @Autowired
     protected AdminTakeService adminTakeService;
@@ -64,8 +65,6 @@ public abstract class IntegrationTestSupport {
     protected Clock clock;
     @MockBean
     protected ClockConfig clockConfig;
-    @MockBean
-    protected AdminVehicleService adminVehicleService;
 
     @Autowired
     protected QuestionRepository questionRepository;

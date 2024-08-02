@@ -12,8 +12,10 @@ import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.question.service.QuestionService;
 import kea.enter.enterbe.api.take.controller.AdminTakeController;
 import kea.enter.enterbe.api.take.service.AdminTakeService;
+import kea.enter.enterbe.api.vehicle.controller.AdminVehicleController;
 import kea.enter.enterbe.api.vehicle.controller.VehicleController;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
+import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.global.security.JwtUtil;
 import kea.enter.enterbe.global.security.SecurityConfig;
 import kea.enter.enterbe.global.util.FileUtil;
@@ -40,6 +42,10 @@ public abstract class ControllerTestSupport {
     protected FileUtil fileUtil;
     @MockBean
     protected AdminPenaltyService adminPenaltyService;
+    @MockBean
+    protected AdminVehicleService adminVehicleService;
+    @MockBean
+    protected VehicleRepository vehicleRepository;
     @MockBean
     protected AuthService authService;
     @MockBean
