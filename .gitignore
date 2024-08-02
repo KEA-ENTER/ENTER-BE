@@ -39,6 +39,9 @@ out/
 /nbdist/
 /.nb-gradle/
 
+### QODANA ###
+qodana.yaml
+
 ### VS Code ###
 .vscode/
 

@@ -4,6 +4,8 @@ import kea.enter.enterbe.api.auth.dto.MemberInfoDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
+import kea.enter.enterbe.global.common.exception.CustomException;
+import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Member member = memberRepository.findByIdAndState(Long.parseLong(id), MemberState.ACTIVE)
-            .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저가 없습니다."));
+            .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
 
         return new CustomUserDetails(mapper.map(member, MemberInfoDto.class));
     }
