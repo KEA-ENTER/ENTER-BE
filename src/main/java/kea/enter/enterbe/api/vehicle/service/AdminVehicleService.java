@@ -1,8 +1,10 @@
 package kea.enter.enterbe.api.vehicle.service;
 
-import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
+import java.util.Optional;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
+import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 
 public interface AdminVehicleService {
+    Optional<Vehicle> checkVehicle(String vehicleNo);
     void createVehicle(CreateVehicleDto service);
 }

@@ -1,12 +1,9 @@
 package kea.enter.enterbe.api.vehicle.service.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter

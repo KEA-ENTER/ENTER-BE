@@ -25,7 +25,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 public abstract class IntegrationTestSupport {
-
     @Autowired
     protected ExService exService;
     @Autowired
@@ -40,7 +39,7 @@ public abstract class IntegrationTestSupport {
     protected VehicleReportRepository vehicleReportRepository;
     @Autowired
     protected VehicleNoteRepository vehicleNoteRepository;
-    @Autowired
+    @MockBean
     protected VehicleRepository vehicleRepository;
     @Autowired
     protected MemberRepository memberRepository;
@@ -52,6 +51,8 @@ public abstract class IntegrationTestSupport {
     protected FileUtil fileUtil;
     @Autowired
     protected AdminPenaltyService adminPenaltyService;
+    @Autowired
+    protected AdminVehicleService adminVehicleService;
     @MockBean
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean
@@ -60,8 +61,6 @@ public abstract class IntegrationTestSupport {
     protected Clock clock;
     @MockBean
     protected ClockConfig clockConfig;
-    @MockBean
-    protected AdminVehicleService adminVehicleService;
 
     @AfterEach
     void tearDown() {
