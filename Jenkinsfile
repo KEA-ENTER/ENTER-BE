@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/develop']], extensions: [], userRemoteConfigs: [[credentialsId: 'mingy1206-github', url: "${GITHUB_ADDRESS_BE}";]])
+                checkout scmGit(branches: [[name: '*/develop']], extensions: [], userRemoteConfigs: [[credentialsId: 'mingy1206-github', url: "${GITHUB_ADDRESS_BE}"]])
             }
         }
         stage('Build App') {
