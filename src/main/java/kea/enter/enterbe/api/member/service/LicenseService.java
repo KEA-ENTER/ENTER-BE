@@ -4,9 +4,11 @@ import kea.enter.enterbe.api.member.controller.dto.request.LicenseDto;
 
 public interface LicenseService {
 
-    // license 정보를 저장
+    // 면허증 정보를 저장
     void saveLicenseInformation(LicenseDto licenseDto);
-    // license data가 있는지 확인
+    // 면허증 정보가 유효한지 확인
     void getLicenseInformation(Long memberId);
-
+    // 면허증 정보가 있는 사람의 진위여부 저장
+    // todo : patch 컨트롤러 하나 만들어서 연결해야 함.
+    void patchLicenseInformation(Long memberId);
 }

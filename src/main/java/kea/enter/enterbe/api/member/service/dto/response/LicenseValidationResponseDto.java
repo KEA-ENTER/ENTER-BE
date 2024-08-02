@@ -12,14 +12,14 @@ public class LicenseValidationResponseDto {
     private String resUserNm;
     private String commBirthDate;
     private String resLicenseNumber;
-    private Boolean resAuthenticity;
+    private String resAuthenticity;
     private String resAuthenticityDesc1;
     private String resAuthenticityDesc2;
     private String resSearchDateTime;
 
     @Builder
     public LicenseValidationResponseDto(String resUserNm, String commBirthDate,
-        String resLicenseNumber, Boolean resAuthenticity, String resAuthenticityDesc1,
+        String resLicenseNumber, String resAuthenticity, String resAuthenticityDesc1,
         String resAuthenticityDesc2, String resSearchDateTime) {
         this.resUserNm = resUserNm;
         this.commBirthDate = commBirthDate;
@@ -31,7 +31,7 @@ public class LicenseValidationResponseDto {
     }
 
     public static LicenseValidationResponseDto of(String resUserNm, String commBirthDate,
-        String resLicenseNumber, Boolean resAuthenticity, String resAuthenticityDesc1,
+        String resLicenseNumber, String resAuthenticity, String resAuthenticityDesc1,
         String resAuthenticityDesc2, String resSearchDateTime) {
         return LicenseValidationResponseDto.builder()
             .resUserNm(resUserNm)

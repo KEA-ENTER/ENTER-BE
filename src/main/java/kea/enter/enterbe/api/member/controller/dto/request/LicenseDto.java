@@ -25,13 +25,13 @@ public class LicenseDto {
 
     @NotNull
     @AssertTrue(message = "개인 정보처리 방침에 동의해야 합니다.")
-    private Boolean privateDataAgree;
+    private Boolean isAgreeTerms;
 
     @Builder
-    public LicenseDto(Long memberId, String licenseId, String licensePassword, Boolean privateDataAgree) {
+    public LicenseDto(Long memberId, String licenseId, String licensePassword, Boolean isAgreeTerms) {
         this.memberId = memberId;
         this.licenseId = licenseId;
         this.licensePassword = licensePassword;
-        this.privateDataAgree = privateDataAgree;
+        this.isAgreeTerms = isAgreeTerms;
     }
 }

@@ -25,6 +25,7 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+/src/main/resources/data.sql
 
 ### NetBeans ###
 /nbproject/private/
@@ -35,3 +36,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### MAC OS ###
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store

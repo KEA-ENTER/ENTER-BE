@@ -9,10 +9,14 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import kea.enter.enterbe.domain.penalty.entity.Penalty;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
+import kea.enter.enterbe.global.common.exception.CustomException;
+import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,7 +39,6 @@ public class Member extends BaseEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @JsonFormat(pattern = "yyMMdd")
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
@@ -110,6 +113,11 @@ public class Member extends BaseEntity {
             .build();
     }
 
+    public String getBirthDate(){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyMMdd");
+        return this.birthDate.format(dateTimeFormatter);
+    }
+
     // 면허 정보를 set하는 함수
     public void setLicenseInformation(
         String licenseId, String licensePassword,
@@ -119,5 +127,14 @@ public class Member extends BaseEntity {
         this.licensePassword = licensePassword;
         this.isLicenseValid = isLicenseValid;
         this.isAgreeTerms = isAgreeTerms;
+    }
+
+    public void setIsLicenseValid(Boolean isLicenseValid){
+        this.isLicenseValid = isLicenseValid;
+    }
+
+    // 만 나이를 반환하는 함수
+    public Integer getAge(){
+        return Period.between(this.birthDate, LocalDate.now()).getYears();
     }
 }
