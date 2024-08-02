@@ -28,7 +28,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = {
   VehicleController.class, AdminPenaltyController.class, QuestionController.class,
-    AdminApplyController.class, AdminTakeController.class, AuthController.class
+    AdminApplyController.class, AdminTakeController.class, AuthController.class,
+    AdminVehicleController.class
 })
 @Import({SecurityConfig.class})
 public abstract class ControllerTestSupport {

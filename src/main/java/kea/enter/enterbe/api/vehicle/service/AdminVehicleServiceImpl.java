@@ -41,21 +41,19 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     @Override
     @Transactional
     public void createVehicle(CreateVehicleDto dto) {
-        Optional<Vehicle> vehicle = checkVehicle(dto.getVehicleNo());
-
-        if (vehicle != null) {
+        if (checkVehicle(dto.getVehicleNo()).isPresent()) {
             throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
         }
         else {
             String img = "";
-
             try {
                 img = uploadS3Image(dto.getImg());
 
-                vehicle = Optional.of(vehicleRepository.save(Vehicle.of(
+                Vehicle vehicle = vehicleRepository.save(Vehicle.of(
                     dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
-                    dto.getFuel(), img, VehicleState.AVAILABLE)));
+                    dto.getFuel(), img, VehicleState.AVAILABLE));
 
+                vehicleRepository.save(vehicle);
             } catch (Exception e) {
                 deleteS3Image(img);
                 throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
@@ -70,4 +68,5 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     private String uploadS3Image(MultipartFile images) {
         return objectStorageUtil.uploadFileToS3(images);
     }
+
 }
