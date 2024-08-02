@@ -18,9 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
 class AdminVehicleControllerTest extends ControllerTestSupport {
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @DisplayName(value = "법인 차량 추가 Ctrl")
     @Test
     public void createVehicle() throws Exception {
