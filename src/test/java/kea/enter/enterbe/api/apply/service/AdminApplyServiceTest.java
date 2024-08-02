@@ -23,7 +23,7 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AdminApplyServiceImplTest extends IntegrationTestSupport {
+class AdminApplyServiceTest extends IntegrationTestSupport {
     @DisplayName("이번주의 응모 현황을 조회한다.")
     @Test
     void getApplySituation() {
