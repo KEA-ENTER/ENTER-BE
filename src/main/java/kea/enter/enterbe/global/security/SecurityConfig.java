@@ -22,11 +22,4 @@ public class SecurityConfig {
         return http.build();
     }
 
-    //Security Config에 넣고 h2 접속. 깃허브 올릴땐 삭제.
-    @Bean
-    @ConditionalOnProperty(name = "spring.h2.console.enabled",havingValue = "true")
-    public WebSecurityCustomizer configureH2ConsoleEnable() {
-        return web -> web.ignoring()
-            .requestMatchers(PathRequest.toH2Console());
-    }
 }
