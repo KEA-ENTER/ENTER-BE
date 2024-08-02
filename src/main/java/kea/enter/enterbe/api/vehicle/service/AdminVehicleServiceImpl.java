@@ -1,10 +1,7 @@
 package kea.enter.enterbe.api.vehicle.service;
 
-import java.time.Clock;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
@@ -46,12 +43,11 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     public void createVehicle(CreateVehicleDto dto) {
         Optional<Vehicle> vehicle = checkVehicle(dto.getVehicleNo());
 
-        if (vehicle.isPresent()) {
+        if (vehicle != null) {
             throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
         }
         else {
             String img = "";
-            img = uploadS3Image(dto.getImg());
 
             try {
                 img = uploadS3Image(dto.getImg());
