@@ -50,8 +50,6 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(){
-
-
         UserDetails test1 = User.builder()
             .username("test1")
             .password(passwordEncoder().encode("test1"))
@@ -64,9 +62,7 @@ public class SecurityConfig {
             .roles("ADMIN")
             .build();
 
-        UserDetails test3 = User.withUserDetails(customUserDetailsService.loadUserByUsername("test3")).build();
-
-        return new InMemoryUserDetailsManager(test1,test2, test3);
+        return new InMemoryUserDetailsManager(test1,test2);
     }
 
 
