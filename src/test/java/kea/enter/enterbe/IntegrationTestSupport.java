@@ -4,6 +4,7 @@ import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.question.service.QuestionService;
+import kea.enter.enterbe.api.take.service.AdminTakeService;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
@@ -53,6 +54,8 @@ public abstract class IntegrationTestSupport {
     protected AdminPenaltyService adminPenaltyService;
     @Autowired
     protected AdminApplyService adminApplyService;
+    @Autowired
+    protected AdminTakeService adminTakeService;
     @MockBean
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean

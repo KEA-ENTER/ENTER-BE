@@ -1,6 +1,7 @@
 package kea.enter.enterbe.api.take.service;
 
 import kea.enter.enterbe.api.take.controller.response.GetTakeSituationResponse;
+import kea.enter.enterbe.api.take.service.dto.GetTakeSituationServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
@@ -37,11 +38,11 @@ public class AdminTakeServiceImpl implements AdminTakeService {
     private final VehicleReportRepository vehicleReportRepository;
 
     /* 인수 현황 조회 API */
-    public GetTakeSituationResponse getTakeSituation() {
+    public GetTakeSituationResponse getTakeSituation(GetTakeSituationServiceDto dto) {
         // 오늘을 기준으로 저번주 기간을 구한다
-        LocalDate today = LocalDate.now().minusDays(7);
-        LocalDate lastMonday = today.with(DayOfWeek.MONDAY);  // 저번주 월요일
-        LocalDate lastSunday = today.with(DayOfWeek.SUNDAY);  // 저번주 일요일
+        LocalDate date = dto.getToday().minusDays(7);
+        LocalDate lastMonday = date.with(DayOfWeek.MONDAY);  // 저번주 월요일
+        LocalDate lastSunday = date.with(DayOfWeek.SUNDAY);  // 저번주 일요일
 
         // 신청회차의 take_date가 저번주 월요일부터 저번주 일요일 사이라면 저번주 회차라고 간주한다
         int applyCnt = 0, takeCnt = 0, noShowCnt = 0;
