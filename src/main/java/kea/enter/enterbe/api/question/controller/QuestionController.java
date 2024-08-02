@@ -76,8 +76,9 @@ public class QuestionController {
         @Valid @RequestBody QuestionRequestDto questionDto,
         @PathVariable Long questionId) {
 
-        questionService.modifyQuestion(questionDto,
-            ModifyQuestionServiceDto.of(questionDto.getMemberId(), questionId));
+        questionService.modifyQuestion(
+            ModifyQuestionServiceDto.of(questionDto.getMemberId(), questionId,
+                questionDto.getContent(), questionDto.getCategory()));
 
         return ResponseEntity.ok(SUCCESS.getMessage());
     }

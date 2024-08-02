@@ -123,13 +123,11 @@ public class QuestionServiceTest extends IntegrationTestSupport {
         Question question = questionRepository.save(createQuestion(member));
         Long questionId = question.getId();
 
-        ModifyQuestionServiceDto dto = ModifyQuestionServiceDto.of(memberId, questionId);
-
         //when
         // 수정 될 content가 들어있는 requestDto
-        QuestionRequestDto requestDto = new QuestionRequestDto(memberId, modifyContentText,
-            QuestionCategory.USER);
-        questionService.modifyQuestion(requestDto, dto);
+        ModifyQuestionServiceDto dto = ModifyQuestionServiceDto.of(memberId, questionId,
+            modifyContentText, QuestionCategory.USER);
+        questionService.modifyQuestion(dto);
 
         //then
         Optional<Question> result = questionRepository.findByIdAndMemberId(questionId, memberId);
@@ -152,13 +150,11 @@ public class QuestionServiceTest extends IntegrationTestSupport {
         Question question = questionRepository.save(createQuestion(member));
         Long questionId = question.getId();
 
-        ModifyQuestionServiceDto dto = ModifyQuestionServiceDto.of(memberId, questionId);
-
         //when
         // 수정 될 category가 들어있는 requestDto
-        QuestionRequestDto requestDto = new QuestionRequestDto(memberId, question.getContent(),
-            modifyCategory);
-        questionService.modifyQuestion(requestDto, dto);
+        ModifyQuestionServiceDto dto = ModifyQuestionServiceDto.of(memberId, questionId,
+            question.getContent(), modifyCategory);
+        questionService.modifyQuestion(dto);
 
         //then
         Optional<Question> result = questionRepository.findByIdAndMemberId(questionId, memberId);
@@ -184,15 +180,13 @@ public class QuestionServiceTest extends IntegrationTestSupport {
             Question.of(member, "content", QuestionCategory.USER, wrongState));
         Long questionId = question.getId();
 
-        ModifyQuestionServiceDto dto = ModifyQuestionServiceDto.of(memberId, questionId);
-
         // 수정 될 내용물이 들어있는 requestDto
-        QuestionRequestDto requestDto = new QuestionRequestDto(memberId, question.getContent(),
-            question.getCategory());
+        ModifyQuestionServiceDto dto = ModifyQuestionServiceDto.of(memberId, questionId,
+            question.getContent(), question.getCategory());
 
         //when & then
         CustomException exception = assertThrows(CustomException.class, () -> {
-            questionService.modifyQuestion(requestDto, dto);
+            questionService.modifyQuestion(dto);
         });
 
         assertThat(exception.getResponseCode()).isEqualTo(ResponseCode.INVALID_QUESTION_STATE);
