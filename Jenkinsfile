@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Build App') {
             steps {
-                sh 'chmod +x grad	lew'
+                sh 'chmod +x gradlew'
                 sh './gradlew clean build -x test'
             }
 			post {
