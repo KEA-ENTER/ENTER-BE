@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/develop']], extensions: [], userRemoteConfigs: [[credentialsId: 'mingy1206-github', url: 'https://github.com/KEA-ENTER/ENTER-BE.git']])
+                checkout scmGit(branches: [[name: '*/develop']], extensions: [], userRemoteConfigs: [[credentialsId: 'mingy1206-github', url: "${GITHUB_ADDRESS_BE}";]])
             }
         }
         stage('Build App') {
@@ -137,7 +137,7 @@ pipeline {
                             sudo docker pull ${BACKEND_CR_ADDRESS}backend:latest &&
                             sudo docker stop app || true &&
                             sudo docker rm app || true &&
-                            sudo docker run -d --name app -p ${BACKEND_APP_PORT}:${BACKEND_APP_PORT} ${BACKEND_CR_ADDRESS}backend:latest
+                            sudo docker run -d -e JAVA_OPTS1=-Ddev-vault-token=${{VAULT-TOKEN}} -e JAVA_OPTS2=-Ddev-vault-host=${{VAULT-HOST}} -e JAVA_OPTS3=-Ddev-vault-port=${{VAULT-PORT}} --name app -p ${BACKEND_APP_PORT}:${BACKEND_APP_PORT} ${BACKEND_CR_ADDRESS}backend:latest
                             '
                         """
                     }
@@ -216,7 +216,7 @@ pipeline {
                             sudo docker pull ${BACKEND_CR_ADDRESS}backend:latest &&
                             sudo docker stop app || true &&
                             sudo docker rm app || true &&
-                            sudo docker run -d --name app -p ${BACKEND_APP_PORT}:${BACKEND_APP_PORT} ${BACKEND_CR_ADDRESS}backend:latest
+                            sudo docker run -d -e JAVA_OPTS1=-Ddev-vault-token=${{VAULT-TOKEN}} -e JAVA_OPTS2=-Ddev-vault-host=${{VAULT-HOST}} -e JAVA_OPTS3=-Ddev-vault-port=${{VAULT-PORT}} --name app -p ${BACKEND_APP_PORT}:${BACKEND_APP_PORT} ${BACKEND_CR_ADDRESS}backend:latest
                             '
                         """
                     }
