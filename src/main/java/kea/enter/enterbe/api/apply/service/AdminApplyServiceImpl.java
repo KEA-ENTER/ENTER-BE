@@ -1,6 +1,7 @@
 package kea.enter.enterbe.api.apply.service;
 
 import kea.enter.enterbe.api.apply.controller.response.GetApplySituationResponse;
+import kea.enter.enterbe.api.apply.service.dto.GetApplySituationServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
@@ -32,9 +33,9 @@ public class AdminApplyServiceImpl implements AdminApplyService {
     private final WinningRepository winningRepository;
 
     /* 응모 현황 조회 API */
-    public GetApplySituationResponse getApplySituation() {
-        // 오늘을 기준으로 오늘이 몇요일인지 구한다
-        LocalDate today = LocalDate.now();
+    public GetApplySituationResponse getApplySituation(GetApplySituationServiceDto dto) {
+        // 오늘을 기준으로 이번주 기간을 구한다
+        LocalDate today = dto.getToday();
         LocalDate thisMonday = today.with(DayOfWeek.MONDAY);  // 이번주 월요일
         LocalDate thisSunday = thisMonday.plusDays(6);  // 이번주 일요일
 
