@@ -31,10 +31,11 @@ public class ModifyVehicleDto {
         this.state = state;
     }
 
-    public static ModifyVehicleDto of(String vehicleNo, String company, String model,
+    public static ModifyVehicleDto of(Long id, String vehicleNo, String company, String model,
         int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
 
         return ModifyVehicleDto.builder()
+            .id(id)
             .vehicleNo(vehicleNo)
             .company(company)
             .model(model)

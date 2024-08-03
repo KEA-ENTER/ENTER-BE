@@ -32,49 +32,46 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
         if (!Pattern.matches(VEHICLE_NO_PATTERN, vehicleNo)) {
             throw new CustomException(ResponseCode.VEHICLE_NO_NOT_ALLOWED);
         }
+
+        // 중복 확인
+        if (vehicleRepository.findByVehicleNoAndStateNot(vehicleNo, VehicleState.INACTIVE).isPresent()) {
+            throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
+        }
     }
 
     @Override
     @Transactional
     public void createVehicle(CreateVehicleDto dto) {
-        // 차량 번호 형식 확인
         checkVehicle(dto.getVehicleNo());
 
-        // 중복 확인
-        if (vehicleRepository.findByVehicleNoAndStateNot(dto.getVehicleNo(), VehicleState.INACTIVE).isPresent()) {
-            throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
-        }
-        else {
-            String img = "";
-            try {
-                img = uploadS3Image(dto.getImg());
+        String img = "";
+        try {
+            img = uploadS3Image(dto.getImg());
 
-                vehicleRepository.save(Vehicle.of(
-                    dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
-                    dto.getFuel(), img, dto.getState()));
+            vehicleRepository.save(Vehicle.of(
+                dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
+                dto.getFuel(), img, dto.getState()));
 
-            } catch (Exception e) {
-                deleteS3Image(img);
-                throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
-            }
+        } catch (Exception e) {
+            deleteS3Image(img);
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     @Transactional
     public void modifyVehicle(ModifyVehicleDto dto) {
-        // 차량 번호 형식 확인
         checkVehicle(dto.getVehicleNo());
 
-        // 중복 확인
-        if (vehicleRepository.findById(dto.getId()).isPresent()) {
+        Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
+        if (vehicle.isPresent()) {
             String img = "";
             try {
                 img = uploadS3Image(dto.getImg());
 
-                vehicleRepository.save(Vehicle.of(
+                vehicle.get().modifyVehicle(
                     dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
-                    dto.getFuel(), img, dto.getState()));
+                    dto.getFuel(), img, dto.getState());
 
             } catch (Exception e) {
                 deleteS3Image(img);

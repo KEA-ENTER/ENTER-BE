@@ -50,8 +50,7 @@ public class AdminVehicleController {
     }
 
     @Operation(summary = "법인 차량 수정 API")
-    @PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
-        MediaType.APPLICATION_JSON_VALUE})
+    @PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CustomResponseCode> modifyVehicle(
         @RequestPart(value = "data") @Valid AdminVehicleRequest adminVehicleRequest,
         @RequestPart(value = "image") MultipartFile img) {
@@ -61,7 +60,7 @@ public class AdminVehicleController {
             throw new CustomException(ResponseCode.NOT_IMAGE_FILE);
 
         adminVehicleService.modifyVehicle(
-            ModifyVehicleDto.of(adminVehicleRequest.getVehicleNo(), adminVehicleRequest.getCompany(),
+            ModifyVehicleDto.of(adminVehicleRequest.getId(), adminVehicleRequest.getVehicleNo(), adminVehicleRequest.getCompany(),
                 adminVehicleRequest.getModel(), adminVehicleRequest.getSeats(),
                 adminVehicleRequest.getFuel(), img, adminVehicleRequest.getState()));
 

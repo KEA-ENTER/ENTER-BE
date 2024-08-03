@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminVehicleRequest {
     @Schema(description = "차량 아이디", example = "1")
     @Positive(message = "양수만 가능합니다.")
-    private Long vehicleId;
+    private Long id;
 
     @Schema(description = "차량 번호", example = "12가 3456")
     @NotBlank(message = "차량 번호를 입력해야 합니다.")
@@ -48,8 +48,8 @@ public class AdminVehicleRequest {
 
 
     @Builder
-    public AdminVehicleRequest(Long vehicleId, String vehicleNo, String company, String model, int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
-        this.vehicleId = vehicleId;
+    public AdminVehicleRequest(Long id, String vehicleNo, String company, String model, int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
+        this.id = id;
         this.vehicleNo = vehicleNo;
         this.company = company;
         this.model = model;
@@ -59,6 +59,7 @@ public class AdminVehicleRequest {
         this.state = state;
     }
 
+    @Builder
     public AdminVehicleRequest(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, VehicleState state) {
         this.vehicleNo = vehicleNo;
         this.company = company;
