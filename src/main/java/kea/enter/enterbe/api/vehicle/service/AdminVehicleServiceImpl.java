@@ -23,7 +23,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     private final VehicleRepository vehicleRepository;
     private final ObjectStorageUtil objectStorageUtil;
 
-    public Optional<Vehicle> checkVehicle(String vehicleNo) {
+    public void checkVehicle(String vehicleNo) {
         // 차량 번호 형식 : 두 자리 또는 세 자리 숫자 + 한글 한 글자 + 네 자리 숫자
         String VEHICLE_NO_PATTERN = "^[0-9]{2,3}[가-힣][0-9]{4}$";
 
@@ -31,17 +31,16 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
         if (!Pattern.matches(VEHICLE_NO_PATTERN, vehicleNo)) {
             throw new CustomException(ResponseCode.VEHICLE_NO_NOT_ALLOWED);
         }
-
-        // 중복 확인
-        Optional<Vehicle> vehicle = vehicleRepository.findByVehicleNoAndStateNot(vehicleNo, VehicleState.INACTIVE);
-
-        return vehicle;
     }
 
     @Override
     @Transactional
     public void createVehicle(CreateVehicleDto dto) {
-        if (checkVehicle(dto.getVehicleNo()).isPresent()) {
+        // 차량 번호 형식 확인
+        checkVehicle(dto.getVehicleNo());
+
+        // 중복 확인
+        if (vehicleRepository.findByVehicleNoAndStateNot(dto.getVehicleNo(), VehicleState.INACTIVE).isPresent()) {
             throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
         }
         else {
@@ -49,11 +48,10 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
             try {
                 img = uploadS3Image(dto.getImg());
 
-                Vehicle vehicle = vehicleRepository.save(Vehicle.of(
+                vehicleRepository.save(Vehicle.of(
                     dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
                     dto.getFuel(), img, VehicleState.AVAILABLE));
 
-                vehicleRepository.save(vehicle);
             } catch (Exception e) {
                 deleteS3Image(img);
                 throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);

@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class CreateVehicleDto {
-    private Long vehicleId;
     private String vehicleNo;
     private String company;
     private String model;
@@ -18,10 +17,8 @@ public class CreateVehicleDto {
     private VehicleState state;
 
     @Builder
-    public CreateVehicleDto(Long vehicleId, String vehicleNo, String company, String model,
+    public CreateVehicleDto(String vehicleNo, String company, String model,
         int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
-
-        this.vehicleId = vehicleId;
         this.vehicleNo = vehicleNo;
         this.company = company;
         this.model = model;
