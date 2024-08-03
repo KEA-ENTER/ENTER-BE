@@ -15,6 +15,7 @@ import kea.enter.enterbe.global.common.exception.ResponseCode;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -193,7 +194,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
     }
 
     private Member createMember() {
-        return Member.of("2", "name", "test@naver.com", "password", "licenseId",
+        return Member.of("2", "name", "test@naver.com", "password", LocalDate.of(1999,11,28), "licenseId",
             "licensePassword", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 

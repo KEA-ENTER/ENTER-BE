@@ -6,6 +6,7 @@ import kea.enter.enterbe.api.auth.service.AuthService;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
 import kea.enter.enterbe.api.apply.controller.AdminApplyController;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
+import kea.enter.enterbe.api.member.service.LicenseService;
 import kea.enter.enterbe.api.question.controller.QuestionController;
 import kea.enter.enterbe.api.penalty.controller.AdminPenaltyController;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
@@ -60,4 +61,6 @@ public abstract class ControllerTestSupport {
     protected AdminApplyService adminApplyService;
     @MockBean
     protected AdminTakeService adminTakeService;
+    @MockBean
+    protected LicenseService licenseService;
 }
