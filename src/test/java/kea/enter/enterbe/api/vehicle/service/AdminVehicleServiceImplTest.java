@@ -29,22 +29,12 @@ class AdminVehicleServiceImplTest extends IntegrationTestSupport {
         CreateVehicleDto dto = CreateVehicleDto.of("12가3456", "현대", "그랜저",
             5, VehicleFuel.GASOLINE, mock(MultipartFile.class), VehicleState.AVAILABLE);
             given(objectStorageUtil.uploadFileToS3(mock(MultipartFile.class))).willReturn("test.jpg");
-//        // 중복 아님 확인
-//        given(vehicleRepository.findByVehicleNoAndStateNot(dto.getVehicleNo(), VehicleState.INACTIVE))
-//            .willReturn(null);
-//
-//        given(vehicleRepository.save(any(Vehicle.class)))
-//            .willReturn(vehicle);
 
         // when
         adminVehicleService.createVehicle(dto);
 
         // then
         Vehicle vehicle = vehicleRepository.findByVehicleNoAndState(dto.getVehicleNo(), dto.getState());
-//        given(vehicleRepository.findByVehicleNoAndState(dto.getVehicleNo(), dto.getState()))
-//            .willReturn(vehicle);
-
-//        Vehicle findVehicle = vehicleRepository.findByVehicleNoAndState(dto.getVehicleNo(), dto.getState());
 
         assertThat(vehicle.getVehicleNo()).isEqualTo(dto.getVehicleNo());
         assertThat(vehicle.getState()).isEqualTo(dto.getState());
