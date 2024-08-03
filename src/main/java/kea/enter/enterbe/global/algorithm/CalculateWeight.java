@@ -1,7 +1,7 @@
 package kea.enter.enterbe.global.algorithm;
 
 import kea.enter.enterbe.domain.member.entity.Member;
-import kea.enter.enterbe.domain.winning.entity.Winning;
+import kea.enter.enterbe.domain.lottery.entity.Winning;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;

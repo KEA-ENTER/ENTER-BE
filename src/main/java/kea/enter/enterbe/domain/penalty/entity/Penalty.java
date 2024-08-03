@@ -39,32 +39,42 @@ public class Penalty extends BaseEntity {
     @Column(name = "state", nullable = false)
     private PenaltyState state;
 
+    public void deletePenalty() {
+        this.state = PenaltyState.INACTIVE;
+    }
+
     @Builder
     public Penalty(
         Member member,
         PenaltyReason reason, PenaltyLevel level,
-        String etc,
-        PenaltyState state
+        String etc
     ) {
         this.member = member;
         this.reason = reason;
         this.level = level;
         this.etc = etc;
-        this.state = state;
+        this.state = PenaltyState.ACTIVE;
     }
 
     public static Penalty of(
         Member member,
         PenaltyReason reason, PenaltyLevel level,
-        String etc,
-        PenaltyState state
+        String etc
     ) {
         return Penalty.builder()
             .member(member)
             .reason(reason)
             .level(level)
             .etc(etc)
-            .state(state)
+            .build();
+    }
+
+    public static Penalty create(Member member, PenaltyReason reason, PenaltyLevel level, String etc) {
+        return Penalty.builder()
+            .member(member)
+            .reason(reason)
+            .level(level)
+            .etc(etc)
             .build();
     }
 }

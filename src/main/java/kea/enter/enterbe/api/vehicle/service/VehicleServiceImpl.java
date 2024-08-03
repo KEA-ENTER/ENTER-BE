@@ -4,14 +4,15 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import kea.enter.enterbe.api.vehicle.service.dto.PostTakeVehicleReportServiceDto;
-import kea.enter.enterbe.domain.note.entity.VehicleNote;
-import kea.enter.enterbe.domain.note.repository.VehicleNoteRepository;
-import kea.enter.enterbe.domain.report.entity.VehicleReport;
-import kea.enter.enterbe.domain.report.repository.VehicleReportRepository;
-import kea.enter.enterbe.domain.winning.entity.Winning;
-import kea.enter.enterbe.domain.winning.entity.WinningState;
-import kea.enter.enterbe.domain.winning.repository.WinningRepository;
+import kea.enter.enterbe.api.vehicle.service.dto.PostVehicleReportServiceDto;
+import kea.enter.enterbe.domain.vehicle.entity.VehicleNote;
+import kea.enter.enterbe.domain.vehicle.repository.VehicleNoteRepository;
+import kea.enter.enterbe.domain.take.entity.VehicleReport;
+import kea.enter.enterbe.domain.take.entity.VehicleReportType;
+import kea.enter.enterbe.domain.take.repository.VehicleReportRepository;
+import kea.enter.enterbe.domain.lottery.entity.Winning;
+import kea.enter.enterbe.domain.lottery.entity.WinningState;
+import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -34,9 +36,9 @@ public class VehicleServiceImpl implements VehicleService {
     private final Clock clock;
 
     @Override
-    public void postTakeVehicleReport(PostTakeVehicleReportServiceDto dto) {
+    public void postVehicleReport(PostVehicleReportServiceDto dto) {
         List<String> images = new ArrayList<>();
-        Winning winning = findWinningByMemberIdAndTakeDate(dto.getMemberId(), LocalDate.now(clock));
+        Winning winning = getWinningByReportType(dto.getMemberId(), dto.getType());
 
         try {
             String frontImg = uploadS3Image(dto.getFrontImg());
@@ -49,11 +51,15 @@ public class VehicleServiceImpl implements VehicleService {
             images.add(leftImg);
             String dashboardImg = uploadS3Image(dto.getDashboardImg());
             images.add(dashboardImg);
+
             VehicleReport vehicleReport = vehicleReportRepository.save(
-                VehicleReport.takeCreate(winning, frontImg, leftImg,
-                    rightImg, backImg, dashboardImg));
-            vehicleNoteRepository.save(
-                VehicleNote.create(winning.getVehicle(), vehicleReport, dto.getNote()));
+                VehicleReport.create(winning, frontImg, leftImg,
+                    rightImg, backImg, dashboardImg, dto.getParkingLoc(), dto.getType()));
+
+            if (StringUtils.hasText(dto.getNote())) {
+                vehicleNoteRepository.save(
+                    VehicleNote.create(winning.getVehicle(), vehicleReport, dto.getNote()));
+            }
 
         } catch (Exception e) {
             deleteS3Images(images);
@@ -61,8 +67,23 @@ public class VehicleServiceImpl implements VehicleService {
         }
     }
 
-    private Winning findWinningByMemberIdAndTakeDate(Long memberId,LocalDate date) {
-        return winningRepository.findByMemberIdAndTakeDateAndState(memberId, date,WinningState.ACTIVE)
+    private Winning getWinningByReportType(Long memberId, VehicleReportType type) {
+        if (type.equals(VehicleReportType.TAKE)) {
+            return findWinningByMemberIdAndTakeDate(memberId, LocalDate.now(clock));
+        } else {
+            return findWinningByMemberIdAndReturnDate(memberId, LocalDate.now(clock));
+        }
+    }
+
+    private Winning findWinningByMemberIdAndReturnDate(Long memberId, LocalDate date) {
+        return winningRepository.findByMemberIdAndReturnDateAndState(memberId, date,
+                WinningState.ACTIVE)
+            .orElseThrow(() -> new CustomException(ResponseCode.WINNING_NOT_FOUND));
+    }
+
+    private Winning findWinningByMemberIdAndTakeDate(Long memberId, LocalDate date) {
+        return winningRepository.findByMemberIdAndTakeDateAndState(memberId, date,
+                WinningState.ACTIVE)
             .orElseThrow(() -> new CustomException(ResponseCode.WINNING_NOT_FOUND));
     }
 
