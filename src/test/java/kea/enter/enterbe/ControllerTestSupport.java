@@ -9,6 +9,7 @@ import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.question.controller.QuestionController;
 import kea.enter.enterbe.api.penalty.controller.AdminPenaltyController;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
+import kea.enter.enterbe.api.question.service.AnswerService;
 import kea.enter.enterbe.api.question.service.QuestionService;
 import kea.enter.enterbe.api.take.controller.AdminTakeController;
 import kea.enter.enterbe.api.take.service.AdminTakeService;
@@ -29,7 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = {
   VehicleController.class, AdminPenaltyController.class, QuestionController.class,
     AdminApplyController.class, AdminTakeController.class, AuthController.class,
-    AdminVehicleController.class
+    AdminVehicleController.class, AnswerService.class
 })
 @Import({SecurityConfig.class})
 public abstract class ControllerTestSupport {

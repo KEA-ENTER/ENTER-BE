@@ -12,7 +12,6 @@ import kea.enter.enterbe.domain.question.entity.QuestionCategory;
 import kea.enter.enterbe.domain.question.entity.QuestionState;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.List;
