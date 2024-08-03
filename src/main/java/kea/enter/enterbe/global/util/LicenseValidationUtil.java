@@ -64,7 +64,13 @@ public class LicenseValidationUtil {
         } catch (UnsupportedEncodingException e) {
             log.error(e.getMessage(), e);
             throw new CustomException(ResponseCode.BAD_REQUEST);
-        } catch (JsonProcessingException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+            /* Sonarlint suggestion : Clean up whatever needs to be handled before interrupting  */
+            Thread.currentThread().interrupt();
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
+
+        } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e);
             throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
         }

@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// TODO: 전체적인 리턴 값좀 다시 확인해봐야 할 것 같음. void를 그냥 쓰는 건 난 함수 관점에서 별로임.
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -85,18 +84,9 @@ public class LicenseServiceImpl implements LicenseService {
             // license data는 있으나, 유효성 검사가 필요합니다. 뭐 그런 얘기
             throw new CustomException(ResponseCode.LICENSE_VALIDATION_FALSE);
         }
-
-        /*
-        1. 신청 제출 할 때 진위여부 api 호출
-            외부 api에서 0 또는 2를 받게 되면 다시 면허 등록 페이지로 이동 -> ~~
-        2. 라우팅 처리 여부 확인
-        만약 신청서 제출할 때 아래 patchLicense~ 메서드가 달린 컨트롤러를 사용한다면
-        isLicenseValid 값의 여부와 상관없이 사용할 수 있도록 if문의 조건에서 제외하면 된다.
-         */
     }
 
     // 면허 데이터가 이미 존재하고 isLicenseValid = false 인 사용자들의 데이터 진위여부 확인 메서드
-    // -> 프론트에서 만약 진위여부가 참이 아니라는 말이 있으면 이 메서드가 달린 컨트롤러를 호출해주면 된다.
     @Override
     @Transactional
     public void patchLicenseInformation(Long memberId) {
