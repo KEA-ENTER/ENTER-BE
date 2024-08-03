@@ -41,7 +41,7 @@ public class AdminVehicleController {
         adminVehicleService.createVehicle(
             CreateVehicleDto.of(adminVehicleRequest.getVehicleNo(), adminVehicleRequest.getCompany(),
                 adminVehicleRequest.getModel(),adminVehicleRequest.getSeats(),
-                adminVehicleRequest.getFuel(), img, VehicleState.AVAILABLE));
+                adminVehicleRequest.getFuel(), img, adminVehicleRequest.getState()));
 
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }
