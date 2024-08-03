@@ -1,5 +1,7 @@
 package kea.enter.enterbe.api.member.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kea.enter.enterbe.api.member.controller.dto.request.LicenseDto;
 import kea.enter.enterbe.api.member.service.LicenseService;
@@ -15,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// TODO: swagger 연결을 위한 태그, 이후 수정
-//@Tag(name = "예제", description = "예제 API 명세서")
+@Tag(name = "면허", description = "[사용자]License")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -26,6 +27,10 @@ public class LicenseController {
     private final LicenseService licenseService;
 
     // 면허 여부 조회
+    @Operation(
+        summary = "면허를 포함한 신청 자격 확인 API",
+        description = "만 26살 미만, 신청 기간(월요일 오전9시~화요일 밤12시),면허증 데이터를 체크합니다."
+    )
     @GetMapping("/license")
     public ResponseEntity<CustomResponseCode> getLicenseInformation() {
         log.info("get /license start");
@@ -36,6 +41,7 @@ public class LicenseController {
     }
 
     // 면허증 등록 (등록 페이지에서 호출)
+    @Operation(summary = "면허증 등록 API", description = "면허증 진위여부를 확인하고 등록합니다.")
     @PostMapping("/license")
     public ResponseEntity<CustomResponseCode> postLicenseInformation(@Valid @RequestBody LicenseDto licenseDto)
     {
@@ -54,6 +60,7 @@ public class LicenseController {
     }
 
     // 면허 진위여부 확인 및 isLicenseValid 데이터 patch
+    @Operation(summary = "면허 진위여부 수정 API", description = "DB에 저장된 면허 데이터의 진위여부를 확인하고 저장합니다.")
     @PatchMapping("/valid-license")
     public ResponseEntity<CustomResponseCode> patchLicenseInformation(){
 
