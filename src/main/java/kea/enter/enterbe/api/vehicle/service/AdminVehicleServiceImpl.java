@@ -3,6 +3,7 @@ package kea.enter.enterbe.api.vehicle.service;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
+import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
@@ -50,7 +51,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
 
                 vehicleRepository.save(Vehicle.of(
                     dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
-                    dto.getFuel(), img, VehicleState.AVAILABLE));
+                    dto.getFuel(), img, dto.getState()));
 
             } catch (Exception e) {
                 deleteS3Image(img);
@@ -58,6 +59,33 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
             }
         }
     }
+
+    @Override
+    @Transactional
+    public void modifyVehicle(ModifyVehicleDto dto) {
+        // 차량 번호 형식 확인
+        checkVehicle(dto.getVehicleNo());
+
+        // 중복 확인
+        if (vehicleRepository.findById(dto.getId()).isPresent()) {
+            String img = "";
+            try {
+                img = uploadS3Image(dto.getImg());
+
+                vehicleRepository.save(Vehicle.of(
+                    dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
+                    dto.getFuel(), img, dto.getState()));
+
+            } catch (Exception e) {
+                deleteS3Image(img);
+                throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else {
+            throw new CustomException(ResponseCode.VEHICLE_NOT_VALID);
+        }
+    }
+
 
     private void deleteS3Image(String imageUrl) {
         objectStorageUtil.delete(imageUrl);
