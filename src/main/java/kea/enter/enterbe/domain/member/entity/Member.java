@@ -1,6 +1,5 @@
 package kea.enter.enterbe.domain.member.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,12 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import kea.enter.enterbe.domain.penalty.entity.Penalty;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
-import kea.enter.enterbe.global.common.exception.CustomException;
-import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -48,6 +46,7 @@ public class Member extends BaseEntity {
     @Column(name = "license_password")
     private String licensePassword;
 
+    @Setter
     @Column(name = "is_license_valid")
     private Boolean isLicenseValid;
 
@@ -127,10 +126,6 @@ public class Member extends BaseEntity {
         this.licensePassword = licensePassword;
         this.isLicenseValid = isLicenseValid;
         this.isAgreeTerms = isAgreeTerms;
-    }
-
-    public void setIsLicenseValid(Boolean isLicenseValid){
-        this.isLicenseValid = isLicenseValid;
     }
 
     // 만 나이를 반환하는 함수

@@ -12,4 +12,5 @@ spring:
       - openapi
       - vault
       - kc
+      - licenseapi
     active: local

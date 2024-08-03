@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,17 @@ public class LicenseController {
                 .build()
         );
         log.info("post /license end");
+        return ResponseEntity.ok(CustomResponseCode.SUCCESS);
+    }
+
+    // 면허 진위여부 확인 및 isLicenseValid 데이터 patch
+    @PatchMapping("/valid-license")
+    public ResponseEntity<CustomResponseCode> patchLicenseInformation(){
+
+        log.info("patch /valid-license start");
+        Long memberId = 2L;
+        licenseService.patchLicenseInformation(memberId);
+        log.info("patch /valid-license end");
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }
 }
