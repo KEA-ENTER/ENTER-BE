@@ -27,37 +27,46 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = {
-  VehicleController.class, AdminPenaltyController.class, QuestionController.class,
-    AdminApplyController.class, AdminTakeController.class, AuthController.class,
-    AdminVehicleController.class
+    AuthController.class,
+    AdminApplyController.class,
+    AdminPenaltyController.class,
+    QuestionController.class,
+    AdminTakeController.class,
+    VehicleController.class, AdminVehicleController.class
 })
 @Import({SecurityConfig.class})
 public abstract class ControllerTestSupport {
 
+    @MockBean
+    protected AuthService authService;
+
+    @MockBean
+    protected AdminApplyService adminApplyService;
+
+    @MockBean
+    protected AdminPenaltyService adminPenaltyService;
+
+    @MockBean
+    protected QuestionService questionService;
+
+    @MockBean
+    protected AdminTakeService adminTakeService;
+
+    @MockBean
+    protected VehicleService vehicleService;
+    @MockBean
+    protected VehicleRepository vehicleRepository;
+    @MockBean
+    protected AdminVehicleService adminVehicleService;
+
+    @MockBean
+    protected CustomUserDetailsService customUserDetailsService;
+    @MockBean
+    protected FileUtil fileUtil;
+    @MockBean
+    protected JwtUtil jwtUtil;
     @Autowired
     protected MockMvc mockMvc;
     @Autowired
     protected ObjectMapper objectMapper;
-    @MockBean
-    protected VehicleService vehicleService;
-    @MockBean
-    protected FileUtil fileUtil;
-    @MockBean
-    protected AdminPenaltyService adminPenaltyService;
-    @MockBean
-    protected AdminVehicleService adminVehicleService;
-    @MockBean
-    protected VehicleRepository vehicleRepository;
-    @MockBean
-    protected AuthService authService;
-    @MockBean
-    protected CustomUserDetailsService customUserDetailsService;
-    @MockBean
-    protected JwtUtil jwtUtil;
-    @MockBean
-    protected QuestionService questionService;
-    @MockBean
-    protected AdminApplyService adminApplyService;
-    @MockBean
-    protected AdminTakeService adminTakeService;
 }
