@@ -1,11 +1,15 @@
 package kea.enter.enterbe.api.vehicle.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDateTime;
 
 @Getter
 public class AdminVehicleResponse {
@@ -29,6 +33,12 @@ public class AdminVehicleResponse {
 
     @Schema(description = "차량 이미지", example = "")
     private MultipartFile img;
+
+    @Schema(description = "차량 생성일", example = "2024-08-03")
+    private String createdAt;
+
+    @Schema(description = "차량 수정일", example = "2024-08-03")
+    private String updatedAt;
 
     @Schema(description = "차량 상태", example = "AVAILABLE")
     private VehicleState state;
