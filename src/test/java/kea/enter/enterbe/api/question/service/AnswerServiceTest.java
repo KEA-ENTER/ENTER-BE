@@ -3,7 +3,9 @@ package kea.enter.enterbe.api.question.service;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.question.controller.dto.request.AnswerRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.request.QuestionRequestDto;
+import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
 import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
+import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
 import kea.enter.enterbe.api.question.service.dto.ModifyQuestionServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
@@ -53,6 +55,29 @@ public class AnswerServiceTest extends IntegrationTestSupport {
 
         // 답변 저장 시 QuestionState COMPLETE로 변경 되었는지
         assertThat(answer.getQuestion().getState()).isEqualTo(QuestionState.COMPLETE);
+    }
+
+    @DisplayName(value = "문의사항 답변을 조회한다")
+    @Test
+    @Transactional
+    public void testGetAnswer_Success() {
+
+        // given
+        String questionContentTest = "답변 테스트 문장";
+        Member member = memberRepository.save(createMember());
+        Question question = questionRepository.save(createQuestion(member));
+
+        AnswerRequestDto answerRequestDto = new AnswerRequestDto(member.getId(), questionContentTest);
+        answerService.answerQuestion(question.getId(), answerRequestDto);
+
+        // when
+        GetAnswerServiceDto getAnswerServiceDto = GetAnswerServiceDto.of(question.getId(), member.getId());
+        GetAnswerResponseDto responseDto = answerService.getAnswer(getAnswerServiceDto);
+
+        // then
+        assertThat(responseDto).isNotNull();
+        assertThat(responseDto.getContent()).isEqualTo(questionContentTest);
+
     }
 
     private Member createMember() {

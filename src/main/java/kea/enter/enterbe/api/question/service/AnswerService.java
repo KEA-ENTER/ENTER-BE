@@ -1,6 +1,8 @@
 package kea.enter.enterbe.api.question.service;
 
 import kea.enter.enterbe.api.question.controller.dto.request.AnswerRequestDto;
+import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
+import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
@@ -15,6 +17,7 @@ import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +38,28 @@ public class AnswerService {
 
         /* 문의사항 삭제 */
         // 답변을 작성했으므로 AnswerState는 ACTIVE로 고정값
-        Answer answer = Answer.of(question, member,  dto.getContent(), AnswerState.ACTIVE);
+        Answer answer = Answer.of(question, member, dto.getContent(), AnswerState.ACTIVE);
         // 문의사항의 state를 COMPLETE로 업데이트
-        question.modifyQuestion(question.getContent(), question.getCategory(), QuestionState.COMPLETE);
+        question.modifyQuestion(question.getContent(), question.getCategory(),
+            QuestionState.COMPLETE);
 
         answerRepository.save(answer);
+    }
+
+    /* 답변 조회 API */
+    @Transactional
+    public GetAnswerResponseDto getAnswer(GetAnswerServiceDto dto) {
+        // memberId로 멤버 존재 여부를 검사한다.
+        Member member = getActiveMemberById(dto.getMemberId());
+
+        // questionId로 문의사항 존재 여부를 검사한다.
+        Question question = getQuestionByIdAndMemberId(dto.getQuestionId(), dto.getMemberId());
+
+        // 답변 반환
+        Optional<Answer> optionalAnswer = answerRepository.findByQuestionId(dto.getQuestionId());
+        // 답변이 없을 시 null로 반환
+        String content = optionalAnswer.map(Answer::getContent).orElse(null);
+        return GetAnswerResponseDto.of(content);
     }
 
     // memberId로 멤버의 존재 여부와 상태를 검사하는 메소드
