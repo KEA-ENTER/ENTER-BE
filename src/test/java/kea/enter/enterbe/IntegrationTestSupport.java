@@ -29,46 +29,52 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 public abstract class IntegrationTestSupport {
 
     @Autowired
-    protected QuestionService questionService;
-    @Autowired
-    protected WinningRepository winningRepository;
-    @Autowired
     protected ApplyRepository applyRepository;
     @Autowired
     protected ApplyRoundRepository applyRoundRepository;
     @Autowired
-    protected VehicleReportRepository vehicleReportRepository;
+    protected AdminApplyService adminApplyService;
+
     @Autowired
-    protected VehicleNoteRepository vehicleNoteRepository;
-    @Autowired
-    protected VehicleRepository vehicleRepository;
+    protected WinningRepository winningRepository;
+
     @Autowired
     protected MemberRepository memberRepository;
+
     @Autowired
     protected PenaltyRepository penaltyRepository;
     @Autowired
-    protected VehicleService vehicleService;
-    @Autowired
-    protected FileUtil fileUtil;
-    @Autowired
     protected AdminPenaltyService adminPenaltyService;
+
     @Autowired
-    protected AdminApplyService adminApplyService;
+    protected QuestionRepository questionRepository;
+    @Autowired
+    protected QuestionService questionService;
+
     @Autowired
     protected AdminTakeService adminTakeService;
-    @MockBean
-    protected ObjectStorageConfig objectStorageConfig;
-    @MockBean
-    protected ObjectStorageUtil objectStorageUtil;
+
+    protected VehicleService vehicleService;
+    @Autowired
+    protected VehicleRepository vehicleRepository;
+    @Autowired
+    protected VehicleNoteRepository vehicleNoteRepository;
+    @Autowired
+    protected VehicleReportRepository vehicleReportRepository;
+    @Autowired
+    protected AdminVehicleService adminVehicleService;
+
     @MockBean
     protected Clock clock;
     @MockBean
     protected ClockConfig clockConfig;
-    @MockBean
-    protected AdminVehicleService adminVehicleService;
-
     @Autowired
-    protected QuestionRepository questionRepository;
+    protected FileUtil fileUtil;
+    @MockBean
+    protected ObjectStorageConfig objectStorageConfig;
+    @MockBean
+    protected ObjectStorageUtil objectStorageUtil;
+
 
     @AfterEach
     void tearDown() {

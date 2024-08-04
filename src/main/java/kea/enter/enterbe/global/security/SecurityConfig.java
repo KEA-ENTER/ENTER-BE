@@ -1,5 +1,8 @@
 package kea.enter.enterbe.global.security;
 
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import java.util.List;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -96,3 +99,4 @@ public class SecurityConfig {
 
     }
 }
+
