@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import kea.enter.enterbe.api.lottery.dto.ScoreDto;
+import kea.enter.enterbe.api.lottery.dto.WeightDto;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.domain.member.entity.Member;
@@ -26,7 +26,7 @@ public class CalculateWeight {
     private final WinningRepository winningRepository;
     private final ApplyRepository applyRepository;
 
-    public List<ScoreDto> getApplyMemberList() { // 반기 별 당첨자를 조회한다.
+    public List<WeightDto> getApplyMemberList() { // 반기 별 당첨자를 조회한다.
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startDate;
         LocalDateTime endDate;
@@ -39,32 +39,31 @@ public class CalculateWeight {
             endDate = LocalDateTime.of(now.getYear(), Month.DECEMBER, 31, 23, 59, 59);
         }
 
-        return winningRepository.countActiveEntitiesByHalfYear(startDate, endDate);
+        return winningRepository.countActiveEntitiesByHalfYearAndState(startDate, endDate);
     }
-    private void updateWeight(List<ScoreDto> scoreDtoList, long applyRoundId) {
+    private void updateWeight(List<WeightDto> weightDtoList, long applyRoundId) {
         List<Member> memberList = new ArrayList<>();
         List<Long> applyMemberList = applyRepository.findMemberIdsByApplyRoundId(applyRoundId);
 
-        Map<Long, ScoreDto> scoreDtoMap = scoreDtoList.stream()
-            .collect(Collectors.toMap(ScoreDto::getMemberId, dto -> dto));
+        Map<Long, WeightDto> weightDtoMap = weightDtoList.stream()
+            .collect(Collectors.toMap(WeightDto::getMemberId, dto -> dto));
 
         for (Long memberId : applyMemberList) {
-            if (scoreDtoMap.containsKey(memberId)) {
-                ScoreDto scoreDto = scoreDtoMap.get(memberId);
+            if (weightDtoMap.containsKey(memberId)) {
+                WeightDto weightDto = weightDtoMap.get(memberId);
                 Member member = memberRepository.findByIdAndState(memberId, MemberState.ACTIVE)
                     .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
                 member.setScore(
-                    member.getScore() + calculateYears(member.getId()) + calculateHistory(
-                        scoreDto.getScore()));
+                    20 + calculateYears(member) + calculateHistory(
+                        weightDto.getWeight()));
                 memberList.add(member);
             }
         }
         memberRepository.saveAll(memberList);
     }
-    private int calculateYears(Long memberId) { // 근속일수로 가중치를 계산한다.
+    private int calculateYears(Member member) { // 근속일수로 가중치를 계산한다.
         LocalDateTime now = LocalDateTime.now();
-        Member members = memberRepository.findByIdAndState(memberId, MemberState.ACTIVE).orElseThrow( () -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
-        Period period = Period.between(members.getCreatedAt().toLocalDate(), now.toLocalDate());
+        Period period = Period.between(member.getCreatedAt().toLocalDate(), now.toLocalDate());
         return switch (period.getYears()) {
             case 0, 1 -> 0;
             case 2 -> 1;
