@@ -1,3 +1,4 @@
+# application-local.yml
 spring:
     config:
         activate:
@@ -6,13 +7,15 @@ openapi:
     service:
         title: enter-documentation
         version: 1.0.0
-        url: https://localhost:8090
-    springdoc:
-        api-docs:
-            path: /api/v3/api-docs
-        swagger-ui:
-            path: /api/swagger-ui.html
+        url: http://localhost:8090
+springdoc:
+    api-docs:
+        path: /api/v3/api-docs
+    swagger-ui:
+        path: /api/swagger-ui.html
+
 ---
+# application-test.yml
 spring:
     config:
         activate:
@@ -21,13 +24,15 @@ openapi:
     service:
         title: enter-documentation
         version: 1.0.0
-        url: https://localhost:8090
-    springdoc:
-        api-docs:
-            path: /api/v3/api-docs
-        swagger-ui:
-            path: /api/swagger-ui.html
+        url: http://localhost:8090
+springdoc:
+    api-docs:
+        path: /api/v3/api-docs
+    swagger-ui:
+        path: /api/swagger-ui.html
+
 ---
+# application-dev.yml
 spring:
     config:
         activate:
@@ -37,8 +42,8 @@ openapi:
         title: enter-documentation
         version: 1.0.0
         url: https://moaboa.shop
-    springdoc:
-        api-docs:
-            path: /api/v3/api-docs
-        swagger-ui:
-            path: /api/swagger-ui.html
+springdoc:
+    api-docs:
+        path: /api/v3/api-docs
+    swagger-ui:
+        path: /api/swagger-ui.html
