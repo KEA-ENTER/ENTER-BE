@@ -2,11 +2,9 @@ package kea.enter.enterbe.global.security;
 
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import java.util.List;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,8 +30,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final List<String> CORS_WHITELIST = List.of("http://localhost:3000");
-    private static final List<String> CORS_METHODS = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS");
+    private static final List<String> CORS_WHITELIST = List.of("http://localhost:3000", "http://localhost:8090", "https://moaboa.shop", "https://yamfubao.shop");
+    private static final List<String> CORS_METHODS = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "FETCH");
 
 
     private final CustomUserDetailsService customUserDetailsService;
