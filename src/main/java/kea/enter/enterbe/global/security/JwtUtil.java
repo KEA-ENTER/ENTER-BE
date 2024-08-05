@@ -12,6 +12,8 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import kea.enter.enterbe.api.auth.dto.MemberInfoDto;
+import kea.enter.enterbe.global.common.exception.CustomException;
+import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -49,21 +51,17 @@ public class JwtUtil {
 
 
     private String createToken(MemberInfoDto member, long expireTime) {
-        Claims claims = (Claims) Jwts.claims();
-        claims.put("memberId", member.getMemberId());
-        claims.put("email", member.getEmail());
-        claims.put("role", member.getRole());
-
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime tokenValidity = now.plusSeconds(expireTime);
 
-
-        return Jwts.builder()
-            .claims(claims)
-            .issuedAt(Date.from(now.toInstant()))
-            .expiration(Date.from(tokenValidity.toInstant()))
-            .signWith(key)
-            .compact();
+            return Jwts.builder()
+                .claim("memberName", member.getName())
+                .claim("memberId", member.getId())
+                .claim("role", member.getRole())
+                .issuedAt(Date.from(now.toInstant()))
+                .expiration(Date.from(tokenValidity.toInstant()))
+                .signWith(key)
+                .compact();
     }
 
 
@@ -77,15 +75,14 @@ public class JwtUtil {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
+            throw new CustomException(ResponseCode.INVALID_TOKEN); // Invalid JWT signature
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            throw new CustomException(ResponseCode.EXPIRED_TOKEN); // Expired JWT token
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
+            throw new CustomException(ResponseCode.UNSUPPORTED_TOKEN); // Unsupported JWT token
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
+            throw new CustomException(ResponseCode.INVALID_HEADER_OR_COMPACT_JWT); // JWT token compact of handler are invalid
         }
-        return false;
     }
 
     public Claims parseClaims(String accessToken) {

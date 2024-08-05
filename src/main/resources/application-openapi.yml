@@ -2,7 +2,7 @@ openapi:
   service:
     title: enter-documentation
     version: 1.0.0
-    url: http://localhost:8090
+    url: https://moaboa.shop
 springdoc:
   api-docs:
     path: /api/v3/api-docs
