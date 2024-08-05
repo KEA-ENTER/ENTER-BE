@@ -1,6 +1,7 @@
 package kea.enter.enterbe.domain.apply.repository;
 
 import java.util.List;
+import java.util.Optional;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
@@ -19,5 +20,7 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
     @Query("SELECT a.member FROM Apply a WHERE a.applyRound = :applyRound AND a.state = 'ACTIVE' ")
     List<Member> findMembersBydApplyRoundAndState(@Param("applyRound") ApplyRound applyRound);
+
+    Optional<Apply> findByMemberAndApplyRoundAndState(Member member, ApplyRound applyRound, ApplyState state);
 
 }
