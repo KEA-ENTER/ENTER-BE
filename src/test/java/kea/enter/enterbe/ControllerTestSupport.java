@@ -16,6 +16,7 @@ import kea.enter.enterbe.api.vehicle.controller.AdminVehicleController;
 import kea.enter.enterbe.api.vehicle.controller.VehicleController;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
+import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.global.security.JwtUtil;
 import kea.enter.enterbe.global.security.SecurityConfig;
@@ -36,7 +37,6 @@ import org.springframework.test.web.servlet.MockMvc;
 })
 @Import({SecurityConfig.class})
 public abstract class ControllerTestSupport {
-
     @MockBean
     protected AuthService authService;
 
@@ -54,22 +54,28 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected VehicleService vehicleService;
-    @MockBean
-    protected QuestionService questionService;
-    @MockBean
-    protected AdminApplyService adminApplyService;
+
     @MockBean
     protected VehicleRepository vehicleRepository;
+
     @MockBean
     protected AdminVehicleService adminVehicleService;
+
     @MockBean
     protected CustomUserDetailsService customUserDetailsService;
+
     @MockBean
     protected FileUtil fileUtil;
+
     @MockBean
     protected JwtUtil jwtUtil;
+
     @Autowired
     protected MockMvc mockMvc;
+
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @MockBean
+    protected ApplyRoundRepository applyRoundRepository;
 }
