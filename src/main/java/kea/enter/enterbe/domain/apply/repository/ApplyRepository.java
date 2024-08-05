@@ -3,6 +3,7 @@ package kea.enter.enterbe.domain.apply.repository;
 import java.util.List;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
+import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,5 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     @Query("SELECT a.member FROM Apply a WHERE a.applyRound = :applyRound AND a.state = 'ACTIVE' ")
     List<Member> findMembersBydApplyRoundAndState(@Param("applyRound") ApplyRound applyRound);
 
+    Integer countByApplyRoundApplyRoundAndStateAndApplyRoundState(int i, ApplyState applyState, ApplyRoundState applyRoundState);
 }

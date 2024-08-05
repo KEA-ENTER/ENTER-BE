@@ -1,4 +1,4 @@
-package kea.enter.enterbe.api.lottery.dto;
+package kea.enter.enterbe.api.lottery.service.dto;
 
 import lombok.Builder;
 import lombok.Getter;
