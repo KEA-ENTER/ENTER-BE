@@ -56,11 +56,14 @@ public abstract class ControllerTestSupport {
     protected VehicleService vehicleService;
 
     @MockBean
+    protected QuestionService questionService;
+    @MockBean
+    protected AdminApplyService adminApplyService;
+    @MockBean
     protected VehicleRepository vehicleRepository;
 
     @MockBean
     protected AdminVehicleService adminVehicleService;
-
     @MockBean
     protected CustomUserDetailsService customUserDetailsService;
 

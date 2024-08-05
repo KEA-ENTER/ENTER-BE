@@ -19,4 +19,5 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
     @Query("SELECT a.member FROM Apply a WHERE a.applyRound = :applyRound AND a.state = 'ACTIVE' ")
     List<Member> findMembersByApplyRoundAndState(@Param("applyRound") ApplyRound applyRound);
+
 }
