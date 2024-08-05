@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.AdminVehicleRequest;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
@@ -13,6 +14,9 @@ import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import kea.enter.enterbe.global.util.FileUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import java.awt.print.Pageable;
 
 @Tag(name = "법인 차량 관리", description = "법인 차량 관리 API 명세서")
 @RestController
@@ -37,7 +40,7 @@ public class AdminVehicleController {
     @Operation(summary = "법인 차량 목록 조회 API")
     @GetMapping("")
     public Page<AdminVehicleResponse> getVehicleList(
-        Pageable pageable,
+        @PageableDefault(size = 4) Pageable pageable,
         @RequestParam(required = false) String vehicleNo,
         @RequestParam(required = false) String model,
         @RequestParam(required = false) VehicleState state) {

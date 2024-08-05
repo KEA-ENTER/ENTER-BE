@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
-import kea.enter.enterbe.api.vehicle.service.dto.GetVehicleListDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
@@ -15,7 +14,6 @@ import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +28,11 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     private final ObjectStorageUtil objectStorageUtil;
 
     @Override
-    public Page<AdminVehicleResponse> getVehicleList(Pageable pageable, GetVehicleListDto dto) {
+    public Page<AdminVehicleResponse> getVehicleList(Pageable pageable, String vehicleNo, String model, VehicleState state) {
         Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(
-            pageable, getVehicleDto.getVehicleNo(), getVehicleDto.getModel(), getVehicleDto.getState());
+            pageable, vehicleNo, model, state);
         return vehicles.map(v -> AdminVehicleResponse.of(
-            v.getId(), v.getVehicleNo(), v.getCompany(), v.getModel(), v.getSeats(), v.getFuel(), null, v.getState()));
+            v.getId(), v.getVehicleNo(), v.getCompany(), v.getModel(), v.getSeats(), v.getFuel(), v.getImg(), v.getCreatedAt().toLocalDate().toString(), v.getUpdatedAt().toLocalDate().toString(), v.getState()));
 
     }
 

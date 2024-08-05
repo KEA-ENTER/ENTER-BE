@@ -1,15 +1,10 @@
 package kea.enter.enterbe.api.vehicle.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.web.multipart.MultipartFile;
-import java.time.LocalDateTime;
 
 @Getter
 public class AdminVehicleResponse {
@@ -32,7 +27,7 @@ public class AdminVehicleResponse {
     private VehicleFuel fuel;
 
     @Schema(description = "차량 이미지", example = "")
-    private MultipartFile img;
+    private String img;
 
     @Schema(description = "차량 생성일", example = "2024-08-03")
     private String createdAt;
@@ -46,7 +41,7 @@ public class AdminVehicleResponse {
 
     @Builder
     public AdminVehicleResponse(Long vehicleId, String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
+        int seats, VehicleFuel fuel, String img, String createdAt, String updatedAt, VehicleState state) {
 
         this.vehicleId = vehicleId;
         this.vehicleNo = vehicleNo;
@@ -55,11 +50,13 @@ public class AdminVehicleResponse {
         this.seats = seats;
         this.fuel = fuel;
         this.img = img;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.state = state;
     }
 
     public static AdminVehicleResponse of(Long vehicleId, String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
+        int seats, VehicleFuel fuel, String img, String createdAt, String updatedAt, VehicleState state) {
 
         return AdminVehicleResponse.builder()
             .vehicleId(vehicleId)
@@ -69,6 +66,8 @@ public class AdminVehicleResponse {
             .seats(seats)
             .fuel(fuel)
             .img(img)
+            .createdAt(createdAt)
+            .updatedAt(updatedAt)
             .state(state)
             .build();
     }

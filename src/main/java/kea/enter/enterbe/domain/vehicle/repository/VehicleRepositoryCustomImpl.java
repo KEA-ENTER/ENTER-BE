@@ -5,6 +5,7 @@ import static kea.enter.enterbe.domain.vehicle.entity.QVehicle.vehicle;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import java.util.List;
 
-
-public class VehicleRepositoryCumstomImpl extends QuerydslRepositorySupport implements VehicleRepositoryCustom {
+public class VehicleRepositoryCustomImpl extends QuerydslRepositorySupport implements VehicleRepositoryCustom {
     @Autowired
     private JPAQueryFactory queryFactory;
 
-    public VehicleRepositoryCumstomImpl() {
+    public VehicleRepositoryCustomImpl() {
         super(Vehicle.class);
     }
 
