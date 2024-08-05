@@ -15,6 +15,7 @@ spring:
       - kc
       - jwt
       - monitoring
+      - quartz
     active: local
   servlet:
       multipart:
