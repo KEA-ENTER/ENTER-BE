@@ -1,6 +1,7 @@
 package kea.enter.enterbe.domain.apply.repository;
 
 import java.util.List;
+import java.util.Optional;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
@@ -22,4 +23,7 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     List<Member> findMembersBydApplyRoundAndState(@Param("applyRound") ApplyRound applyRound);
 
     Integer countByApplyRoundApplyRoundAndStateAndApplyRoundState(int i, ApplyState applyState, ApplyRoundState applyRoundState);
+  
+    Optional<Apply> findByMemberAndApplyRoundAndState(Member member, ApplyRound applyRound, ApplyState state);
+
 }
