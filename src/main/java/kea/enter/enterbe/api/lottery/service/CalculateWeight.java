@@ -43,7 +43,7 @@ public class CalculateWeight {
     }
     private void updateWeight(List<WeightDto> weightDtoList, long applyRoundId) {
         List<Member> memberList = new ArrayList<>();
-        List<Long> applyMemberList = applyRepository.findMemberIdsByApplyRoundId(applyRoundId);
+        List<Long> applyMemberList = applyRepository.findMemberIdsByApplyRoundIdAndState(applyRoundId);
 
         Map<Long, WeightDto> weightDtoMap = weightDtoList.stream()
             .collect(Collectors.toMap(WeightDto::getMemberId, dto -> dto));

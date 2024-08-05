@@ -18,6 +18,6 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     List<Long> findMemberIdsByApplyRoundIdAndState(@Param("applyRoundId") Long applyRoundId); // 회차에 참여한 회원 ID 조회
 
     @Query("SELECT a.member FROM Apply a WHERE a.applyRound = :applyRound AND a.state = 'ACTIVE' ")
-    List<Member> findMembersByApplyRoundAndState(@Param("applyRound") ApplyRound applyRound);
+    List<Member> findMembersBydApplyRoundAndState(@Param("applyRound") ApplyRound applyRound);
 
 }

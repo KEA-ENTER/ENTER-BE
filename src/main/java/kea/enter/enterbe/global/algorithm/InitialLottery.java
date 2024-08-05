@@ -31,7 +31,7 @@ public class InitialLottery {
         ApplyRound applyRound = applyRoundRepository.findById(applyRoundId).orElseThrow(
             () -> new CustomException(ResponseCode.APPLY_ROUND_NOT_FOUND));
 
-        return applyRepository.findMembersByApplyRoundAndState(applyRound);
+        return applyRepository.findMembersBydApplyRoundAndState(applyRound);
     }
 
 
