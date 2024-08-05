@@ -2,7 +2,7 @@ package kea.enter.enterbe.api.auth.service;
 
 import kea.enter.enterbe.api.auth.dto.LoginRequestDto;
 import kea.enter.enterbe.api.auth.dto.MemberInfoDto;
-import kea.enter.enterbe.api.auth.dto.TokenDao;
+import kea.enter.enterbe.api.auth.dto.LoginResponseDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
@@ -25,9 +25,11 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
 
     @Override
-    public TokenDao login(LoginRequestDto loginRequestDto) {
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
+
+
         Member member = memberRepository.findMemberByEmail(email).orElseThrow(() -> new CustomException(
             ResponseCode.MEMBER_NOT_FOUND));
 
@@ -35,9 +37,11 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(ResponseCode.PASSWORD_INCORRECT);
         }
 
-        return TokenDao.of(
+        return LoginResponseDto.of(
             jwtUtil.createAccessToken(modelMapper.map(member, MemberInfoDto.class)),
-            jwtUtil.createRefreshToken(modelMapper.map(member, MemberInfoDto.class))
+            jwtUtil.createRefreshToken(modelMapper.map(member, MemberInfoDto.class)),
+            member.getName(),
+            member.getRole()
         );
     }
 

@@ -27,49 +27,44 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 public abstract class IntegrationTestSupport {
-
-    @Autowired
-    protected ApplyRepository applyRepository;
-    @Autowired
-    protected ApplyRoundRepository applyRoundRepository;
     @Autowired
     protected AdminApplyService adminApplyService;
-
-    @Autowired
-    protected WinningRepository winningRepository;
-
-    @Autowired
-    protected MemberRepository memberRepository;
-
-    @Autowired
-    protected PenaltyRepository penaltyRepository;
     @Autowired
     protected AdminPenaltyService adminPenaltyService;
-
+    @Autowired
+    protected QuestionService questionService;
+    @Autowired
+    protected AdminTakeService adminTakeService;
+    @Autowired
+    protected VehicleService vehicleService;
+    @Autowired
+    protected AdminVehicleService adminVehicleService;
+    @Autowired
+    protected VehicleRepository vehicleRepository;
     @Autowired
     protected QuestionRepository questionRepository;
     @Autowired
-    protected QuestionService questionService;
-
+    protected WinningRepository winningRepository;
     @Autowired
-    protected AdminTakeService adminTakeService;
-
-    protected VehicleService vehicleService;
+    protected MemberRepository memberRepository;
     @Autowired
-    protected VehicleRepository vehicleRepository;
+    protected PenaltyRepository penaltyRepository;
     @Autowired
     protected VehicleNoteRepository vehicleNoteRepository;
     @Autowired
     protected VehicleReportRepository vehicleReportRepository;
     @Autowired
-    protected AdminVehicleService adminVehicleService;
+    protected ApplyRepository applyRepository;
+    @Autowired
+    protected ApplyRoundRepository applyRoundRepository;
+
+    @Autowired
+    protected FileUtil fileUtil;
 
     @MockBean
     protected Clock clock;
     @MockBean
     protected ClockConfig clockConfig;
-    @Autowired
-    protected FileUtil fileUtil;
     @MockBean
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean

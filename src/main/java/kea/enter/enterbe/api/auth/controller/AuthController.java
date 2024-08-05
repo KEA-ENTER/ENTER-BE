@@ -2,7 +2,7 @@ package kea.enter.enterbe.api.auth.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.enter.enterbe.api.auth.dto.LoginRequestDto;
-import kea.enter.enterbe.api.auth.dto.TokenDao;
+import kea.enter.enterbe.api.auth.dto.LoginResponseDto;
 import kea.enter.enterbe.api.auth.service.AuthService;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
@@ -24,7 +24,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDao> login(LoginRequestDto loginRequestDto, Authorization authorization) {
+    public ResponseEntity<LoginResponseDto> login(LoginRequestDto loginRequestDto, Authorization authorization) {
         if (authorization != null) {
             // 이미 로그인한 상태
             throw new CustomException(ResponseCode.ALREADY_LOGGED_IN);

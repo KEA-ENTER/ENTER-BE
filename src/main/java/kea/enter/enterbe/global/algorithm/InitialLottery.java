@@ -20,7 +20,7 @@ public class InitialLottery {
     private final ApplyRepository applyRepository;
     private final ApplyRoundRepository applyRoundRepository;
 
-    public List<WinnerDto> getApplyMembersWeight(long applyRoundId, int winnerCount) {
+    public List<WinnerDto> processingInitialLottery(long applyRoundId, int winnerCount) {
         List<Member> memberLists = getApplyMembers(applyRoundId); // 회차에 참여한 회원 목록을 조회한다
         List<ScoreDto> scoreList = getScore(memberLists); // 회원 목록을 점수로 변환한다
         List<PercentageMembersDto> percentageMembers = transformToPercentage(scoreList); // 점수를 백분율로 변환한다
@@ -66,11 +66,11 @@ public class InitialLottery {
 
         for (PercentageMembersDto percentageMember : percentageMembers) {
             initialScore += percentageMember.getPercentage();
-            rank++;
             if (initialScore >= pivot && winnerLists.size() < winnerCount){
                 WinnerDto winnerDto = WinnerDto.of(percentageMember.getMemberId(), rank);
                 winnerLists.add(winnerDto);
                 initialScore = 0;
+                rank++;
             }
         }
         return winnerLists;
