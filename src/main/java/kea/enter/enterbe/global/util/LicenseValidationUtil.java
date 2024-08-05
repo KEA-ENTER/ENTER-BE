@@ -37,7 +37,7 @@ public class LicenseValidationUtil {
         LicenseValidationRequestDto licenseDto)
     {
 
-        // #1. 코드에프 객체 생성 및 클라이언트 정보 설정 -> autowired가 안돼서 메서드에서 생성
+        // #1. 코드에프 객체 생성 및 클라이언트 정보 설정
         EasyCodef codef = new EasyCodef();
         codef.setClientInfoForDemo(clientId, clientSecret);
         codef.setPublicKey(publicKey);
@@ -88,7 +88,7 @@ public class LicenseValidationUtil {
         HashMap<String, String> resultMap = (HashMap<String, String>)responseMap.get("result");
         HashMap<String, String> dataMap = (HashMap<String, String>)responseMap.get("data");
 
-        if(resultMap.get("code").equals("CF-00000") && dataMap.get("resAuthenticity").equals("1")){
+        if(resultMap.get("code").equals("CF-00000")){
             return LicenseValidationResponseDto.of(
                 dataMap.get("resUserNm"), dataMap.get("commBirthDate"),
                 dataMap.get("resLicenseNumber"), dataMap.get("resAuthenticity"),
@@ -96,9 +96,9 @@ public class LicenseValidationUtil {
                 dataMap.get("resSearchDateTime")
             );
         }
-        // 요청에 실패하거나, 진위여부가 참이 아닐 때(resAuthenticity가 0또는 2일 때)
+        // 요청에 실패한 경우(code != CF-00000) (ex. clientId, secret틀림 / 같은 이름으로 5회 이상 실패 후 요청)
         else {
-            throw new CustomException(ResponseCode.LICENSE_AUTHENTICITY_INCORRECT);
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
         }
     }
 

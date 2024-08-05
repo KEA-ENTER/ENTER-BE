@@ -31,10 +31,10 @@ public class LicenseValidationRequestDto {
         this.userName = userName;
     }
 
-    public static LicenseValidationRequestDto of(String birthDate, String licenseNo01, String licenseNo02,
+    public static LicenseValidationRequestDto of(String organization, String birthDate, String licenseNo01, String licenseNo02,
         String licenseNo03, String licenseNo04, String serialNo, String userName) {
         return LicenseValidationRequestDto.builder()
-            .organization("0001")
+            .organization(organization)
             .birthDate(birthDate)
             .licenseNo01(licenseNo01)
             .licenseNo02(licenseNo02)

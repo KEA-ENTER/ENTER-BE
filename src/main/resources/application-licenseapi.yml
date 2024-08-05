@@ -10,3 +10,16 @@ license:
         key: ${license-public-key}
     url:
         demo: ${license-url-demo}
+---
+spring:
+    config:
+        activate:
+            on-profile: test
+license:
+    client:
+        id: ${license-client-id}
+        secret: ${license-client-secret}
+    public:
+        key: ${license-public-key}
+    url:
+        demo: ${license-url-demo}

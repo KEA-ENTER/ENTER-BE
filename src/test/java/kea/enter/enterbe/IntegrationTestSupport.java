@@ -30,50 +30,52 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 @SpringBootTest
 public abstract class IntegrationTestSupport {
     @Autowired
+    protected AdminApplyService adminApplyService;
+    @Autowired
+    protected AdminPenaltyService adminPenaltyService;
+    @Autowired
     protected QuestionService questionService;
     @Autowired
-    protected WinningRepository winningRepository;
+    protected AdminTakeService adminTakeService;
     @Autowired
-    protected ApplyRepository applyRepository;
+    protected VehicleService vehicleService;
     @Autowired
-    protected ApplyRoundRepository applyRoundRepository;
+    protected AdminVehicleService adminVehicleService;
     @Autowired
-    protected VehicleReportRepository vehicleReportRepository;
-    @Autowired
-    protected VehicleNoteRepository vehicleNoteRepository;
+    protected LicenseService licenseService;
     @Autowired
     protected VehicleRepository vehicleRepository;
+    @Autowired
+    protected QuestionRepository questionRepository;
+    @Autowired
+    protected WinningRepository winningRepository;
     @Autowired
     protected MemberRepository memberRepository;
     @Autowired
     protected PenaltyRepository penaltyRepository;
     @Autowired
-    protected VehicleService vehicleService;
+    protected VehicleNoteRepository vehicleNoteRepository;
+    @Autowired
+    protected VehicleReportRepository vehicleReportRepository;
+    @Autowired
+    protected ApplyRepository applyRepository;
+    @Autowired
+    protected ApplyRoundRepository applyRoundRepository;
+
     @Autowired
     protected FileUtil fileUtil;
-    @Autowired
-    protected AdminPenaltyService adminPenaltyService;
-    @Autowired
-    protected AdminVehicleService adminVehicleService;
-    @Autowired
-    protected AdminApplyService adminApplyService;
-    @Autowired
-    protected AdminTakeService adminTakeService;
-    @Autowired
-    protected LicenseService licenseService;
+
+    @MockBean
+    protected Clock clock;
+    @MockBean
+    protected ClockConfig clockConfig;
     @MockBean
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean
     protected ObjectStorageUtil objectStorageUtil;
     @MockBean
     protected LicenseValidationUtil licenseValidationUtil;
-    @MockBean
-    protected Clock clock;
-    @MockBean
-    protected ClockConfig clockConfig;
 
-    @Autowired
-    protected QuestionRepository questionRepository;
 
     @AfterEach
     void tearDown() {

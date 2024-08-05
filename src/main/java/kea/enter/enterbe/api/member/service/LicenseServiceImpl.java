@@ -1,10 +1,12 @@
 package kea.enter.enterbe.api.member.service;
 
+import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import kea.enter.enterbe.api.member.controller.dto.request.LicenseDto;
 import kea.enter.enterbe.api.member.service.dto.request.LicenseValidationRequestDto;
+import kea.enter.enterbe.api.member.service.dto.response.LicenseValidationResponseDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
@@ -24,6 +26,7 @@ public class LicenseServiceImpl implements LicenseService {
 
     private final MemberRepository memberRepository;
     private final LicenseValidationUtil licenseValidationUtil;
+    private final Clock clock;
 
     // 면허증 정보 저장 메서드
     @Override
@@ -38,8 +41,9 @@ public class LicenseServiceImpl implements LicenseService {
         Member member = findMemberByMemberId(licenseDto.getMemberId());
         String licenseId = licenseDto.getLicenseId();
         // 면허 진위여부 api 호출
-        licenseValidationUtil.checkValidationLicense(
+        LicenseValidationResponseDto dto = licenseValidationUtil.checkValidationLicense(
             LicenseValidationRequestDto.of(
+                "0001",
                 member.getBirthDate(),
                 licenseId.substring(0,2),
                 licenseId.substring(2,4),
@@ -49,14 +53,20 @@ public class LicenseServiceImpl implements LicenseService {
                 member.getName()
             )
         );
-        // 멤버 엔티티 수정
-        // resAuthenticity 가 "1"이 아닌 경우에는 api 호출 함수에서 exception 처리
-        member.setLicenseInformation(
-            licenseDto.getLicenseId(),
-            licenseDto.getLicensePassword(),
-            true,
-            licenseDto.getIsAgreeTerms()
-        );
+        if(dto == null) throw new CustomException(ResponseCode.BAD_REQUEST);
+        if(dto.getResAuthenticity().equals("1")){
+            // 멤버 엔티티 수정
+            member.setLicenseInformation(
+                licenseDto.getLicenseId(),
+                licenseDto.getLicensePassword(),
+                true,
+                licenseDto.getIsAgreeTerms()
+            );
+        }
+        // resAuthenticity 0: 면허 일련번호 틀림, 2: 암호 일련번호 틀림
+        else {
+            throw new CustomException(ResponseCode.LICENSE_AUTHENTICITY_INCORRECT);
+        }
     }
 
     // 면허증 정보가 유효한지 확인하는 메서드
@@ -98,8 +108,9 @@ public class LicenseServiceImpl implements LicenseService {
         // 데이터 검사
         if(licenseId.length()==12 && !licensePassword.isEmpty() && isAgreeTerms.equals(Boolean.TRUE)){
             // 면허 진위여부 api 호출
-            licenseValidationUtil.checkValidationLicense(
+            LicenseValidationResponseDto dto = licenseValidationUtil.checkValidationLicense(
                 LicenseValidationRequestDto.of(
+                    "0001",
                     member.getBirthDate(),
                     licenseId.substring(0,2),
                     licenseId.substring(2,4),
@@ -109,7 +120,14 @@ public class LicenseServiceImpl implements LicenseService {
                     member.getName()
                 )
             );
-            member.setIsLicenseValid(true);
+            if(dto.getResAuthenticity().equals("1")){
+                member.setIsLicenseValid(true);
+            }
+            // resAuthenticity 0: 면허 일련번호 틀림, 2: 암호 일련번호 틀림
+            else {
+                throw new CustomException(ResponseCode.LICENSE_AUTHENTICITY_INCORRECT);
+            }
+
         }
         // db에 기존 데이터가 존재하지 않거나 정해진 형식이 아니라면
         else {
@@ -119,7 +137,7 @@ public class LicenseServiceImpl implements LicenseService {
 
     // 신청 기간인지 확인하는 메서드
     private boolean isWithinAllowedTime() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(clock);
         DayOfWeek dayOfWeek = now.getDayOfWeek();
         LocalTime time = now.toLocalTime();
 

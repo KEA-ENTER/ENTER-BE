@@ -4,6 +4,7 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import kea.enter.enterbe.domain.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,4 +35,16 @@ public class LicenseDto {
         this.licensePassword = licensePassword;
         this.isAgreeTerms = isAgreeTerms;
     }
+
+    public static LicenseDto toService(
+        Long memberId, String licenseId, String licensePassword, Boolean isAgreeTerm
+    ){
+        return LicenseDto.builder()
+            .memberId(memberId)
+            .licenseId(licenseId)
+            .licensePassword(licensePassword)
+            .isAgreeTerms(isAgreeTerm)
+            .build();
+    }
+
 }

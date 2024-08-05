@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/members")
 public class LicenseController {
 
-    private static final Logger log = LoggerFactory.getLogger(LicenseController.class);
     private final LicenseService licenseService;
 
     // 면허 여부 조회
@@ -33,10 +32,10 @@ public class LicenseController {
     )
     @GetMapping("/license")
     public ResponseEntity<CustomResponseCode> getLicenseInformation() {
-        log.info("get /license start");
+
         Long memberId = 1L;
         licenseService.getLicenseInformation(memberId);
-        log.info("get /license end");
+
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }
 
@@ -45,17 +44,16 @@ public class LicenseController {
     @PostMapping("/license")
     public ResponseEntity<CustomResponseCode> postLicenseInformation(@Valid @RequestBody LicenseDto licenseDto)
     {
-        log.info("post /license start");
         Long memberId = 5L;
         licenseService.saveLicenseInformation(
-            LicenseDto.builder()
-                .memberId(memberId)
-                .licenseId(licenseDto.getLicenseId())
-                .licensePassword(licenseDto.getLicensePassword())
-                .isAgreeTerms(licenseDto.getIsAgreeTerms())
-                .build()
+            LicenseDto.toService(
+                memberId,
+                licenseDto.getLicenseId(),
+                licenseDto.getLicensePassword(),
+                licenseDto.getIsAgreeTerms()
+            )
         );
-        log.info("post /license end");
+
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }
 
@@ -64,10 +62,9 @@ public class LicenseController {
     @PatchMapping("/valid-license")
     public ResponseEntity<CustomResponseCode> patchLicenseInformation(){
 
-        log.info("patch /valid-license start");
-        Long memberId = 2L;
+        Long memberId = 2L; // 또는 @RequestParam Long memberId
         licenseService.patchLicenseInformation(memberId);
-        log.info("patch /valid-license end");
+
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }
 }
