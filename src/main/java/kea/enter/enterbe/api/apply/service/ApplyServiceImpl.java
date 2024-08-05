@@ -1,7 +1,6 @@
 package kea.enter.enterbe.api.apply.service;
 
 import kea.enter.enterbe.api.apply.controller.response.GetApplyResponse;
-import kea.enter.enterbe.api.apply.controller.response.GetApplySituationResponse;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
@@ -47,7 +46,7 @@ public class ApplyServiceImpl implements ApplyService{
             GetApplyResponse response = GetApplyResponse.builder()
                 .applyRound(applyRound.getApplyRound())
                 .takeDate(applyRound.getTakeDate())
-                .returnDate(applyRound.getTakeDate())
+                .returnDate(applyRound.getReturnDate())
                 .build();
 
             // takeDate와 returnDate를 한쌍의 key로 설정
