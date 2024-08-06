@@ -7,6 +7,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import kea.enter.enterbe.domain.penalty.entity.Penalty;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -34,21 +37,25 @@ public class Member extends BaseEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "birth_date", nullable = false)
+    private LocalDate birthDate;
+
     @Column(name = "license_id")
     private String licenseId;
 
     @Column(name = "license_password")
     private String licensePassword;
 
+    @Setter
     @Column(name = "is_license_valid")
-    private boolean isLicenseValid;
+    private Boolean isLicenseValid;
 
     @Column(name = "is_agree_terms", nullable = false)
-    private boolean isAgreeTerms;
+    private Boolean isAgreeTerms;
 
     @Setter
     @Column(name = "score", nullable = false)
-    private int score;
+    private Integer score;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
@@ -64,15 +71,16 @@ public class Member extends BaseEntity {
     @Builder
     public Member(
         String employeeNo,
-        String name, String email, String password,
-        String licenseId, String licensePassword, boolean isLicenseValid,
-        boolean isAgreeTerms,
-        int score, MemberRole role, MemberState state
+        String name, String email, String password, LocalDate birthDate,
+        String licenseId, String licensePassword, Boolean isLicenseValid,
+        Boolean isAgreeTerms,
+        Integer score, MemberRole role, MemberState state
     ) {
         this.employeeNo = employeeNo;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.birthDate = birthDate;
         this.licenseId = licenseId;
         this.licensePassword = licensePassword;
         this.isLicenseValid = isLicenseValid;
@@ -84,16 +92,17 @@ public class Member extends BaseEntity {
 
     public static Member of(
         String employeeNo,
-        String name, String email, String password,
-        String licenseId, String licensePassword, boolean isLicenseValid,
-        boolean isAgreeTerms,
-        int score, MemberRole role, MemberState state
+        String name, String email, String password, LocalDate birthDate,
+        String licenseId, String licensePassword, Boolean isLicenseValid,
+        Boolean isAgreeTerms,
+        Integer score, MemberRole role, MemberState state
     ) {
         return Member.builder()
             .employeeNo(employeeNo)
             .name(name)
             .email(email)
             .password(password)
+            .birthDate(birthDate)
             .licenseId(licenseId)
             .licensePassword(licensePassword)
             .isLicenseValid(isLicenseValid)
@@ -102,5 +111,26 @@ public class Member extends BaseEntity {
             .role(role)
             .state(state)
             .build();
+    }
+
+    public String getBirthDate(){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyMMdd");
+        return this.birthDate.format(dateTimeFormatter);
+    }
+
+    // 면허 정보를 set하는 함수
+    public void setLicenseInformation(
+        String licenseId, String licensePassword,
+        Boolean isLicenseValid, Boolean isAgreeTerms
+    ){
+        this.licenseId = licenseId;
+        this.licensePassword = licensePassword;
+        this.isLicenseValid = isLicenseValid;
+        this.isAgreeTerms = isAgreeTerms;
+    }
+
+    // 만 나이를 반환하는 함수
+    public Integer getAge(){
+        return Period.between(this.birthDate, LocalDate.now()).getYears();
     }
 }

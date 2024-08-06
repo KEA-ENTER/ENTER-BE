@@ -14,6 +14,7 @@ import kea.enter.enterbe.domain.penalty.entity.PenaltyReason;
 import kea.enter.enterbe.domain.penalty.entity.PenaltyState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,7 +95,7 @@ class AdminPenaltyServiceTest extends IntegrationTestSupport {
     }
 
     private Member createMember() {
-        return Member.of("1234", "name", "test@naver.com", "password", "licenseId",
+        return Member.of("1234", "name", "test@naver.com", "password", LocalDate.of(1999,11,28), "licenseId",
             "licensePassword", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 
