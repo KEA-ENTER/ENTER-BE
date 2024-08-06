@@ -7,5 +7,6 @@ import kea.enter.enterbe.api.auth.dto.ReissueResponseDto;
 public interface AuthService {
     LoginResponseDto login(LoginRequestDto loginRequestDto);
     ReissueResponseDto reissue(String refreshToken);
+    String logout(String accessToken);
 
 }

@@ -1,6 +1,5 @@
 package kea.enter.enterbe.api.auth.service;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class CustomUserDetails implements UserDetails {
 
     private final MemberInfoDto member;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<String> roles = new ArrayList<>();
@@ -36,6 +36,9 @@ public class CustomUserDetails implements UserDetails {
         return member.getId().toString();
     }
 
+    public Long getId() {
+        return member.getId();
+    }
 
     @Override
     public boolean isAccountNonExpired() {

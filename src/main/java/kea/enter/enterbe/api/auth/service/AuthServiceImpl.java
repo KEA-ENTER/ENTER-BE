@@ -28,7 +28,15 @@ public class AuthServiceImpl implements AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final RedisUtil redisUtil;
-    private final Duration expireTime = Duration.ofSeconds(864000);
+    private final Duration expireTime = Duration.ofSeconds(864000); // 2 weeks
+
+    @Override
+    public String logout(String accessToken) {
+        // 로그아웃은 클라이언트에서 처리하도록 하자
+        jwtUtil.validateToken(accessToken); // 어차피 안 되면 오류를 뿜으니까~
+        redisUtil.deleteValue(jwtUtil.getMemberId(accessToken).toString()); // 로그아웃 처리
+        return "Logout Success";
+    }
 
     @Override
     public ReissueResponseDto reissue(String refreshToken) {

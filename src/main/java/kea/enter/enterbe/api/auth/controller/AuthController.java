@@ -30,10 +30,30 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginRequestDto));
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(
+        @RequestHeader("Authorization") String accessToken
+    ) {
+        return ResponseEntity.ok(authService.logout(accessToken.substring(7)));
+    }
+
     @GetMapping("/reissue")
     public ResponseEntity<ReissueResponseDto> reissue(
         @RequestHeader("Authorization") String refreshToken
     ) {
+        /*
+        authentication.getAuthorities() : 권한
+        authentication.getName() : memberId를 반환함
+
+        getName()이 기분이 나쁘다면...
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getId();
+        String token = redisUtil.getValue(userId.toString());
+        return ResponseEntity.ok(authService.reissue(token));
+
+        식으로 사용하면 됨
+
+        */
         return ResponseEntity.ok(authService.reissue(refreshToken.substring(7)));
     }
 
