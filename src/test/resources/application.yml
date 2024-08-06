@@ -6,4 +6,6 @@ spring:
             - vault
             - kc
             - jwt
+            - redis
+            - monitoring
         active: test

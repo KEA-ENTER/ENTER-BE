@@ -3,12 +3,15 @@ package kea.enter.enterbe.api.auth.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.enter.enterbe.api.auth.dto.LoginRequestDto;
 import kea.enter.enterbe.api.auth.dto.LoginResponseDto;
+import kea.enter.enterbe.api.auth.dto.ReissueResponseDto;
 import kea.enter.enterbe.api.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +28,13 @@ public class AuthController {
     public ResponseEntity<LoginResponseDto> login(
         @RequestBody LoginRequestDto loginRequestDto) {
         return ResponseEntity.ok(authService.login(loginRequestDto));
+    }
+
+    @GetMapping("/reissue")
+    public ResponseEntity<ReissueResponseDto> reissue(
+        @RequestHeader("Authorization") String refreshToken
+    ) {
+        return ResponseEntity.ok(authService.reissue(refreshToken.substring(7)));
     }
 
 }

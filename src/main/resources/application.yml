@@ -16,6 +16,7 @@ spring:
       - jwt
       - licenseapi
       - monitoring
+      - redis
     active: local
   servlet:
       multipart:
