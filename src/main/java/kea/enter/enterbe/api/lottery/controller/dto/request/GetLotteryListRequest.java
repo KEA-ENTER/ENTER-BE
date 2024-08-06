@@ -5,11 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryListServiceDto;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Pageable;
 
 @Getter
-@Setter
+@NoArgsConstructor
 public class GetLotteryListRequest {
     @Schema(description = "검색 키워드", example = "G80")
     private String keyword;
