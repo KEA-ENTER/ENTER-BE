@@ -2,11 +2,8 @@ package kea.enter.enterbe.api.question.service;
 
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.question.controller.dto.request.AnswerRequestDto;
-import kea.enter.enterbe.api.question.controller.dto.request.QuestionRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
-import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
-import kea.enter.enterbe.api.question.service.dto.ModifyQuestionServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
 import kea.enter.enterbe.domain.member.entity.MemberState;
@@ -15,17 +12,11 @@ import kea.enter.enterbe.domain.question.entity.AnswerState;
 import kea.enter.enterbe.domain.question.entity.Question;
 import kea.enter.enterbe.domain.question.entity.QuestionCategory;
 import kea.enter.enterbe.domain.question.entity.QuestionState;
-import kea.enter.enterbe.global.common.exception.CustomException;
-import kea.enter.enterbe.global.common.exception.ResponseCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 public class AnswerServiceTest extends IntegrationTestSupport {
 

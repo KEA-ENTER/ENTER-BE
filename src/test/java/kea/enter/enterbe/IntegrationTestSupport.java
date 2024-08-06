@@ -4,6 +4,7 @@ import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.question.service.AnswerService;
+import kea.enter.enterbe.api.question.service.EmailService;
 import kea.enter.enterbe.api.question.service.QuestionService;
 import kea.enter.enterbe.api.take.service.AdminTakeService;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
@@ -23,9 +24,12 @@ import kea.enter.enterbe.global.config.ObjectStorageConfig;
 import kea.enter.enterbe.global.util.FileUtil;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import org.junit.jupiter.api.AfterEach;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSender;
 
 @SpringBootTest
 public abstract class IntegrationTestSupport {
@@ -71,6 +75,10 @@ public abstract class IntegrationTestSupport {
     protected Clock clock;
     @MockBean
     protected ClockConfig clockConfig;
+    @MockBean
+    protected JavaMailSender mailSender;
+    @MockBean
+    protected EmailService emailService;
 
     @Autowired
     protected QuestionRepository questionRepository;

@@ -14,6 +14,7 @@ spring:
       - vault
       - kc
       - jwt
+      - email
     active: local
   servlet:
       multipart:

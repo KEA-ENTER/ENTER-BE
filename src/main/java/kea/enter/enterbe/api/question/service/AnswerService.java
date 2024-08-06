@@ -2,6 +2,7 @@ package kea.enter.enterbe.api.question.service;
 
 import kea.enter.enterbe.api.question.controller.dto.request.AnswerRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
+import kea.enter.enterbe.api.question.service.dto.EmailServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
@@ -17,6 +18,8 @@ import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -26,6 +29,7 @@ public class AnswerService {
     private final QuestionRepository questionRepository;
     private final MemberRepository memberRepository;
     private final AnswerRepository answerRepository;
+    private final EmailService emailService;
 
     /* 문의 사항 답변 작성 API */
     @Transactional
@@ -34,9 +38,8 @@ public class AnswerService {
         Member member = getActiveMemberById(dto.getMemberId());
 
         // questionId로 문의사항 존재 여부를 검사한다.
-        Question question = getQuestionByIdAndMemberId(questionId, member.getId());
+        Question question = getQuestionById(questionId);
 
-        /* 문의사항 삭제 */
         // 답변을 작성했으므로 AnswerState는 ACTIVE로 고정값
         Answer answer = Answer.of(question, member, dto.getContent(), AnswerState.ACTIVE);
         // 문의사항의 state를 COMPLETE로 업데이트
@@ -44,6 +47,9 @@ public class AnswerService {
             QuestionState.COMPLETE);
 
         answerRepository.save(answer);
+
+        // 이메일 전송 로직 추가
+        sendAnswerEmail(member, question, dto.getContent());
     }
 
     /* 답변 조회 API */
@@ -62,6 +68,21 @@ public class AnswerService {
         return GetAnswerResponseDto.of(content);
     }
 
+    private void sendAnswerEmail(Member member, Question question, String answerContent) {
+        // 수신자 Email
+        String recipient = question.getMember().getEmail();
+        String questionContent = question.getContent();
+        String title = "[TALCAR] 문의 사항에 대한 답변 드립니다.";
+
+        EmailServiceDto emailDto = EmailServiceDto.builder()
+            .recipient(recipient)
+            .title(title)
+            .questionContent(questionContent)
+            .answerContent(answerContent)
+            .build();
+        emailService.sendEmail(emailDto);
+    }
+
     // memberId로 멤버의 존재 여부와 상태를 검사하는 메소드
     private Member getActiveMemberById(Long memberId) {
         return memberRepository.findByIdAndState(memberId, MemberState.ACTIVE)
@@ -71,6 +92,11 @@ public class AnswerService {
     // questionId와 memberId로 문의사항의 존재 여부를 검사하는 메소드
     private Question getQuestionByIdAndMemberId(Long questionId, Long memberId) {
         return questionRepository.findByIdAndMemberId(questionId, memberId)
+            .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_QUESTION));
+    }
+
+    private Question getQuestionById(Long questionId) {
+        return questionRepository.findById(questionId)
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_QUESTION));
     }
 }

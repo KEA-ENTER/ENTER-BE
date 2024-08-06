@@ -71,6 +71,10 @@ dependencies {
 
     //pipeline
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // email 서비스
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 }
 
 dependencyManagement {
