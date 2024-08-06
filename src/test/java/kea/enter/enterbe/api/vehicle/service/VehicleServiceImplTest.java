@@ -217,7 +217,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
     }
 
     private Member createMember() {
-        return Member.of("employeeNo", "name", "email", "password", "licenseId",
+        return Member.of("employeeNo", "name", "email", "password", LocalDate.of(1999,11,28) , "licenseId",
             "licensePassword", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 
