@@ -28,7 +28,6 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
     public Page<ApplyRound> findAllApplyRoundByCondition(String keyword, LotterySearchType searchType, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
         builder
-            .or(vehicleNoContains(searchType, keyword))
             .and(applyRound1.state.eq(ApplyRoundState.ACTIVE));
 
         // 검색 조건에 따른 쿼리 처리
