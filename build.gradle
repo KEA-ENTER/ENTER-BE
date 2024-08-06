@@ -60,6 +60,9 @@ dependencies {
     implementation platform('software.amazon.awssdk:bom:2.23.7')
     implementation 'software.amazon.awssdk:s3'
 
+    //codef api
+    implementation group: 'io.codef.api', name: 'easycodef-java', version: '1.0.5'
+
     //querydsl 설정 추가
     implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"

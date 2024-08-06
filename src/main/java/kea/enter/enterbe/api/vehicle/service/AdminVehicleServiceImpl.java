@@ -2,6 +2,7 @@ package kea.enter.enterbe.api.vehicle.service;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
@@ -12,6 +13,8 @@ import kea.enter.enterbe.global.common.exception.ResponseCode;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,19 +27,13 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     private final VehicleRepository vehicleRepository;
     private final ObjectStorageUtil objectStorageUtil;
 
-    public void checkVehicle(String vehicleNo) {
-        // 차량 번호 형식 : 두 자리 또는 세 자리 숫자 + 한글 한 글자 + 네 자리 숫자
-        String VEHICLE_NO_PATTERN = "^[0-9]{2,3}[가-힣][0-9]{4}$";
+    @Override
+    public Page<AdminVehicleResponse> getVehicleList(Pageable pageable, String vehicleNo, String model, VehicleState state) {
+        Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(
+            pageable, vehicleNo, model, state);
+        return vehicles.map(v -> AdminVehicleResponse.of(
+            v.getId(), v.getVehicleNo(), v.getCompany(), v.getModel(), v.getSeats(), v.getFuel(), v.getImg(), v.getCreatedAt().toLocalDate().toString(), v.getUpdatedAt().toLocalDate().toString(), v.getState()));
 
-        // 유효성 검사
-        if (!Pattern.matches(VEHICLE_NO_PATTERN, vehicleNo)) {
-            throw new CustomException(ResponseCode.VEHICLE_NO_NOT_ALLOWED);
-        }
-
-        // 중복 확인
-        if (vehicleRepository.findByVehicleNoAndStateNot(vehicleNo, VehicleState.INACTIVE).isPresent()) {
-            throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
-        }
     }
 
     @Override
@@ -83,6 +80,21 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
         }
     }
 
+
+    private void checkVehicle(String vehicleNo) {
+        // 차량 번호 형식 : 두 자리 또는 세 자리 숫자 + 한글 한 글자 + 네 자리 숫자
+        String VEHICLE_NO_PATTERN = "^[0-9]{2,3}[가-힣][0-9]{4}$";
+
+        // 유효성 검사
+        if (!Pattern.matches(VEHICLE_NO_PATTERN, vehicleNo)) {
+            throw new CustomException(ResponseCode.VEHICLE_NO_NOT_ALLOWED);
+        }
+
+        // 중복 확인
+        if (vehicleRepository.findByVehicleNoAndStateNot(vehicleNo, VehicleState.INACTIVE).isPresent()) {
+            throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
+        }
+    }
 
     private void deleteS3Image(String imageUrl) {
         objectStorageUtil.delete(imageUrl);

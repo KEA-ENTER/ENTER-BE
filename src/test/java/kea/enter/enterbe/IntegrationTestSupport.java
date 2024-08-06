@@ -3,6 +3,9 @@ package kea.enter.enterbe;
 import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.apply.service.ApplyService;
+import kea.enter.enterbe.api.lottery.service.AdminLotteryService;
+import kea.enter.enterbe.api.member.service.LicenseService;
+import kea.enter.enterbe.api.lottery.service.LotteryService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.question.service.QuestionService;
 import kea.enter.enterbe.api.take.service.AdminTakeService;
@@ -20,6 +23,7 @@ import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.global.config.ClockConfig;
 import kea.enter.enterbe.global.config.ObjectStorageConfig;
 import kea.enter.enterbe.global.util.FileUtil;
+import kea.enter.enterbe.global.util.LicenseValidationUtil;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +47,9 @@ public abstract class IntegrationTestSupport {
     @Autowired
     protected AdminVehicleService adminVehicleService;
     @Autowired
+    protected LicenseService licenseService;
+
+    @Autowired
     protected VehicleRepository vehicleRepository;
     @Autowired
     protected QuestionRepository questionRepository;
@@ -60,7 +67,10 @@ public abstract class IntegrationTestSupport {
     protected ApplyRepository applyRepository;
     @Autowired
     protected ApplyRoundRepository applyRoundRepository;
-
+    @Autowired
+    protected LotteryService lotteryService;
+    @Autowired
+    protected AdminLotteryService adminLotteryService;
     @Autowired
     protected FileUtil fileUtil;
 
@@ -72,6 +82,8 @@ public abstract class IntegrationTestSupport {
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean
     protected ObjectStorageUtil objectStorageUtil;
+    @MockBean
+    protected LicenseValidationUtil licenseValidationUtil;
 
 
     @AfterEach
