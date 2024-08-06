@@ -53,5 +53,5 @@ public interface WinningRepository extends JpaRepository<Winning, Long> {
         @Param("endDate") LocalDateTime endDate
     );
 
-    Integer countByApplyApplyRoundApplyRoundAndState(int i, WinningState winningState);
+    Integer countByApplyApplyRoundApplyRoundAndState(int applyRound, WinningState winningState);
 }
