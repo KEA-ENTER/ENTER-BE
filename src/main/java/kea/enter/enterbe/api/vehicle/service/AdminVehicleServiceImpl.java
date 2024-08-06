@@ -77,7 +77,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
             }
         }
         else {
-            throw new CustomException(ResponseCode.VEHICLNOT_VALID);
+            throw new CustomException(ResponseCode.VEHICLE_NOT_VALID);
         }
     }
 
@@ -86,7 +86,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     public void deleteVehicle(DeleteVehicleDto dto) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
         if (vehicle.isPresent()) {
-            vehicle.get().deleteVehicle;
+            vehicle.get().deleteVehicle();
         }
         else {
             throw new CustomException(ResponseCode.VEHICLE_NOT_VALID);
