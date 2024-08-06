@@ -40,6 +40,8 @@ public class AnswerController {
         @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "MEM-ERR-001", description = "멤버가 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "QST-ERR-001", description = "문의사항이 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "QST-ERR-003", description = "삭제된 문의사항입니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "QST-ERR-004", description = "답변 완료된 문의사항입니다.", content = @Content(mediaType = "application/json")),
     })
     @PostMapping("/answers/{questionId}")
     public ResponseEntity<String> createAnswer(

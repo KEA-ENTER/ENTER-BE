@@ -19,8 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -40,6 +38,14 @@ public class AnswerService {
 
         // questionId로 문의사항 존재 여부를 검사한다.
         Question question = getQuestionById(questionId);
+
+        // 문의사항의 state가 WAIT 상태가 아닌 경우 예외를 발생시킨다.
+        if (question.getState() == QuestionState.INACTIVE) {
+            throw new CustomException(ResponseCode.INVALID_QUESTION_STATE_DELETE);
+        }
+        if (question.getState() == QuestionState.COMPLETE) {
+            throw new CustomException(ResponseCode.INVALID_QUESTION_STATE_COMPLETE);
+        }
 
         // 답변을 작성했으므로 AnswerState는 ACTIVE로 고정값
         Answer answer = Answer.of(question, member, dto.getContent(), AnswerState.ACTIVE);
