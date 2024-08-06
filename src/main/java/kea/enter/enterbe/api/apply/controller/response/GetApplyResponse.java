@@ -3,7 +3,6 @@ package kea.enter.enterbe.api.apply.controller.response;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 import java.time.LocalDate;
 
 @Getter
