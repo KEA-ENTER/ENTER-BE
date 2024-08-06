@@ -1,8 +1,10 @@
 package kea.enter.enterbe.domain.lottery.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import kea.enter.enterbe.api.lottery.dto.WeightDto;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,4 +42,14 @@ public interface WinningRepository extends JpaRepository<Winning, Long> {
     );
   
     List<Winning> findAllByApplyApplyRoundIdAndState(Long applyRoundId, WinningState state);
+
+    @Query("SELECT new kea.enter.enterbe.api.lottery.dto.WeightDto(w.id, COUNT(w.id)) " +
+        "FROM Winning w " +
+        "WHERE w.state = 'ACTIVE' " +
+        "AND w.createdAt BETWEEN :startDate AND :endDate " +
+        "GROUP BY w.id")
+    List<WeightDto> countActiveEntitiesByHalfYearAndState(
+        @Param("startDate") LocalDateTime startDate,
+        @Param("endDate") LocalDateTime endDate
+    );
 }

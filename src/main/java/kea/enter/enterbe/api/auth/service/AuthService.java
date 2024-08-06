@@ -1,9 +1,9 @@
 package kea.enter.enterbe.api.auth.service;
 
 import kea.enter.enterbe.api.auth.dto.LoginRequestDto;
-import kea.enter.enterbe.api.auth.dto.TokenDao;
+import kea.enter.enterbe.api.auth.dto.LoginResponseDto;
 
 public interface AuthService {
-    TokenDao login(LoginRequestDto loginRequestDto);
+    LoginResponseDto login(LoginRequestDto loginRequestDto);
 
 }

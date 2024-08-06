@@ -15,6 +15,7 @@ spring:
       - kc
       - jwt
       - licenseapi
+      - monitoring
     active: local
   servlet:
       multipart:

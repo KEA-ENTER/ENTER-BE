@@ -3,6 +3,7 @@ package kea.enter.enterbe.api.vehicle.service;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
+import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
@@ -31,33 +32,57 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
         if (!Pattern.matches(VEHICLE_NO_PATTERN, vehicleNo)) {
             throw new CustomException(ResponseCode.VEHICLE_NO_NOT_ALLOWED);
         }
+
+        // 중복 확인
+        if (vehicleRepository.findByVehicleNoAndStateNot(vehicleNo, VehicleState.INACTIVE).isPresent()) {
+            throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
+        }
     }
 
     @Override
     @Transactional
     public void createVehicle(CreateVehicleDto dto) {
-        // 차량 번호 형식 확인
         checkVehicle(dto.getVehicleNo());
 
-        // 중복 확인
-        if (vehicleRepository.findByVehicleNoAndStateNot(dto.getVehicleNo(), VehicleState.INACTIVE).isPresent()) {
-            throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
+        String img = "";
+        try {
+            img = uploadS3Image(dto.getImg());
+
+            vehicleRepository.save(Vehicle.of(
+                dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
+                dto.getFuel(), img, dto.getState()));
+
+        } catch (Exception e) {
+            deleteS3Image(img);
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
         }
-        else {
+    }
+
+    @Override
+    @Transactional
+    public void modifyVehicle(ModifyVehicleDto dto) {
+        checkVehicle(dto.getVehicleNo());
+
+        Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
+        if (vehicle.isPresent()) {
             String img = "";
             try {
                 img = uploadS3Image(dto.getImg());
 
-                vehicleRepository.save(Vehicle.of(
+                vehicle.get().modifyVehicle(
                     dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
-                    dto.getFuel(), img, VehicleState.AVAILABLE));
+                    dto.getFuel(), img, dto.getState());
 
             } catch (Exception e) {
                 deleteS3Image(img);
                 throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
             }
         }
+        else {
+            throw new CustomException(ResponseCode.VEHICLE_NOT_VALID);
+        }
     }
+
 
     private void deleteS3Image(String imageUrl) {
         objectStorageUtil.delete(imageUrl);

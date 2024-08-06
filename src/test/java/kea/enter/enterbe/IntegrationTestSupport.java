@@ -2,6 +2,7 @@ package kea.enter.enterbe;
 
 import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
+import kea.enter.enterbe.api.apply.service.ApplyService;
 import kea.enter.enterbe.api.member.service.LicenseService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.question.service.QuestionService;
@@ -30,6 +31,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 @SpringBootTest
 public abstract class IntegrationTestSupport {
     @Autowired
+    protected ApplyService applyService;
+    @Autowired
     protected AdminApplyService adminApplyService;
     @Autowired
     protected AdminPenaltyService adminPenaltyService;
@@ -43,6 +46,7 @@ public abstract class IntegrationTestSupport {
     protected AdminVehicleService adminVehicleService;
     @Autowired
     protected LicenseService licenseService;
+
     @Autowired
     protected VehicleRepository vehicleRepository;
     @Autowired

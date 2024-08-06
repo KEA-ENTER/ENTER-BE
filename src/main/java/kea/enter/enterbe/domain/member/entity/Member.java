@@ -10,8 +10,6 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import kea.enter.enterbe.domain.penalty.entity.Penalty;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -19,6 +17,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -53,6 +53,7 @@ public class Member extends BaseEntity {
     @Column(name = "is_agree_terms", nullable = false)
     private Boolean isAgreeTerms;
 
+    @Setter
     @Column(name = "score", nullable = false)
     private Integer score;
 
