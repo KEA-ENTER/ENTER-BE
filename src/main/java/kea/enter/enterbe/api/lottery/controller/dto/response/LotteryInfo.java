@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class LotteryInfo {
+    @Schema(description = "신청 회차 아이디", example = "1")
+    private Long applyRoundId;
+
     @Schema(description = "회차", example = "24")
     private int applyRound;
 
@@ -36,7 +39,8 @@ public class LotteryInfo {
     private String competition ;
 
     @Builder
-    public LotteryInfo(int applyRound, String takeDate, String returnDate, String vehicleModel, String vehicleNo, int applyCnt, int winningCnt, int noShowCnt, String competition) {
+    public LotteryInfo(Long applyRoundId, int applyRound, String takeDate, String returnDate, String vehicleModel, String vehicleNo, int applyCnt, int winningCnt, int noShowCnt, String competition) {
+        this.applyRoundId = applyRoundId;
         this.applyRound = applyRound;
         this.takeDate = takeDate;
         this.returnDate = returnDate;
@@ -48,8 +52,9 @@ public class LotteryInfo {
         this.competition = competition;
     }
 
-    public static LotteryInfo of(int applyRound, String takeDate, String returnDate,  String vehicleModel, String vehicleNo, int applyCnt, int winningCnt, int noShowCnt, String competition) {
+    public static LotteryInfo of(Long applyRoundId, int applyRound, String takeDate, String returnDate,  String vehicleModel, String vehicleNo, int applyCnt, int winningCnt, int noShowCnt, String competition) {
         return LotteryInfo.builder()
+            .applyRoundId(applyRoundId)
             .applyRound(applyRound)
             .takeDate(takeDate)
             .returnDate(returnDate)

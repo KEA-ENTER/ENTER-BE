@@ -1,4 +1,4 @@
-package kea.enter.enterbe.api.take.controller.response;
+package kea.enter.enterbe.api.take.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

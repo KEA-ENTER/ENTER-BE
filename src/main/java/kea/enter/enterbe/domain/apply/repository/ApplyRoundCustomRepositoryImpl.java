@@ -28,8 +28,6 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
     public Page<ApplyRound> findAllApplyRoundByCondition(String keyword, LotterySearchType searchType, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
         builder
-            .and(roundContains(searchType, keyword))
-            .and(vehicleModelContains(searchType, keyword))
             .or(vehicleNoContains(searchType, keyword))
             .and(applyRound1.state.eq(ApplyRoundState.ACTIVE));
 
@@ -43,7 +41,7 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
             case VEHICLE -> searchBuilder.or(vehicleModelContains(searchType, keyword))
                 .or(vehicleNoContains(searchType, keyword));
 
-            case ROUND -> searchBuilder.or(roundContains(searchType, keyword));
+            case ROUND -> searchBuilder.and(roundContains(searchType, keyword));
         }
 
         builder.and(searchBuilder);
@@ -54,7 +52,7 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
             .from(applyRound1)
             .where(builder)
             .leftJoin(applyRound1.vehicle, vehicle).fetchJoin()
-            .orderBy(applyRound1.applyRound.asc(), applyRound1.createdAt.desc())
+            .orderBy(applyRound1.takeDate.desc())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
