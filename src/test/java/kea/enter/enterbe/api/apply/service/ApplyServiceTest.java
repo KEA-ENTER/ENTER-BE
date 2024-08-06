@@ -1,7 +1,7 @@
 package kea.enter.enterbe.api.apply.service;
 
 import kea.enter.enterbe.IntegrationTestSupport;
-import kea.enter.enterbe.api.apply.controller.response.GetApplyResponse;
+import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyResponse;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;

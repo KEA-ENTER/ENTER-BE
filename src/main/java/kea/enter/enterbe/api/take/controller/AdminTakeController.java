@@ -2,7 +2,7 @@ package kea.enter.enterbe.api.take.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kea.enter.enterbe.api.take.controller.response.GetTakeSituationResponse;
+import kea.enter.enterbe.api.take.controller.dto.response.GetTakeSituationResponse;
 import kea.enter.enterbe.api.take.service.AdminTakeService;
 import kea.enter.enterbe.api.take.service.dto.GetTakeSituationServiceDto;
 import lombok.RequiredArgsConstructor;
