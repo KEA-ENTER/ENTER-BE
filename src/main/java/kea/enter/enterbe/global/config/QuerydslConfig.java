@@ -1,4 +1,4 @@
-package kea.enter.enterbe.domain.vehicle.repository;
+package kea.enter.enterbe.global.config;
 
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
