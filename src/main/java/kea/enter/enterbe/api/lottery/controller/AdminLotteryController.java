@@ -2,6 +2,7 @@ package kea.enter.enterbe.api.lottery.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kea.enter.enterbe.api.lottery.controller.dto.request.GetApplicantListRequest;
 import kea.enter.enterbe.api.lottery.controller.dto.request.GetLotteryListRequest;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetApplicantListResponse;
@@ -27,7 +28,7 @@ public class AdminLotteryController {
     @Operation(summary = "추첨 관리 목록 조회 API", description = "그동안의 추첨에 대한 통계를 조회합니다.")
     @GetMapping("")
     public ResponseEntity<GetLotteryListResponse> getLotteryList(
-        @ParameterObject GetLotteryListRequest request,
+        @Valid @ParameterObject GetLotteryListRequest request,
         @ParameterObject Pageable pageable) {
         // TODO: 어드민 권한 검사
         GetLotteryListResponse response = adminLotteryService.getLotteryList(request.toService(pageable));
@@ -39,7 +40,7 @@ public class AdminLotteryController {
     @GetMapping("/{applyRoundId}")
     public ResponseEntity<GetApplicantListResponse> getApplicantList(
         @PathVariable Long applyRoundId,
-        @ParameterObject GetApplicantListRequest request,
+        @Valid @ParameterObject GetApplicantListRequest request,
         @ParameterObject Pageable pageable) {
         // TODO: 어드민 권한 검사
         GetApplicantListResponse response = adminLotteryService.getApplicantList(request.toService(applyRoundId, pageable));
