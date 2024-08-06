@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface ApplyRoundRepository extends JpaRepository<ApplyRound, Long> {
+public interface ApplyRoundRepository extends JpaRepository<ApplyRound, Long>, ApplyRoundCustomRepository {
     // 인수 날짜를 기준으로 회차를 조회한다
     List<ApplyRound> findAllByTakeDateBetweenAndState(LocalDate startDate, LocalDate endDate, ApplyRoundState state);
 }

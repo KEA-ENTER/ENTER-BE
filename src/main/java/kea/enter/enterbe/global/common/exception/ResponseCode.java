@@ -20,6 +20,9 @@ public enum ResponseCode {
     // APPLY_ROUND
     APPLY_ROUND_NOT_FOUND("APR-ERR-001", HttpStatus.NOT_FOUND, "신청 회차를 찾을 수 없습니다."),
 
+    // LOTTERY
+    APPLY_ROUND_INVALID_SEARCH("LOT-ERR-001", HttpStatus.BAD_GATEWAY, "신청 회차는 정수형으로 입력해야 합니다"),
+
     //VEHICLE
     VEHICLE_NOT_VALID("VHC_ERR_001", HttpStatus.NOT_FOUND, "법인 차량 정보를 찾을 수 없습니다."),
     VEHICLE_NO_NOT_ALLOWED("VHC_ERR_002", HttpStatus.METHOD_NOT_ALLOWED, "유효하지 않은 차량번호 형식입니다."),
