@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ApplyRepository extends JpaRepository<Apply, Long> {
+public interface ApplyRepository extends JpaRepository<Apply, Long>, ApplyCustomRepository {
     List<Apply> findAllByApplyRoundIdAndState(Long applyRoundId, ApplyState state);
 
     @Query("SELECT a.member.id FROM Apply a WHERE a.applyRound.id = :applyRoundId AND a.state = 'ACTIVE' ")

@@ -3,6 +3,7 @@ package kea.enter.enterbe;
 import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.apply.service.ApplyService;
+import kea.enter.enterbe.api.lottery.service.AdminLotteryService;
 import kea.enter.enterbe.api.member.service.LicenseService;
 import kea.enter.enterbe.api.lottery.service.LotteryService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
@@ -68,7 +69,8 @@ public abstract class IntegrationTestSupport {
     protected ApplyRoundRepository applyRoundRepository;
     @Autowired
     protected LotteryService lotteryService;
-
+    @Autowired
+    protected AdminLotteryService adminLotteryService;
     @Autowired
     protected FileUtil fileUtil;
 

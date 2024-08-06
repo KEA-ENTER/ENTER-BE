@@ -39,31 +39,37 @@ public class Apply extends BaseEntity {
 
     @Column(name="arrivals", nullable = false)
     private String arrivals;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="purpose", nullable = false)
+    private ApplyPurpose purpose;
+
     @Enumerated(EnumType.STRING)
     @Column(name="state", nullable = false)
     private ApplyState state;
+
     @Builder
-    public Apply(Member member, ApplyRound applyRound, Vehicle vehicle, String departures,
-        String arrivals, ApplyState state){
+    public Apply(Member member, ApplyRound applyRound, Vehicle vehicle,
+        String departures, String arrivals, ApplyPurpose purpose, ApplyState state){
         this.member = member;
         this.applyRound = applyRound;
         this.vehicle = vehicle;
         this.departures = departures;
         this.arrivals = arrivals;
+        this.purpose = purpose;
         this.state = state;
     }
 
-    public static Apply of(Member member, ApplyRound applyRound, Vehicle vehicle, String departures,
-        String arrivals, ApplyState state){
+    public static Apply of(Member member, ApplyRound applyRound, Vehicle vehicle,
+        String departures, String arrivals, ApplyPurpose purpose, ApplyState state){
         return Apply.builder()
             .member(member)
             .applyRound(applyRound)
             .vehicle(vehicle)
             .departures(departures)
             .arrivals(arrivals)
+            .purpose(purpose)
             .state(state)
             .build();
     }
-
-
 }
