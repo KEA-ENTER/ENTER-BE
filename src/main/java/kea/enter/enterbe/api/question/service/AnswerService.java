@@ -18,6 +18,7 @@ import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -59,13 +60,15 @@ public class AnswerService {
         Member member = getActiveMemberById(dto.getMemberId());
 
         // questionId로 문의사항 존재 여부를 검사한다.
-        Question question = getQuestionByIdAndMemberId(dto.getQuestionId(), dto.getMemberId());
+        Question question = getQuestionById(dto.getQuestionId());
 
         // 답변 반환
         Optional<Answer> optionalAnswer = answerRepository.findByQuestionId(dto.getQuestionId());
         // 답변이 없을 시 null로 반환
         String content = optionalAnswer.map(Answer::getContent).orElse(null);
-        return GetAnswerResponseDto.of(content);
+        LocalDateTime createdAt = optionalAnswer.map(Answer::getCreatedAt).orElse(null);
+        String memberRole = member.getRole().name();
+        return GetAnswerResponseDto.of(content, createdAt, memberRole);
     }
 
     private void sendAnswerEmail(Member member, Question question, String answerContent) {
@@ -89,12 +92,7 @@ public class AnswerService {
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_MEMBER));
     }
 
-    // questionId와 memberId로 문의사항의 존재 여부를 검사하는 메소드
-    private Question getQuestionByIdAndMemberId(Long questionId, Long memberId) {
-        return questionRepository.findByIdAndMemberId(questionId, memberId)
-            .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_QUESTION));
-    }
-
+    // questionId로 문의사항의 존재 여부를 검사하는 메소드
     private Question getQuestionById(Long questionId) {
         return questionRepository.findById(questionId)
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_QUESTION));
