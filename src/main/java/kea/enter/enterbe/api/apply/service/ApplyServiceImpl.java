@@ -34,7 +34,6 @@ import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_ROUND
 public class ApplyServiceImpl implements ApplyService{
     private final ApplyRepository applyRepository;
     private final ApplyRoundRepository applyRoundRepository;
-    private final VehicleRepository vehicleRepository;
 
     // 신청 가능 날짜 조회 API
     @Transactional
