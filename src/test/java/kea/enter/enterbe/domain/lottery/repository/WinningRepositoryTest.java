@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.domain.apply.entity.Apply;
+import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
@@ -171,7 +172,7 @@ class WinningRepositoryTest extends IntegrationTestSupport {
     }
 
     private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyState.ACTIVE);
+        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
     private ApplyRound createApplyRound(Vehicle vehicle, LocalDate takeDate, LocalDate returnDate) {

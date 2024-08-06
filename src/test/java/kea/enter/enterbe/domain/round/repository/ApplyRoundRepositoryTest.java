@@ -3,6 +3,7 @@ package kea.enter.enterbe.domain.round.repository;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.lottery.controller.dto.request.LotterySearchType;
 import kea.enter.enterbe.domain.apply.entity.Apply;
+import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
@@ -184,7 +185,7 @@ class ApplyRoundRepositoryTest extends IntegrationTestSupport {
     }
 
     private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyState.ACTIVE);
+        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
     private Winning createWinning(Vehicle vehicle, Apply apply, WinningState state) {
