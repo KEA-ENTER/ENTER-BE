@@ -50,7 +50,8 @@ public enum ResponseCode {
     NOT_FOUND_QUESTION("QST-ERR-001", HttpStatus.NOT_FOUND, "문의사항이 존재하지 않습니다."),
     INVALID_QUESTION_STATE("QST-ERR-002", HttpStatus.INTERNAL_SERVER_ERROR, "수정할 수 없는 문의 사항입니다."),
 
-    NOT_IMAGE_FILE("GLB-ERR-004", HttpStatus.BAD_REQUEST, "이미지 파일이 아닙니다.");
+    NOT_IMAGE_FILE("GLB-ERR-004", HttpStatus.BAD_REQUEST, "이미지 파일이 아닙니다."),
+    INVALID_QUARTZ_EXPRESSION_TRIGGER("GLB-ERR-005",HttpStatus.INTERNAL_SERVER_ERROR , "잘못된Quartz expression trigger입니다.");
 
 
     private final String code;
