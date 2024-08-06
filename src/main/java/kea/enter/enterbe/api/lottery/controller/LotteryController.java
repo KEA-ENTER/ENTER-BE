@@ -20,7 +20,7 @@ public class LotteryController {
     private final LotteryService lotteryService;
 
     @Operation(summary = "최근 5회차의 회차별 평균 경쟁률")
-    @GetMapping
+    @GetMapping("competition-rate")
     public ResponseEntity<List<GetRecentCompetitionRateResponse>> getRecentCompetitionRate() {
         return ResponseEntity.ok(lotteryService.getRecentCompetitionRate());
     }
