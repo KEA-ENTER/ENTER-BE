@@ -1,10 +1,15 @@
 package kea.enter.enterbe.api.lottery.service;
 
 import kea.enter.enterbe.IntegrationTestSupport;
+import kea.enter.enterbe.api.lottery.controller.dto.request.ApplicantSearchType;
+import kea.enter.enterbe.api.lottery.controller.dto.request.GetApplicantListRequest;
 import kea.enter.enterbe.api.lottery.controller.dto.request.LotterySearchType;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetApplicantListResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryListResponse;
+import kea.enter.enterbe.api.lottery.service.dto.GetApplicantListServiceDto;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryListServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
+import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
@@ -62,6 +67,34 @@ class AdminLotteryServiceTest extends IntegrationTestSupport {
             );
     }
 
+    @DisplayName("해당 신청 회차의 신청자 목록을 조회한다. (검색, 페이징)")
+    @Test
+    void getApplicantList() {
+        // given
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, 1, LocalDate.of(2024, 7, 29)));
+
+        Member member1 = memberRepository.save(createMember());
+        Member member2 = memberRepository.save(createMember());
+        Member member3 = memberRepository.save(createMember());
+
+        Apply winningApply = applyRepository.save(createApply(member1, applyRound, vehicle));
+        applyRepository.save(createApply(member2, applyRound, vehicle));
+        applyRepository.save(createApply(member3, applyRound, vehicle));
+
+        winningRepository.save(createWinning(vehicle, winningApply, WinningState.ACTIVE));
+
+        GetApplicantListServiceDto dto = GetApplicantListServiceDto.of(applyRound.getId(), null, ApplicantSearchType.ALL, PageRequest.of(0, 10));
+
+        // when
+        GetApplicantListResponse response = adminLotteryService.getApplicantList(dto);
+
+        // then
+        assertThat(response.getApplicantList()).hasSize(3)
+            .extracting("isWinning")
+            .contains(false, false, true);
+    }
+
     private Member createMember() {
         return Member.of("employeeNo", "name", "email", "password", LocalDate.of(1999,11,28),
             "licenseId", "licensePassword", true, true,
@@ -78,7 +111,7 @@ class AdminLotteryServiceTest extends IntegrationTestSupport {
     }
 
     private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyState.ACTIVE);
+        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
     private Winning createWinning(Vehicle vehicle, Apply apply, WinningState state) {

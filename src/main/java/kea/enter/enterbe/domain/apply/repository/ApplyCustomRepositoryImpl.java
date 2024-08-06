@@ -15,6 +15,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.util.List;
 
 import static kea.enter.enterbe.domain.apply.entity.QApply.apply;
+import static kea.enter.enterbe.domain.member.entity.QMember.member;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,6 +45,7 @@ public class ApplyCustomRepositoryImpl implements ApplyCustomRepository {
             .select(apply)
             .from(apply)
             .where(builder)
+            .leftJoin(apply.member, member).fetchJoin()
             .orderBy(apply.createdAt.desc())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())

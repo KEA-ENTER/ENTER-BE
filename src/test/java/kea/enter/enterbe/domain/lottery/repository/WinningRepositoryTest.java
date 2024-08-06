@@ -167,6 +167,26 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         assertThat(applyList).isEmpty();
     }
 
+    @Transactional
+    @DisplayName(value = "해당 신청 내역의 당첨 여부를 조회한다.")
+    @Test
+    public void findByApplyIdAndState() {
+        // given
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024, 7, 29), LocalDate.of(2024, 7, 30)));
+
+        Member member = memberRepository.save(createMember());
+        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
+
+        winningRepository.save(createWinning(vehicle, apply));
+
+        // when
+        Optional<Winning> winningOptional = winningRepository.findByApplyIdAndState(apply.getId(), WinningState.ACTIVE);
+
+        // then
+        assertThat(winningOptional).isPresent();
+    }
+
     private Winning createWinning(Vehicle vehicle, Apply apply) {
         return Winning.of(vehicle, apply, WinningState.ACTIVE);
     }
