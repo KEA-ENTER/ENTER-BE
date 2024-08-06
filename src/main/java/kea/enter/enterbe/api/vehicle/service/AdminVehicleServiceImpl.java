@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
+import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
@@ -74,6 +75,18 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
                 deleteS3Image(img);
                 throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
             }
+        }
+        else {
+            throw new CustomException(ResponseCode.VEHICLNOT_VALID);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteVehicle(DeleteVehicleDto dto) {
+        Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
+        if (vehicle.isPresent()) {
+            vehicle.get().deleteVehicle;
         }
         else {
             throw new CustomException(ResponseCode.VEHICLE_NOT_VALID);
