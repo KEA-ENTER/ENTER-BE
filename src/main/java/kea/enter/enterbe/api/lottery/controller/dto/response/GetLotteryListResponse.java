@@ -4,17 +4,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 public class GetLotteryListResponse {
     private List<LotteryInfo> lotteryList;
+    @Schema(description = "현재 페이지", example = "0")
     private int page;
+    @Schema(description = "현재 페이지 사이즈", example = "8")
     private int size;
+    @Schema(description = "전체 개수", example = "20")
     private long totalElements;
+    @Schema(description = "전체 페이지", example = "3")
     private int totalPages;
+    @Schema(description = "다음 페이지 존재 여부", example = "true")
     private boolean hasNextPage;
 
     @Builder
