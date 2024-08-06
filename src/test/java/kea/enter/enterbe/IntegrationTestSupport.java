@@ -2,6 +2,7 @@ package kea.enter.enterbe;
 
 import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
+import kea.enter.enterbe.api.lottery.service.AdminLotteryService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.question.service.QuestionService;
 import kea.enter.enterbe.api.take.service.AdminTakeService;
@@ -57,6 +58,8 @@ public abstract class IntegrationTestSupport {
     protected AdminApplyService adminApplyService;
     @Autowired
     protected AdminTakeService adminTakeService;
+    @Autowired
+    protected AdminLotteryService adminLotteryService;
     @MockBean
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean

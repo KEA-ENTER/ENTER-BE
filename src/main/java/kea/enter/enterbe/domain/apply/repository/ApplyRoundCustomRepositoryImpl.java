@@ -17,6 +17,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.util.List;
 
 import static kea.enter.enterbe.domain.apply.entity.QApplyRound.applyRound1;
+import static kea.enter.enterbe.domain.vehicle.entity.QVehicle.vehicle;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -52,6 +53,7 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
             .select(applyRound1)
             .from(applyRound1)
             .where(builder)
+            .leftJoin(applyRound1.vehicle, vehicle).fetchJoin()
             .orderBy(applyRound1.applyRound.asc(), applyRound1.createdAt.desc())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
