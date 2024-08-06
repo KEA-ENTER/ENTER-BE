@@ -54,7 +54,7 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
             .from(applyRound1)
             .where(builder)
             .leftJoin(applyRound1.vehicle, vehicle).fetchJoin()
-            .orderBy(applyRound1.applyRound.asc(), applyRound1.createdAt.desc())
+            .orderBy(applyRound1.takeDate.desc())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
