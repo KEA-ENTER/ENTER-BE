@@ -54,4 +54,6 @@ public interface WinningRepository extends JpaRepository<Winning, Long> {
     );
 
     Integer countByApplyApplyRoundApplyRoundAndState(int applyRound, WinningState winningState);
+
+    Optional<Winning> findByApplyIdAndState(Long applyId, WinningState state);
 }

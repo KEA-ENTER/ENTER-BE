@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.vehicle.service.dto.PostVehicleReportServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
+import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
@@ -209,7 +210,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
     }
 
     private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyState.ACTIVE);
+        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
     private ApplyRound createApplyRound(Vehicle vehicle, LocalDate takeDate, LocalDate returnDate) {
