@@ -6,6 +6,8 @@ import kea.enter.enterbe.api.auth.service.AuthService;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
 import kea.enter.enterbe.api.apply.controller.AdminApplyController;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
+import kea.enter.enterbe.api.lottery.controller.AdminLotteryController;
+import kea.enter.enterbe.api.lottery.service.AdminLotteryService;
 import kea.enter.enterbe.api.member.controller.LicenseController;
 import kea.enter.enterbe.api.member.service.LicenseService;
 import kea.enter.enterbe.api.lottery.controller.LotteryController;
@@ -38,7 +40,8 @@ import org.springframework.test.web.servlet.MockMvc;
     VehicleController.class,
     AdminVehicleController.class,
     LicenseController.class,
-    LotteryController.class
+    LotteryController.class,
+    AdminLotteryController.class
 })
 @Import({SecurityConfig.class})
 public abstract class ControllerTestSupport {
@@ -63,6 +66,8 @@ public abstract class ControllerTestSupport {
     protected LicenseService licenseService;
     @MockBean
     protected LotteryService lotteryService;
+    @MockBean
+    protected AdminLotteryService adminLotteryService;
 
     @MockBean
     protected FileUtil fileUtil;
