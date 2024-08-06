@@ -6,10 +6,11 @@ import kea.enter.enterbe.api.lottery.service.dto.GetLotteryListServiceDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.domain.Pageable;
 
 @Getter
-@NoArgsConstructor
+@Setter
 public class GetLotteryListRequest {
     @Schema(description = "검색 키워드", example = "G80")
     private String keyword;

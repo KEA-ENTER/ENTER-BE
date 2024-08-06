@@ -2,7 +2,10 @@ package kea.enter.enterbe;
 
 import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
+import kea.enter.enterbe.api.apply.service.ApplyService;
 import kea.enter.enterbe.api.lottery.service.AdminLotteryService;
+import kea.enter.enterbe.api.member.service.LicenseService;
+import kea.enter.enterbe.api.lottery.service.LotteryService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.question.service.QuestionService;
 import kea.enter.enterbe.api.take.service.AdminTakeService;
@@ -20,6 +23,7 @@ import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.global.config.ClockConfig;
 import kea.enter.enterbe.global.config.ObjectStorageConfig;
 import kea.enter.enterbe.global.util.FileUtil;
+import kea.enter.enterbe.global.util.LicenseValidationUtil;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,48 +33,58 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 @SpringBootTest
 public abstract class IntegrationTestSupport {
     @Autowired
+    protected ApplyService applyService;
+    @Autowired
+    protected AdminApplyService adminApplyService;
+    @Autowired
+    protected AdminPenaltyService adminPenaltyService;
+    @Autowired
     protected QuestionService questionService;
     @Autowired
-    protected WinningRepository winningRepository;
+    protected AdminTakeService adminTakeService;
     @Autowired
-    protected ApplyRepository applyRepository;
+    protected VehicleService vehicleService;
     @Autowired
-    protected ApplyRoundRepository applyRoundRepository;
+    protected AdminVehicleService adminVehicleService;
     @Autowired
-    protected VehicleReportRepository vehicleReportRepository;
-    @Autowired
-    protected VehicleNoteRepository vehicleNoteRepository;
+    protected LicenseService licenseService;
+
     @Autowired
     protected VehicleRepository vehicleRepository;
+    @Autowired
+    protected QuestionRepository questionRepository;
+    @Autowired
+    protected WinningRepository winningRepository;
     @Autowired
     protected MemberRepository memberRepository;
     @Autowired
     protected PenaltyRepository penaltyRepository;
     @Autowired
-    protected VehicleService vehicleService;
+    protected VehicleNoteRepository vehicleNoteRepository;
     @Autowired
-    protected FileUtil fileUtil;
+    protected VehicleReportRepository vehicleReportRepository;
     @Autowired
-    protected AdminPenaltyService adminPenaltyService;
+    protected ApplyRepository applyRepository;
     @Autowired
-    protected AdminVehicleService adminVehicleService;
+    protected ApplyRoundRepository applyRoundRepository;
     @Autowired
-    protected AdminApplyService adminApplyService;
-    @Autowired
-    protected AdminTakeService adminTakeService;
+    protected LotteryService lotteryService;
     @Autowired
     protected AdminLotteryService adminLotteryService;
+    @Autowired
+    protected FileUtil fileUtil;
+
+    @MockBean
+    protected Clock clock;
+    @MockBean
+    protected ClockConfig clockConfig;
     @MockBean
     protected ObjectStorageConfig objectStorageConfig;
     @MockBean
     protected ObjectStorageUtil objectStorageUtil;
     @MockBean
-    protected Clock clock;
-    @MockBean
-    protected ClockConfig clockConfig;
+    protected LicenseValidationUtil licenseValidationUtil;
 
-    @Autowired
-    protected QuestionRepository questionRepository;
 
     @AfterEach
     void tearDown() {

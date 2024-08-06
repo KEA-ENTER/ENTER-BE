@@ -22,6 +22,8 @@ spring:
         import:
             - vault://secret/database
             - vault://secret/kc
+            - vault://secret/security
+            - vault://secret/license
     cloud:
         vault:
             token: ${dev-vault-token}

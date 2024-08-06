@@ -8,6 +8,10 @@ import kea.enter.enterbe.api.apply.controller.AdminApplyController;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.lottery.controller.AdminLotteryController;
 import kea.enter.enterbe.api.lottery.service.AdminLotteryService;
+import kea.enter.enterbe.api.member.controller.LicenseController;
+import kea.enter.enterbe.api.member.service.LicenseService;
+import kea.enter.enterbe.api.lottery.controller.LotteryController;
+import kea.enter.enterbe.api.lottery.service.LotteryService;
 import kea.enter.enterbe.api.question.controller.QuestionController;
 import kea.enter.enterbe.api.penalty.controller.AdminPenaltyController;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
@@ -18,7 +22,6 @@ import kea.enter.enterbe.api.vehicle.controller.AdminVehicleController;
 import kea.enter.enterbe.api.vehicle.controller.VehicleController;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
-import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.global.security.JwtUtil;
 import kea.enter.enterbe.global.security.SecurityConfig;
 import kea.enter.enterbe.global.util.FileUtil;
@@ -29,39 +32,49 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = {
-  VehicleController.class, AdminPenaltyController.class, QuestionController.class,
-    AdminApplyController.class, AdminTakeController.class, AuthController.class,
-    AdminVehicleController.class, AdminLotteryController.class
+    AuthController.class,
+    AdminApplyController.class,
+    AdminPenaltyController.class,
+    QuestionController.class,
+    AdminTakeController.class,
+    VehicleController.class,
+    AdminVehicleController.class,
+    LicenseController.class,
+    LotteryController.class,
+    AdminLotteryController.class
 })
 @Import({SecurityConfig.class})
 public abstract class ControllerTestSupport {
 
+    @MockBean
+    protected AuthService authService;
+    @MockBean
+    protected AdminApplyService adminApplyService;
+    @MockBean
+    protected AdminPenaltyService adminPenaltyService;
+    @MockBean
+    protected QuestionService questionService;
+    @MockBean
+    protected AdminTakeService adminTakeService;
+    @MockBean
+    protected VehicleService vehicleService;
+    @MockBean
+    protected AdminVehicleService adminVehicleService;
+    @MockBean
+    protected CustomUserDetailsService customUserDetailsService;
+    @MockBean
+    protected LicenseService licenseService;
+    @MockBean
+    protected LotteryService lotteryService;
+    @MockBean
+    protected AdminLotteryService adminLotteryService;
+
+    @MockBean
+    protected FileUtil fileUtil;
+    @MockBean
+    protected JwtUtil jwtUtil;
     @Autowired
     protected MockMvc mockMvc;
     @Autowired
     protected ObjectMapper objectMapper;
-    @MockBean
-    protected VehicleService vehicleService;
-    @MockBean
-    protected FileUtil fileUtil;
-    @MockBean
-    protected AdminPenaltyService adminPenaltyService;
-    @MockBean
-    protected AdminVehicleService adminVehicleService;
-    @MockBean
-    protected VehicleRepository vehicleRepository;
-    @MockBean
-    protected AuthService authService;
-    @MockBean
-    protected CustomUserDetailsService customUserDetailsService;
-    @MockBean
-    protected JwtUtil jwtUtil;
-    @MockBean
-    protected QuestionService questionService;
-    @MockBean
-    protected AdminApplyService adminApplyService;
-    @MockBean
-    protected AdminTakeService adminTakeService;
-    @MockBean
-    protected AdminLotteryService adminLotteryService;
 }
