@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ApplyService {
     List<GetApplyResponse> getApply(GetApplyServiceDto dto);
-    List<GetApplyVehicleResponse> getApplyVehicle(GetApplyVehicleServiceDto dto);
+    List<GetApplyVehicleResponse> getApplyVehicles(GetApplyVehicleServiceDto dto);
 }

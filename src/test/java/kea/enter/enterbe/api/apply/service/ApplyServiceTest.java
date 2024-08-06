@@ -62,7 +62,7 @@ public class ApplyServiceTest extends IntegrationTestSupport {
     }
     @DisplayName("신청 가능한 차량의 목록과 경쟁률을 조회한다.")
     @Test
-    void getApplyVehicle() {
+    void getApplyVehicles() {
         // given
         LocalDate today  = LocalDate.now();
         LocalDate nextTuesday = today.with(DayOfWeek.TUESDAY).plusDays(7); // 다음 주 화요일
@@ -91,7 +91,7 @@ public class ApplyServiceTest extends IntegrationTestSupport {
         GetApplyVehicleServiceDto dto = GetApplyVehicleServiceDto.of(nextTuesday, nextTuesday);
 
         // when
-        List<GetApplyVehicleResponse> response = applyService.getApplyVehicle(dto);
+        List<GetApplyVehicleResponse> response = applyService.getApplyVehicles(dto);
 
 
         // then

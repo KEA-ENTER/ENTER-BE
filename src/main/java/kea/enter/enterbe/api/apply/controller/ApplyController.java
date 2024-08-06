@@ -39,7 +39,7 @@ public class ApplyController {
         @RequestParam LocalDate takeDate,
         @RequestParam LocalDate returnDate) {
         GetApplyVehicleServiceDto dto = GetApplyVehicleServiceDto.of(takeDate, returnDate);
-        List<GetApplyVehicleResponse> response = applyService.getApplyVehicle(dto);
+        List<GetApplyVehicleResponse> response = applyService.getApplyVehicles(dto);
         return ResponseEntity.ok(response);
     }
 }

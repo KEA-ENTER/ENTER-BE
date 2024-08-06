@@ -71,7 +71,7 @@ public class ApplyServiceImpl implements ApplyService{
 
     // 신청 가능한 차량 목록 API
     @Transactional
-    public List<GetApplyVehicleResponse> getApplyVehicle(GetApplyVehicleServiceDto dto) {
+    public List<GetApplyVehicleResponse> getApplyVehicles(GetApplyVehicleServiceDto dto) {
         LocalDate takeDate = dto.getTakeDate();
         LocalDate returnDate = dto.getReturnDate();
 
