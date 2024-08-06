@@ -25,24 +25,24 @@ public class VehicleRepositoryCustomImpl extends QuerydslRepositorySupport imple
     @Override
     public Page<Vehicle> findBySearchOption(Pageable pageable, String vehicleNo, String model, VehicleState state) {
         JPQLQuery<Vehicle> query =  queryFactory.selectFrom(vehicle)
-            .where(eqNo(vehicleNo), eqModel(model), eqState(state));
+            .where(likeNo(vehicleNo), likeModel(model), eqState(state));
 
         List<Vehicle> vehicleList = this.getQuerydsl().applyPagination(pageable, query).fetch();
-        return new PageImpl<Vehicle>(vehicleList, pageable, query.fetchCount());
+        return new PageImpl<>(vehicleList, pageable, query.fetchCount());
     }
 
-    private BooleanExpression eqNo(String vehicleNo) {
+    private BooleanExpression likeNo(String vehicleNo) {
         if(vehicleNo == null || vehicleNo.isEmpty()) {
             return null;
         }
-        return vehicle.vehicleNo.eq(vehicleNo);
+        return vehicle.vehicleNo.containsIgnoreCase(vehicleNo);
     }
 
-    private BooleanExpression eqModel(String model) {
+    private BooleanExpression likeModel(String model) {
         if(model == null || model.isEmpty()) {
             return null;
         }
-        return vehicle.model.eq(model);
+        return vehicle.model.containsIgnoreCase(model);
     }
 
     private BooleanExpression eqState(VehicleState state) {
