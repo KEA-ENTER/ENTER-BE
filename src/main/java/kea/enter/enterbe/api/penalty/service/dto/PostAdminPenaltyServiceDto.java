@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PostPenaltyServiceDto {
+public class PostAdminPenaltyServiceDto {
     private Long memberId;
 
     private PenaltyReason reason;
@@ -18,15 +18,15 @@ public class PostPenaltyServiceDto {
     private String etc;
 
     @Builder
-    public PostPenaltyServiceDto(Long memberId, PenaltyReason reason, PenaltyLevel level, String etc) {
+    public PostAdminPenaltyServiceDto(Long memberId, PenaltyReason reason, PenaltyLevel level, String etc) {
         this.memberId = memberId;
         this.reason = reason;
         this.level = level;
         this.etc = etc;
     }
 
-    public static PostPenaltyServiceDto of(Long memberId, PenaltyReason reason, PenaltyLevel level, String etc) {
-        return PostPenaltyServiceDto.builder()
+    public static PostAdminPenaltyServiceDto of(Long memberId, PenaltyReason reason, PenaltyLevel level, String etc) {
+        return PostAdminPenaltyServiceDto.builder()
             .memberId(memberId)
             .reason(reason)
             .level(level)
