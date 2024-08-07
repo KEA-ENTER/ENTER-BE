@@ -1,6 +1,7 @@
 package kea.enter.enterbe.api.question.service;
 
 import kea.enter.enterbe.api.question.controller.dto.request.QuestionRequestDto;
+import kea.enter.enterbe.api.question.service.dto.CreateQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.ModifyQuestionServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
@@ -24,7 +25,8 @@ public class QuestionService {
 
     /* 문의사항 작성 API */
     @Transactional
-    public void createQuestion(QuestionRequestDto dto) {
+    public void createQuestion(CreateQuestionServiceDto dto) {
+
         // memberId로 멤버 존재 여부를 검사한다.
         Member member = getActiveMemberById(dto.getMemberId());
 
