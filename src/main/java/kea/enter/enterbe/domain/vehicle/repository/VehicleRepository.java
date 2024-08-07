@@ -13,7 +13,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, Vehicle
     Optional<Vehicle> findById(Long id);
     Vehicle findByVehicleNoAndState(String vehicleNo, VehicleState state);
     Optional<Vehicle> findByVehicleNoAndStateNot(String vehicleNo, VehicleState state);
-
     Page<Vehicle> findBySearchOption(Pageable pageable, String vehicleNo, String model, VehicleState state);
 
 }

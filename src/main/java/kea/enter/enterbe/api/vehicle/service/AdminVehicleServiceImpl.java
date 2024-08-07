@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
+import kea.enter.enterbe.api.vehicle.service.dto.GetVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
@@ -29,11 +30,22 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
 
     @Override
     public Page<AdminVehicleResponse> getVehicleList(Pageable pageable, String vehicleNo, String model, VehicleState state) {
-        Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(
-            pageable, vehicleNo, model, state);
-        return vehicles.map(v -> AdminVehicleResponse.of(
-            v.getId(), v.getVehicleNo(), v.getCompany(), v.getModel(), v.getSeats(), v.getFuel(), v.getImg(), v.getCreatedAt().toLocalDate().toString(), v.getUpdatedAt().toLocalDate().toString(), v.getState()));
+        Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(pageable, vehicleNo, model, state);
+        return vehicles.map(v -> AdminVehicleResponse.ofList(
+            v.getId(), v.getVehicleNo(), v.getCompany(), v.getModel(), v.getSeats(), v.getFuel(), v.getImg(),
+            v.getCreatedAt().toLocalDate().toString(), v.getUpdatedAt().toLocalDate().toString(), v.getState()));
+    }
 
+    @Override
+    public AdminVehicleResponse getVehicle(Long id) {
+        Optional<Vehicle> vehicleOptional = vehicleRepository.findById(id);
+        if (vehicleOptional.isPresent()) {
+            Vehicle vehicle = vehicleOptional.get();
+            // 쿼리를 짭시다
+        }
+        else
+            throw new CustomException(ResponseCode.VEHICLE_NOT_VALID);
+        return AdminVehicleResponse.of() // return을 채웁시다
     }
 
     @Override

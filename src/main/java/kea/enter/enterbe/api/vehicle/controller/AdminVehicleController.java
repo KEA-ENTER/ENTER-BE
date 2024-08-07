@@ -7,6 +7,7 @@ import kea.enter.enterbe.api.vehicle.controller.dto.request.AdminVehicleRequest;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
+import kea.enter.enterbe.api.vehicle.service.dto.GetVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.global.common.api.CustomResponseCode;
@@ -21,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,6 +48,14 @@ public class AdminVehicleController {
         @RequestParam(required = false) VehicleState state) {
 
         return adminVehicleService.getVehicleList(pageable, vehicleNo, model, state);
+    }
+
+    @Operation(summary = "법인 차량 상세 정보 조회 API")
+    @GetMapping("/{vehicleId}")
+    public AdminVehicleResponse getVehicle(
+        @PathVariable Long vehicleId) {
+
+        return adminVehicleService.getVehicle(vehicleId);
     }
 
     @Operation(summary = "법인 차량 등록 API")
