@@ -7,4 +7,8 @@ spring:
             - kc
             - jwt
             - email
+            - licenseapi
+            - monitoring
+            - quartz
+            - redis
         active: test

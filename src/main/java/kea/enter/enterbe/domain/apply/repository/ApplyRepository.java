@@ -21,7 +21,7 @@ public interface ApplyRepository extends JpaRepository<Apply, Long>, ApplyCustom
 
     @Query("SELECT a.member FROM Apply a WHERE a.applyRound = :applyRound AND a.state = 'ACTIVE' ")
     List<Member> findMembersBydApplyRoundAndState(@Param("applyRound") ApplyRound applyRound);
-
+    List<Apply> findByApplyRoundAndMemberIdInAndState(ApplyRound applyRound, List<Long> memberIds, ApplyState state);
     Integer countByApplyRoundApplyRoundAndStateAndApplyRoundState(int applyRound, ApplyState applyState, ApplyRoundState applyRoundState);
   
     Optional<Apply> findByMemberAndApplyRoundAndState(Member member, ApplyRound applyRound, ApplyState state);

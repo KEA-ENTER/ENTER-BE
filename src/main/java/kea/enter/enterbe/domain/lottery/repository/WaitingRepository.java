@@ -8,6 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
-
     int findWaitingNoByApplyIdAndState(Long id, WaitingState winningState);
 }

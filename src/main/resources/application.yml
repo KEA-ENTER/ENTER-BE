@@ -18,6 +18,7 @@ spring:
       - licenseapi
       - monitoring
       - quartz
+      - redis
     active: local
   servlet:
       multipart:
