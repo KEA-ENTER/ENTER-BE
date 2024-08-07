@@ -12,7 +12,6 @@ import kea.enter.enterbe.api.apply.service.dto.GetApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,8 +44,10 @@ public class ApplyController {
     }
     @Operation(summary = "차량 신청 내역 조회 API", description = "해당 사용자의 현재 회차의 차량 신청 내역을 조회합니다.")
     @GetMapping("/detail")
-    public ResponseEntity<GetApplyDetailResponse> getApplyDetail(Authentication authentication) {
-        Long memberId = Long.valueOf(authentication.getUsername());
+    public ResponseEntity<GetApplyDetailResponse> getApplyDetail(
+        @RequestParam Long memberId
+        ) {
+
         GetApplyDetailServiceDto dto = GetApplyDetailServiceDto.of(memberId);
         GetApplyDetailResponse response = applyService.getApplyDetail(dto);
         return ResponseEntity.ok(response);

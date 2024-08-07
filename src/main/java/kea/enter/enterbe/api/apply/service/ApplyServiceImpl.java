@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
+import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_NOT_FOUND;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_ROUND_NOT_FOUND;
 
 @Slf4j
@@ -122,9 +123,42 @@ public class ApplyServiceImpl implements ApplyService{
 
     @Transactional(readOnly = true)
     public GetApplyDetailResponse getApplyDetail(GetApplyDetailServiceDto dto) {
-        return null;
+        Long memberId = dto.getMemberId();
+        List<Apply> applyList = findAppliesByMemberId(memberId);
+
+        int max = 0;
+        Apply recentlyApply = null;
+
+        for (Apply apply : applyList) {
+            int round = apply.getApplyRound().getApplyRound();
+            if(max < round)
+                max = round;
+                recentlyApply = apply;
+        }
+
+        if(recentlyApply.equals(null)) {
+            throw new CustomException(APPLY_NOT_FOUND);
+        }
+
+        Vehicle vehicle = recentlyApply.getApplyRound().getVehicle();
+        ApplyRound applyRound = recentlyApply.getApplyRound();
+        int competition = countByApplyRound(applyRound);
+
+        return GetApplyDetailResponse.builder()
+            .takeDate(recentlyApply.getApplyRound().getTakeDate())
+            .competition(competition)
+            .purpose(recentlyApply.getPurpose())
+            .model(vehicle.getModel())
+            .fuel(vehicle.getFuel())
+            .company(vehicle.getCompany())
+            .seat(vehicle.getSeats())
+            .img(vehicle.getImg())
+            .build();
     }
 
+    public List<Apply> findAppliesByMemberId(Long memberId){
+        return applyRepository.findAllByMemberIdAndState(memberId, ApplyState.ACTIVE);
+    }
     public List<ApplyRound> findApplyRoundsByTakeDateBetween(LocalDate startDate, LocalDate endDate) {
         return applyRoundRepository.findAllByTakeDateBetweenAndState(startDate, endDate, ApplyRoundState.ACTIVE);
     }
@@ -133,5 +167,8 @@ public class ApplyServiceImpl implements ApplyService{
     }
     public List<Apply> findAllByApplyRoundId(Long applyRoundId) {
         return applyRepository.findAllByApplyRoundIdAndState(applyRoundId, ApplyState.ACTIVE);
+    }
+    public Integer countByApplyRound(ApplyRound applyRound){
+        return applyRepository.countByApplyRoundAndState(applyRound, ApplyState.ACTIVE);
     }
 }

@@ -26,4 +26,7 @@ public interface ApplyRepository extends JpaRepository<Apply, Long>, ApplyCustom
   
     Optional<Apply> findByMemberAndApplyRoundAndState(Member member, ApplyRound applyRound, ApplyState state);
 
+    List<Apply> findAllByMemberIdAndState(Long memberId, ApplyState state);
+    Integer countByApplyRoundAndState(ApplyRound applyRound, ApplyState applyRoundState);
+
 }
