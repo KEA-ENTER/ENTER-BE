@@ -1,0 +1,32 @@
+spring:
+    quartz:
+        job-store-type: jdbc
+        jdbc:
+            initialize-schema: always
+        properties:
+            org:
+                quartz:
+                    scheduler:
+                        instanceId: AUTO
+                    jobStore:
+                        class: org.quartz.impl.jdbcjobstore.JobStoreTX
+                        driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+                        useProperties: false
+                        tablePrefix: QRTZ_
+                        misfireThreshold: 60000
+                        clusterCheckinInterval: 1000
+                        isClustered: true
+                        dataSource: quartz
+                    threadPool:
+                        class: org.quartz.simpl.SimpleThreadPool
+                        threadCount: 10
+                        threadPriority: 5
+                        threadsInheritContextClassLoaderOfInitializingThread: true
+                    dataSource:
+                        quartz:
+                            provider: hikaricp
+                            driver: org.h2.Driver
+                            URL: jdbc:h2:mem:query;MODE=MySQL;
+                            user: sa
+                            password:
+                            maxConnections: 30
