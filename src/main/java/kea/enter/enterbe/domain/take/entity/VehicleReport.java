@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
+import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,6 +25,10 @@ public class VehicleReport extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "winning_id", nullable = false)
     private Winning winning;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehicle_id", nullable = false)
+    private Vehicle vehicle;
 
     @Column(name = "front_img")
     private String frontImg;
@@ -52,10 +57,11 @@ public class VehicleReport extends BaseEntity {
     private VehicleReportState state;
 
     @Builder
-    public VehicleReport(Winning winning, String frontImg, String leftImg, String rightImg,
+    public VehicleReport(Winning winning, Vehicle vehicle, String frontImg, String leftImg, String rightImg,
         String backImg, String dashboardImg, String parkingLoc, VehicleReportType type,
         VehicleReportState state) {
         this.winning = winning;
+        this.vehicle = vehicle;
         this.frontImg = frontImg;
         this.leftImg = leftImg;
         this.rightImg = rightImg;
@@ -66,11 +72,12 @@ public class VehicleReport extends BaseEntity {
         this.state = state;
     }
 
-    public static VehicleReport of(Winning winning, String frontImg, String leftImg, String rightImg,
+    public static VehicleReport of(Winning winning, Vehicle vehicle, String frontImg, String leftImg, String rightImg,
         String backImg, String dashboardImg, String parkingLoc, VehicleReportType type,
         VehicleReportState state) {
         return VehicleReport.builder()
             .winning(winning)
+            .vehicle(vehicle)
             .frontImg(frontImg)
             .leftImg(leftImg)
             .rightImg(rightImg)
@@ -82,11 +89,12 @@ public class VehicleReport extends BaseEntity {
             .build();
     }
 
-    public static VehicleReport create(Winning winning, String frontImg, String leftImg,
+    public static VehicleReport create(Winning winning, Vehicle vehicle, String frontImg, String leftImg,
         String rightImg, String backImg, String dashboardImg, String parkingLoc,
         VehicleReportType type) {
         return VehicleReport.builder()
             .winning(winning)
+            .vehicle(vehicle)
             .frontImg(frontImg)
             .leftImg(leftImg)
             .rightImg(rightImg)

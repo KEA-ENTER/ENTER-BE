@@ -1,8 +1,10 @@
 package kea.enter.enterbe.api.lottery.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.lottery.controller.dto.request.ApplicantSearchType;
-import kea.enter.enterbe.api.lottery.controller.dto.request.GetApplicantListRequest;
 import kea.enter.enterbe.api.lottery.controller.dto.request.LotterySearchType;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetApplicantListResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryListResponse;
@@ -24,9 +26,6 @@ import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
-import java.time.LocalDate;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class AdminLotteryServiceTest extends IntegrationTestSupport {
     @DisplayName("추첨 관리 목록을 조회한다. (검색, 페이징)")
@@ -42,11 +41,11 @@ class AdminLotteryServiceTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = applyRepository.save(createApply(member1, applyRound1, vehicle1));
-        Apply apply2 = applyRepository.save(createApply(member2, applyRound2, vehicle2));
+        Apply apply1 = applyRepository.save(createApply(member1, applyRound1));
+        Apply apply2 = applyRepository.save(createApply(member2, applyRound2));
 
-        winningRepository.save(createWinning(vehicle1, apply1, WinningState.ACTIVE));
-        winningRepository.save(createWinning(vehicle2, apply2, WinningState.INACTIVE));
+        winningRepository.save(createWinning(apply1, WinningState.ACTIVE));
+        winningRepository.save(createWinning(apply2, WinningState.INACTIVE));
 
         ApplyRound applyRound3 = applyRoundRepository.save(createApplyRound(vehicle1, 2, LocalDate.of(2024, 8, 5)));
         ApplyRound applyRound4 = applyRoundRepository.save(createApplyRound(vehicle2, 2, LocalDate.of(2024, 8, 7)));
@@ -78,11 +77,11 @@ class AdminLotteryServiceTest extends IntegrationTestSupport {
         Member member2 = memberRepository.save(createMember());
         Member member3 = memberRepository.save(createMember());
 
-        Apply winningApply = applyRepository.save(createApply(member1, applyRound, vehicle));
-        applyRepository.save(createApply(member2, applyRound, vehicle));
-        applyRepository.save(createApply(member3, applyRound, vehicle));
+        Apply winningApply = applyRepository.save(createApply(member1, applyRound));
+        applyRepository.save(createApply(member2, applyRound));
+        applyRepository.save(createApply(member3, applyRound));
 
-        winningRepository.save(createWinning(vehicle, winningApply, WinningState.ACTIVE));
+        winningRepository.save(createWinning(winningApply, WinningState.ACTIVE));
 
         GetApplicantListServiceDto dto = GetApplicantListServiceDto.of(applyRound.getId(), null, ApplicantSearchType.ALL, PageRequest.of(0, 10));
 
@@ -110,11 +109,11 @@ class AdminLotteryServiceTest extends IntegrationTestSupport {
         return ApplyRound.of(vehicle, applyRound, takeDate, takeDate.plusDays(1), ApplyRoundState.ACTIVE);
     }
 
-    private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
+    private Apply createApply(Member member, ApplyRound applyRound) {
+        return Apply.of(member, applyRound, ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
-    private Winning createWinning(Vehicle vehicle, Apply apply, WinningState state) {
-        return Winning.of(vehicle, apply, state);
+    private Winning createWinning(Apply apply, WinningState state) {
+        return Winning.of(apply, state);
     }
 }

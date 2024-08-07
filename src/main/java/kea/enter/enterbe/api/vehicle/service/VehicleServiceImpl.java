@@ -5,14 +5,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import kea.enter.enterbe.api.vehicle.service.dto.PostVehicleReportServiceDto;
-import kea.enter.enterbe.domain.vehicle.entity.VehicleNote;
-import kea.enter.enterbe.domain.vehicle.repository.VehicleNoteRepository;
-import kea.enter.enterbe.domain.take.entity.VehicleReport;
-import kea.enter.enterbe.domain.take.entity.VehicleReportType;
-import kea.enter.enterbe.domain.take.repository.VehicleReportRepository;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
+import kea.enter.enterbe.domain.take.entity.VehicleReport;
+import kea.enter.enterbe.domain.take.entity.VehicleReportType;
+import kea.enter.enterbe.domain.take.repository.VehicleReportRepository;
+import kea.enter.enterbe.domain.vehicle.entity.VehicleNote;
+import kea.enter.enterbe.domain.vehicle.repository.VehicleNoteRepository;
+import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
@@ -33,6 +34,7 @@ public class VehicleServiceImpl implements VehicleService {
     private final WinningRepository winningRepository;
     private final VehicleReportRepository vehicleReportRepository;
     private final VehicleNoteRepository vehicleNoteRepository;
+    private final VehicleRepository vehicleRepository;
     private final Clock clock;
 
     @Override
@@ -53,12 +55,12 @@ public class VehicleServiceImpl implements VehicleService {
             images.add(dashboardImg);
 
             VehicleReport vehicleReport = vehicleReportRepository.save(
-                VehicleReport.create(winning, frontImg, leftImg,
+                VehicleReport.create(winning, winning.getApply().getApplyRound().getVehicle(), frontImg, leftImg,
                     rightImg, backImg, dashboardImg, dto.getParkingLoc(), dto.getType()));
 
             if (StringUtils.hasText(dto.getNote())) {
                 vehicleNoteRepository.save(
-                    VehicleNote.create(winning.getVehicle(), vehicleReport, dto.getNote()));
+                    VehicleNote.create(winning.getApply().getApplyRound().getVehicle(), vehicleReport, dto.getNote()));
             }
 
         } catch (Exception e) {

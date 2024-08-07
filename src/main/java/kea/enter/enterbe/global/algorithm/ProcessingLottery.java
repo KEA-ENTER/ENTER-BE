@@ -16,7 +16,6 @@ import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import kea.enter.enterbe.domain.lottery.repository.WaitingRepository;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.domain.member.entity.Member;
-import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -62,11 +61,10 @@ public class ProcessingLottery {
             if (applier == null) {
                 throw new CustomException(ResponseCode.APPLY_NOT_FOUND);
             }
-            Vehicle vehicle = applier.getVehicle();
             if (winnerDto.getRank() == 0) { // 최초 당첨자
-                winningList.add(Winning.of(vehicle, applier, WinningState.ACTIVE));
+                winningList.add(Winning.of(applier, WinningState.ACTIVE));
             } else { // 대기자
-                waitingList.add(Waiting.of(vehicle, applier, winnerDto.getRank()));
+                waitingList.add(Waiting.of(applier, winnerDto.getRank()));
             }
         }
         // 당첨자와 대기자를 저장한다

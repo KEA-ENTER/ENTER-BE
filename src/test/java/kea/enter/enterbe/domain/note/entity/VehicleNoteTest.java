@@ -36,8 +36,8 @@ class VehicleNoteTest extends IntegrationTestSupport {
         Vehicle vehicle = createVehicle();
         Member member = createMember();
         ApplyRound applyRound = createApplyRound(vehicle, takeDate, returnDate);
-        Apply apply = createApply(member, applyRound, vehicle);
-        Winning winning = createWinning(vehicle, apply);
+        Apply apply = createApply(member, applyRound);
+        Winning winning = createWinning(apply);
         VehicleReport vehicleReport = createVehicleReport(winning);
         //when
         VehicleNote vehicleNote = VehicleNote.create(vehicle, vehicleReport, "content");
@@ -48,16 +48,16 @@ class VehicleNoteTest extends IntegrationTestSupport {
     }
 
     private VehicleReport createVehicleReport(Winning winning) {
-        return VehicleReport.of(winning, "image", "image", "image", "image", "image",
+        return VehicleReport.of(winning, winning.getApply().getApplyRound().getVehicle(),"image", "image", "image", "image", "image",
             "location", VehicleReportType.TAKE, VehicleReportState.ACTIVE);
     }
 
-    private Winning createWinning(Vehicle vehicle, Apply apply) {
-        return Winning.of(vehicle, apply, WinningState.ACTIVE);
+    private Winning createWinning(Apply apply) {
+        return Winning.of(apply, WinningState.ACTIVE);
     }
 
-    private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
+    private Apply createApply(Member member, ApplyRound applyRound) {
+        return Apply.of(member, applyRound, ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
     private ApplyRound createApplyRound(Vehicle vehicle, LocalDate takeDate, LocalDate returnDate) {

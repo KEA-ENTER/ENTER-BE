@@ -36,8 +36,8 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        winningRepository.save(createWinning(apply));
         //when
         Optional<Winning> savedWinning = winningRepository.findByMemberIdAndTakeDateAndState(
             member.getId(), takeDate, WinningState.ACTIVE);
@@ -56,8 +56,8 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        winningRepository.save(createWinning(apply));
         //when
         Optional<Winning> savedWinning = winningRepository.findByMemberIdAndTakeDateAndState(
             wrongMemberId, takeDate, WinningState.ACTIVE);
@@ -76,8 +76,8 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        winningRepository.save(createWinning(apply));
         //when
         Optional<Winning> savedWinning = winningRepository.findByMemberIdAndTakeDateAndState(
             member.getId(), wrongDate, WinningState.ACTIVE);
@@ -96,11 +96,11 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = createApply(member1, applyRound, vehicle);
-        Apply apply2 = createApply(member2, applyRound, vehicle);
+        Apply apply1 = createApply(member1, applyRound);
+        Apply apply2 = createApply(member2, applyRound);
         applyRepository.saveAll(List.of(apply1, apply2));
 
-        Winning winning = winningRepository.save(createWinning(vehicle, apply1));
+        Winning winning = winningRepository.save(createWinning(apply1));
 
         // when
         List<Winning> winningList = winningRepository.findAllByApplyApplyRoundIdAndState(applyRound.getId(), WinningState.ACTIVE);
@@ -125,11 +125,11 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = createApply(member1, applyRound, vehicle);
-        Apply apply2 = createApply(member2, applyRound, vehicle);
+        Apply apply1 = createApply(member1, applyRound);
+        Apply apply2 = createApply(member2, applyRound);
         applyRepository.saveAll(List.of(apply1, apply2));
 
-        Winning winning = winningRepository.save(createWinning(vehicle, apply1));
+        Winning winning = winningRepository.save(createWinning(apply1));
         winning.deleteWinning();
 
         // when
@@ -156,8 +156,8 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = createApply(member1, applyRound1, vehicle);
-        Apply apply2 = createApply(member2, applyRound1, vehicle);
+        Apply apply1 = createApply(member1, applyRound1);
+        Apply apply2 = createApply(member2, applyRound1);
         applyRepository.saveAll(List.of(apply1, apply2));
 
         // when
@@ -176,9 +176,9 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024, 7, 29), LocalDate.of(2024, 7, 30)));
 
         Member member = memberRepository.save(createMember());
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
 
-        winningRepository.save(createWinning(vehicle, apply));
+        winningRepository.save(createWinning(apply));
 
         // when
         Optional<Winning> winningOptional = winningRepository.findByApplyIdAndState(apply.getId(), WinningState.ACTIVE);
@@ -187,12 +187,12 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         assertThat(winningOptional).isPresent();
     }
 
-    private Winning createWinning(Vehicle vehicle, Apply apply) {
-        return Winning.of(vehicle, apply, WinningState.ACTIVE);
+    private Winning createWinning(Apply apply) {
+        return Winning.of(apply, WinningState.ACTIVE);
     }
 
-    private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
+    private Apply createApply(Member member, ApplyRound applyRound) {
+        return Apply.of(member, applyRound, ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
     private ApplyRound createApplyRound(Vehicle vehicle, LocalDate takeDate, LocalDate returnDate) {
