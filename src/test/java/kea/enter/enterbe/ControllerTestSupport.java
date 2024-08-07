@@ -6,6 +6,7 @@ import kea.enter.enterbe.api.auth.service.AuthService;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
 import kea.enter.enterbe.api.apply.controller.AdminApplyController;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
+import kea.enter.enterbe.api.question.controller.AnswerController;
 import kea.enter.enterbe.api.lottery.controller.AdminLotteryController;
 import kea.enter.enterbe.api.lottery.service.AdminLotteryService;
 import kea.enter.enterbe.api.member.controller.LicenseController;
@@ -15,6 +16,7 @@ import kea.enter.enterbe.api.lottery.service.LotteryService;
 import kea.enter.enterbe.api.question.controller.QuestionController;
 import kea.enter.enterbe.api.penalty.controller.AdminPenaltyController;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
+import kea.enter.enterbe.api.question.service.AnswerService;
 import kea.enter.enterbe.api.question.service.QuestionService;
 import kea.enter.enterbe.api.take.controller.AdminTakeController;
 import kea.enter.enterbe.api.take.service.AdminTakeService;
@@ -41,7 +43,8 @@ import org.springframework.test.web.servlet.MockMvc;
     AdminVehicleController.class,
     LicenseController.class,
     LotteryController.class,
-    AdminLotteryController.class
+    AdminLotteryController.class,
+    AnswerController.class
 })
 @Import({SecurityConfig.class})
 public abstract class ControllerTestSupport {
@@ -68,6 +71,8 @@ public abstract class ControllerTestSupport {
     protected LotteryService lotteryService;
     @MockBean
     protected AdminLotteryService adminLotteryService;
+    @MockBean
+    protected AnswerService answerService;
 
     @MockBean
     protected FileUtil fileUtil;
@@ -77,4 +82,6 @@ public abstract class ControllerTestSupport {
     protected MockMvc mockMvc;
     @Autowired
     protected ObjectMapper objectMapper;
+
 }
+

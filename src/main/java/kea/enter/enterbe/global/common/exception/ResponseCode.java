@@ -56,7 +56,15 @@ public enum ResponseCode {
     // Question
     NOT_FOUND_MEMBER("MEM-ERR-001", HttpStatus.NOT_FOUND, "멤버가 존재하지 않습니다."),
     NOT_FOUND_QUESTION("QST-ERR-001", HttpStatus.NOT_FOUND, "문의사항이 존재하지 않습니다."),
-    INVALID_QUESTION_STATE("QST-ERR-002", HttpStatus.INTERNAL_SERVER_ERROR, "수정할 수 없는 문의 사항입니다."),
+    INVALID_QUESTION_STATE("QST-ERR-002", HttpStatus.INTERNAL_SERVER_ERROR, "수정할 수 없는 문의사항입니다."),
+    INVALID_QUESTION_STATE_COMPLETE("QST-ERR-003", HttpStatus.INTERNAL_SERVER_ERROR, "답변 완료된 문의사항입니다."),
+    INVALID_QUESTION_STATE_DELETE("QST-ERR-004", HttpStatus.INTERNAL_SERVER_ERROR, "삭제된 문의사항입니다."),
+
+    // Email
+    FAILED_MAIL_CREATE("MAIL-ERR-001", HttpStatus.INTERNAL_SERVER_ERROR, "메일 생성에 실패했습니다."),
+    FAILED_MAIL_TEMPLATE("MAIL-ERR-002", HttpStatus.INTERNAL_SERVER_ERROR, "메일 template load에 실패했습니다."),
+    FAILED_MAIL_SEND("MAIL-ERR-003", HttpStatus.INTERNAL_SERVER_ERROR, "메일 전송에 실패했습니다."),
+
 
     NOT_IMAGE_FILE("GLB-ERR-004", HttpStatus.BAD_REQUEST, "이미지 파일이 아닙니다."),
     INVALID_QUARTZ_EXPRESSION_TRIGGER("GLB-ERR-005",HttpStatus.INTERNAL_SERVER_ERROR , "잘못된Quartz expression trigger입니다.");
