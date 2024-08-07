@@ -14,21 +14,17 @@ public class GetAnswerResponseDto {
     private String content;
     @Schema(description = "작성 날짜", example = "2023-01-01 00:00:00")
     private LocalDateTime createdAt;
-    @Schema(description = "멤버 역할", example = "ADMIN")
-    private String memberRole;
 
     @Builder
-    public GetAnswerResponseDto(String content, LocalDateTime createdAt, String memberRole) {
+    public GetAnswerResponseDto(String content, LocalDateTime createdAt) {
         this.content = content;
         this.createdAt = createdAt;
-        this.memberRole = memberRole;
     }
 
-    public static GetAnswerResponseDto of(String content, LocalDateTime createdAt, String memberRole) {
+    public static GetAnswerResponseDto of(String content, LocalDateTime createdAt) {
         return GetAnswerResponseDto.builder()
             .content(content)
             .createdAt(createdAt)
-            .memberRole(memberRole)
             .build();
     }
 }

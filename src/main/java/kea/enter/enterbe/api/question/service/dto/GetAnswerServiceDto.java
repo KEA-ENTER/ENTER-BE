@@ -8,18 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetAnswerServiceDto {
     private Long questionId;
-    private Long memberId;
 
     @Builder
-    public GetAnswerServiceDto(Long questionId, Long memberId) {
+    public GetAnswerServiceDto(Long questionId) {
         this.questionId = questionId;
-        this.memberId = memberId;
     }
 
-    public static GetAnswerServiceDto of(Long questionId, Long memberId) {
+    public static GetAnswerServiceDto of(Long questionId) {
         return GetAnswerServiceDto.builder()
             .questionId(questionId)
-            .memberId(memberId)
             .build();
     }
 }
