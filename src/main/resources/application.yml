@@ -16,6 +16,7 @@ spring:
       - jwt
       - licenseapi
       - monitoring
+      - quartz
     active: local
   servlet:
       multipart:
