@@ -57,7 +57,8 @@ public enum ResponseCode {
     NOT_FOUND_MEMBER("MEM-ERR-001", HttpStatus.NOT_FOUND, "멤버가 존재하지 않습니다."),
     NOT_FOUND_QUESTION("QST-ERR-001", HttpStatus.NOT_FOUND, "문의사항이 존재하지 않습니다."),
     INVALID_QUESTION_STATE("QST-ERR-002", HttpStatus.INTERNAL_SERVER_ERROR, "수정할 수 없는 문의사항입니다."),
-    INVALID_QUESTION_STATE_FOR_ANSWER("QST-ERR-003", HttpStatus.INTERNAL_SERVER_ERROR, "삭제 되었거나 답변 완료된 문의사항입니다."),
+    INVALID_QUESTION_STATE_COMPLETE("QST-ERR-003", HttpStatus.INTERNAL_SERVER_ERROR, "답변 완료된 문의사항입니다."),
+    INVALID_QUESTION_STATE_DELETE("QST-ERR-004", HttpStatus.INTERNAL_SERVER_ERROR, "삭제된 문의사항입니다."),
 
     // Email
     FAILED_MAIL_CREATE("MAIL-ERR-001", HttpStatus.INTERNAL_SERVER_ERROR, "메일 생성에 실패했습니다."),

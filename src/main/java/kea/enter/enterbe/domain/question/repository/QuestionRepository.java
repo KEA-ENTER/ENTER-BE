@@ -13,4 +13,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     Optional<Question> findByIdAndMemberId(Long questionId, Long memberId);
     Optional<Question> findById(Long questionId);
     Optional<Question> findByIdAndState(Long questionId, QuestionState state);
+    Optional<Question> findByIdAndStateNot(Long questionId, QuestionState state);
+
 }

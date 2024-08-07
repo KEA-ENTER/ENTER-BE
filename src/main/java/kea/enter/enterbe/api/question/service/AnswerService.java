@@ -36,25 +36,16 @@ public class AnswerService {
         // memberId로 멤버 존재 여부를 검사한다.
         Member member = getActiveMemberById(dto.getMemberId());
 
-//        // questionId로 문의사항 존재 여부를 검사한다.
-//        Question question = getQuestionById(questionId);
-//
-//        // 문의사항의 state가 WAIT 상태가 아닌 경우 예외를 발생시킨다.
-//        if (question.getState() == QuestionState.INACTIVE) {
-//            throw new CustomException(ResponseCode.INVALID_QUESTION_STATE_DELETE);
-//        }
-//        if (question.getState() == QuestionState.COMPLETE) {
-//            throw new CustomException(ResponseCode.INVALID_QUESTION_STATE_COMPLETE);
-//        }
-        
-        // 문의사항의 state가 WAIT일 경우에만 조회
-        Question question = getFindByIdAndState(questionId);
+        Question question = getFindByIdAndStateNot(questionId);
+        if (question.getState() == QuestionState.COMPLETE) {
+            throw new CustomException(ResponseCode.INVALID_QUESTION_STATE_COMPLETE);
+        }
 
         // 답변을 작성했으므로 AnswerState는 ACTIVE로 고정값
         Answer answer = Answer.of(question, member, dto.getContent(), AnswerState.ACTIVE);
 
         // 문의사항의 state를 COMPLETE로 업데이트
-        updateQuestionStateToComplete(question);
+        question.completeQuestion();
 
         answerRepository.save(answer);
 
@@ -69,7 +60,7 @@ public class AnswerService {
         Member member = getActiveMemberById(dto.getMemberId());
 
         // questionId로 문의사항 존재 여부를 검사한다.
-        Question question = getQuestionById(dto.getQuestionId());
+        Question question = getFindByIdAndStateNot(dto.getQuestionId());
 
         // 답변 반환
         Optional<Answer> optionalAnswer = answerRepository.findByQuestionId(dto.getQuestionId());
@@ -101,20 +92,10 @@ public class AnswerService {
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_MEMBER));
     }
 
-    // questionId로 문의사항의 존재 여부를 검사하는 메소드
-    private Question getQuestionById(Long questionId) {
-        return questionRepository.findById(questionId)
-            .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_QUESTION));
+    // questionId로 문의사항의 상태 확인. 삭제된 문의인 경우 에러발생
+    private Question getFindByIdAndStateNot(Long questionId) {
+        return questionRepository.findByIdAndStateNot(questionId, QuestionState.INACTIVE)
+            .orElseThrow(() -> new CustomException(ResponseCode.INVALID_QUESTION_STATE_DELETE));
     }
 
-    // questionId로 문의사항의 상태 확인. WAIT 상태가 아니면 에러 발생.
-    private Question getFindByIdAndState(Long questionId) {
-        return questionRepository.findByIdAndState(questionId, QuestionState.WAIT)
-            .orElseThrow(() -> new CustomException(ResponseCode.INVALID_QUESTION_STATE_FOR_ANSWER));
-    }
-
-    // 문의사항의 state를 COMPLETE로 업데이트하는 메소드
-    private void updateQuestionStateToComplete(Question question) {
-        question.modifyQuestion(question.getContent(), question.getCategory(), QuestionState.COMPLETE);
-    }
 }
