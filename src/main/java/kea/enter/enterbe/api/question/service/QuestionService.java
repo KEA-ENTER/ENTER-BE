@@ -62,7 +62,7 @@ public class QuestionService {
         }
 
         // 문의사항 수정
-        question.modifyQuestion(modifyDto.getContent(), modifyDto.getCategory());
+        question.modifyQuestion(modifyDto.getContent(), modifyDto.getCategory(), QuestionState.WAIT);
     }
 
     // memberId로 멤버의 존재 여부와 상태를 검사하는 메소드

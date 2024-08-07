@@ -6,18 +6,18 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class DeletePenaltyServiceDto {
+public class DeleteAdminPenaltyServiceDto {
     private Long memberId;
     private Long penaltyId;
 
     @Builder
-    public DeletePenaltyServiceDto(Long memberId, Long penaltyId) {
+    public DeleteAdminPenaltyServiceDto(Long memberId, Long penaltyId) {
         this.memberId = memberId;
         this.penaltyId = penaltyId;
     }
 
-    public static DeletePenaltyServiceDto of(Long memberId, Long penaltyId) {
-        return DeletePenaltyServiceDto.builder()
+    public static DeleteAdminPenaltyServiceDto of(Long memberId, Long penaltyId) {
+        return DeleteAdminPenaltyServiceDto.builder()
             .memberId(memberId)
             .penaltyId(penaltyId)
             .build();

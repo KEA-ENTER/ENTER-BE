@@ -57,7 +57,7 @@ public class QuestionController {
     public ResponseEntity<String> deleteQuestion(
         @PathVariable Long memberId,
         @PathVariable Long questionId) {
-        // TODO: 어드민 권한 검사
+
         questionService.deleteQuestion(DeleteQuestionServiceDto.of(memberId, questionId));
         return ResponseEntity.ok(SUCCESS.getMessage());
     }

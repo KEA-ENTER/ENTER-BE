@@ -3,15 +3,19 @@ package kea.enter.enterbe;
 import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
 import kea.enter.enterbe.api.apply.service.ApplyService;
+import kea.enter.enterbe.api.lottery.service.AdminLotteryService;
 import kea.enter.enterbe.api.member.service.LicenseService;
 import kea.enter.enterbe.api.lottery.service.LotteryService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
+import kea.enter.enterbe.api.question.service.AnswerService;
+import kea.enter.enterbe.api.question.service.EmailService;
 import kea.enter.enterbe.api.question.service.QuestionService;
 import kea.enter.enterbe.api.take.service.AdminTakeService;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
+import kea.enter.enterbe.domain.question.repository.AnswerRepository;
 import kea.enter.enterbe.domain.question.repository.QuestionRepository;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleNoteRepository;
 import kea.enter.enterbe.domain.penalty.repository.PenaltyRepository;
@@ -28,15 +32,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSender;
 
 @SpringBootTest
 public abstract class IntegrationTestSupport {
+
     @Autowired
     protected ApplyService applyService;
     @Autowired
     protected AdminApplyService adminApplyService;
     @Autowired
     protected AdminPenaltyService adminPenaltyService;
+    @Autowired
+    protected AnswerService answerService;
     @Autowired
     protected QuestionService questionService;
     @Autowired
@@ -53,6 +62,8 @@ public abstract class IntegrationTestSupport {
     @Autowired
     protected QuestionRepository questionRepository;
     @Autowired
+    protected AnswerRepository answerRepository;
+    @Autowired
     protected WinningRepository winningRepository;
     @Autowired
     protected MemberRepository memberRepository;
@@ -68,7 +79,8 @@ public abstract class IntegrationTestSupport {
     protected ApplyRoundRepository applyRoundRepository;
     @Autowired
     protected LotteryService lotteryService;
-
+    @Autowired
+    protected AdminLotteryService adminLotteryService;
     @Autowired
     protected FileUtil fileUtil;
 
@@ -82,10 +94,15 @@ public abstract class IntegrationTestSupport {
     protected ObjectStorageUtil objectStorageUtil;
     @MockBean
     protected LicenseValidationUtil licenseValidationUtil;
+    @MockBean
+    protected JavaMailSender mailSender;
+    @MockBean
+    protected EmailService emailService;
 
 
     @AfterEach
     void tearDown() {
+        answerRepository.deleteAllInBatch();
         questionRepository.deleteAllInBatch();
         vehicleNoteRepository.deleteAllInBatch();
         vehicleReportRepository.deleteAllInBatch();
@@ -97,3 +114,4 @@ public abstract class IntegrationTestSupport {
         memberRepository.deleteAllInBatch();
     }
 }
+

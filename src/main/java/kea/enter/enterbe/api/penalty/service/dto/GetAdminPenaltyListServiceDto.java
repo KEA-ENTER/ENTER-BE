@@ -6,16 +6,16 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class GetPenaltyListServiceDto {
+public class GetAdminPenaltyListServiceDto {
     private Long memberId;
 
     @Builder
-    public GetPenaltyListServiceDto(Long memberId) {
+    public GetAdminPenaltyListServiceDto(Long memberId) {
         this.memberId = memberId;
     }
 
-    public static GetPenaltyListServiceDto of(Long memberId) {
-        return GetPenaltyListServiceDto.builder()
+    public static GetAdminPenaltyListServiceDto of(Long memberId) {
+        return GetAdminPenaltyListServiceDto.builder()
             .memberId(memberId)
             .build();
     }

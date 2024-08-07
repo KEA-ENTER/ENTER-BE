@@ -31,20 +31,20 @@ public class Waiting extends BaseEntity {
     private Apply apply;
 
     @Column(name = "waiting_no")
-    private Integer waiting_no;
+    private Integer waitingNo;
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private WaitingState state;
 
     @Builder
-    public Waiting(Vehicle vehicle, Apply apply, int waiting_no) {
+    public Waiting(Vehicle vehicle, Apply apply, int waitingNo) {
         this.vehicle = vehicle;
         this.apply = apply;
-        this.waiting_no = waiting_no;
+        this.waitingNo = waitingNo;
     }
 
-    public static Waiting of(Vehicle vehicle, Apply apply, int waiting_no) {
-        return Waiting.builder().vehicle(vehicle).apply(apply).waiting_no(waiting_no).build();
+    public static Waiting of(Vehicle vehicle, Apply apply, int waitingNo) {
+        return Waiting.builder().vehicle(vehicle).apply(apply).waitingNo(waitingNo).build();
     }
 }

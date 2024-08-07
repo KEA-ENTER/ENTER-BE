@@ -1,0 +1,48 @@
+spring:
+    config:
+        activate:
+            on-profile: local
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: ${mail.username}
+        password: ${mail.password}
+        properties:
+            mail.smtp.debug: true
+            mail.smtp.connectiontimeout: 1000 #1초
+            mail.starttls.enable: true
+            mail.smtp.auth: true
+
+---
+
+spring:
+    config:
+        activate:
+            on-profile: test
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: test
+        password: test
+        properties:
+            mail.smtp.debug: true
+            mail.smtp.connectiontimeout: 1000 #1초
+            mail.starttls.enable: true
+            mail.smtp.auth: true
+
+---
+
+spring:
+    config:
+        activate:
+            on-profile: dev
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: ${mail.username}
+        password: ${mail.password}
+        properties:
+            mail.smtp.debug: true
+            mail.smtp.connectiontimeout: 1000 #1초
+            mail.starttls.enable: true
+            mail.smtp.auth: true

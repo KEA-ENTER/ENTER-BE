@@ -82,4 +82,8 @@ public class Vehicle extends BaseEntity {
         this.img = img;
         this.state = state;
     }
+
+    public void deleteVehicle() {
+        this.state = VehicleState.INACTIVE;
+    }
 }
