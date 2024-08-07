@@ -17,6 +17,7 @@ spring:
       - email
       - licenseapi
       - monitoring
+      - quartz
     active: local
   servlet:
       multipart:

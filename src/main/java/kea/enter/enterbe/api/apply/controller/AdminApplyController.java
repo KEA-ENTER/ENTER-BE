@@ -19,7 +19,7 @@ public class AdminApplyController {
 
     /* 응모 현황 조회 API */
     @Operation(summary = "응모 현황 조회 API", description = "현재 회차 응모 현황을 조회합니다.")
-    @PostMapping("")
+    @GetMapping("")
     public ResponseEntity<GetApplySituationResponse> getApplySituation() {
         // TODO: 어드민 권한 검사
         GetApplySituationServiceDto dto = GetApplySituationServiceDto.of(LocalDate.now());
