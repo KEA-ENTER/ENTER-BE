@@ -31,12 +31,13 @@ import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_ROUND
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ApplyServiceImpl implements ApplyService{
     private final ApplyRepository applyRepository;
     private final ApplyRoundRepository applyRoundRepository;
 
     // 신청 가능 날짜 조회 API
-    @Transactional
+    @Transactional(readOnly = true)
     public List<GetApplyResponse> getApply(GetApplyServiceDto dto) {
         // 이번 주 + 7 -> 다음 주를 구함
         LocalDate today = dto.getToday();
@@ -70,7 +71,7 @@ public class ApplyServiceImpl implements ApplyService{
     }
 
     // 신청 가능한 차량 목록 API
-    @Transactional
+    @Transactional(readOnly = true)
     public List<GetApplyVehicleResponse> getApplyVehicles(GetApplyVehicleServiceDto dto) {
         LocalDate takeDate = dto.getTakeDate();
         LocalDate returnDate = dto.getReturnDate();

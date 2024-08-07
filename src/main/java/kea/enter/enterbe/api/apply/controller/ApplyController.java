@@ -21,7 +21,7 @@ import java.util.List;
 @Tag(name = "신청", description = "사용자 신청 API")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/apply")
+@RequestMapping("/applies")
 public class ApplyController {
 
     private final ApplyService applyService;
