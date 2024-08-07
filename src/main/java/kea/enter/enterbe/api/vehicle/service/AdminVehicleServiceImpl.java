@@ -60,8 +60,12 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     public void modifyVehicle(ModifyVehicleDto dto) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
 
-        if (vehicle.get().getVehicleNo() != dto.getVehicleNo())
+        log.info(vehicle.get().getVehicleNo());
+        log.info(dto.getVehicleNo());
+//        log.info(vehicle.get().getVehicleNo().equals(dto.getVehicleNo()).t);
+        if (!vehicle.get().getVehicleNo().equals(dto.getVehicleNo())) {
             checkVehicle(dto.getVehicleNo());
+        }
 
         if (vehicle.isPresent()) {
             String img = "";
