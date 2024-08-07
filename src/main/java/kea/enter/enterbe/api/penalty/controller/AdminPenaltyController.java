@@ -3,11 +3,11 @@ package kea.enter.enterbe.api.penalty.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kea.enter.enterbe.api.penalty.controller.request.PostPenaltyRequest;
-import kea.enter.enterbe.api.penalty.controller.response.GetPenaltyListResponse;
+import kea.enter.enterbe.api.penalty.controller.dto.request.PostAdminPenaltyRequest;
+import kea.enter.enterbe.api.penalty.controller.dto.response.GetAdminPenaltyListResponse;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
-import kea.enter.enterbe.api.penalty.service.dto.DeletePenaltyServiceDto;
-import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
+import kea.enter.enterbe.api.penalty.service.dto.DeleteAdminPenaltyServiceDto;
+import kea.enter.enterbe.api.penalty.service.dto.GetAdminPenaltyListServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,18 +34,18 @@ public class AdminPenaltyController {
     @PostMapping("/members/{memberId}")
     public ResponseEntity<String> createPenalty(
         @PathVariable Long memberId,
-        @Valid @RequestBody PostPenaltyRequest postPenaltyRequest) {
+        @Valid @RequestBody PostAdminPenaltyRequest postAdminPenaltyRequest) {
         // TODO: 어드민 권한 검사
-        adminPenaltyService.createPenalty(postPenaltyRequest.toService(memberId));
+        adminPenaltyService.createPenalty(postAdminPenaltyRequest.toService(memberId));
         return ResponseEntity.ok(SUCCESS.getMessage());
     }
 
     /* 페널티 목록 조회 API */
     @Operation(summary = "사용자 페널티 목록 조회 API", description = "사용자의 페널티 목록을 조회합니다.")
     @GetMapping("/members/{memberId}")
-    public ResponseEntity<List<GetPenaltyListResponse>> getPenaltyList(@PathVariable Long memberId) {
+    public ResponseEntity<List<GetAdminPenaltyListResponse>> getPenaltyList(@PathVariable Long memberId) {
         // TODO: 어드민 권한 검사
-        List<GetPenaltyListResponse> response =  adminPenaltyService.getPenaltyList(GetPenaltyListServiceDto.of(memberId));
+        List<GetAdminPenaltyListResponse> response =  adminPenaltyService.getPenaltyList(GetAdminPenaltyListServiceDto.of(memberId));
         return ResponseEntity.ok(response);
     }
 
@@ -54,7 +54,7 @@ public class AdminPenaltyController {
     @DeleteMapping("/members/{memberId}/{penaltyId}")
     public ResponseEntity<String> getPenaltyList(@PathVariable Long memberId, @PathVariable Long penaltyId) {
         // TODO: 어드민 권한 검사
-        adminPenaltyService.deletePenalty(DeletePenaltyServiceDto.of(memberId, penaltyId));
+        adminPenaltyService.deletePenalty(DeleteAdminPenaltyServiceDto.of(memberId, penaltyId));
         return ResponseEntity.ok(SUCCESS.getMessage());
     }
 }

@@ -1,10 +1,10 @@
 package kea.enter.enterbe.api.penalty.service;
 
 import kea.enter.enterbe.IntegrationTestSupport;
-import kea.enter.enterbe.api.penalty.controller.response.GetPenaltyListResponse;
-import kea.enter.enterbe.api.penalty.service.dto.DeletePenaltyServiceDto;
-import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
-import kea.enter.enterbe.api.penalty.service.dto.PostPenaltyServiceDto;
+import kea.enter.enterbe.api.penalty.controller.dto.response.GetAdminPenaltyListResponse;
+import kea.enter.enterbe.api.penalty.service.dto.DeleteAdminPenaltyServiceDto;
+import kea.enter.enterbe.api.penalty.service.dto.GetAdminPenaltyListServiceDto;
+import kea.enter.enterbe.api.penalty.service.dto.PostAdminPenaltyServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
 import kea.enter.enterbe.domain.member.entity.MemberState;
@@ -29,7 +29,7 @@ class AdminPenaltyServiceTest extends IntegrationTestSupport {
     public void postPenalty() {
         //given
         Member member = memberRepository.save(createMember());
-        PostPenaltyServiceDto dto = PostPenaltyServiceDto.of(member.getId(), PenaltyReason.BROKEN, PenaltyLevel.BLACKLIST, null);
+        PostAdminPenaltyServiceDto dto = PostAdminPenaltyServiceDto.of(member.getId(), PenaltyReason.BROKEN, PenaltyLevel.BLACKLIST, null);
 
         //when
         adminPenaltyService.createPenalty(dto);
@@ -55,10 +55,10 @@ class AdminPenaltyServiceTest extends IntegrationTestSupport {
         Penalty penalty3 = penaltyRepository.save(createPenalty(member));
         penaltyRepository.saveAll(List.of(penalty1, penalty2, penalty3));
 
-        GetPenaltyListServiceDto dto = GetPenaltyListServiceDto.of(memberId);
+        GetAdminPenaltyListServiceDto dto = GetAdminPenaltyListServiceDto.of(memberId);
 
         //when
-        List<GetPenaltyListResponse> penaltyList = adminPenaltyService.getPenaltyList(dto);
+        List<GetAdminPenaltyListResponse> penaltyList = adminPenaltyService.getPenaltyList(dto);
 
         //then
         assertThat(penaltyList).hasSize(3)
@@ -80,7 +80,7 @@ class AdminPenaltyServiceTest extends IntegrationTestSupport {
         Penalty penalty = penaltyRepository.save(createPenalty(member));
         Long penaltyId = penalty.getId();
 
-        DeletePenaltyServiceDto dto = DeletePenaltyServiceDto.of(memberId, penaltyId);
+        DeleteAdminPenaltyServiceDto dto = DeleteAdminPenaltyServiceDto.of(memberId, penaltyId);
 
         //when
         adminPenaltyService.deletePenalty(dto);

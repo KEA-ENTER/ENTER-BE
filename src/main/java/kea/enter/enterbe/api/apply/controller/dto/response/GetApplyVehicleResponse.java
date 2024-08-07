@@ -1,4 +1,4 @@
-package kea.enter.enterbe.api.apply.controller.response;
+package kea.enter.enterbe.api.apply.controller.dto.response;
 
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import lombok.Builder;

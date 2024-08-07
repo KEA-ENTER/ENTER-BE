@@ -1,11 +1,12 @@
 package kea.enter.enterbe.api.apply.service;
 
 import kea.enter.enterbe.IntegrationTestSupport;
-import kea.enter.enterbe.api.apply.controller.response.GetApplyResponse;
-import kea.enter.enterbe.api.apply.controller.response.GetApplyVehicleResponse;
+import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyResponse;
+import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyVehicleResponse;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
+import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
@@ -102,7 +103,7 @@ public class ApplyServiceTest extends IntegrationTestSupport {
 
     }
     private Member createMember() {
-        return Member.of("employeeNo", "name", "email", "password",
+        return Member.of("employeeNo", "name", "email", "password", LocalDate.of(1999,11,28),
             "licenseId", "licensePassword", true, true,
             1, MemberRole.USER, MemberState.ACTIVE);
     }
@@ -117,6 +118,6 @@ public class ApplyServiceTest extends IntegrationTestSupport {
         return ApplyRound.of(vehicle, 1, takeDate, takeDate.plusDays(1), ApplyRoundState.ACTIVE);
     }
     private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyState.ACTIVE);
+        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 }

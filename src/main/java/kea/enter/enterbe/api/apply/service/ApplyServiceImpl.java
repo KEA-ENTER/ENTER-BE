@@ -1,7 +1,7 @@
 package kea.enter.enterbe.api.apply.service;
 
-import kea.enter.enterbe.api.apply.controller.response.GetApplyResponse;
-import kea.enter.enterbe.api.apply.controller.response.GetApplyVehicleResponse;
+import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyResponse;
+import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyVehicleResponse;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
@@ -11,7 +11,6 @@ import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
-import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

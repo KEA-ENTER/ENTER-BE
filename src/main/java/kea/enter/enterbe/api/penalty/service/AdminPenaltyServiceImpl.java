@@ -1,9 +1,9 @@
 package kea.enter.enterbe.api.penalty.service;
 
-import kea.enter.enterbe.api.penalty.controller.response.GetPenaltyListResponse;
-import kea.enter.enterbe.api.penalty.service.dto.DeletePenaltyServiceDto;
-import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
-import kea.enter.enterbe.api.penalty.service.dto.PostPenaltyServiceDto;
+import kea.enter.enterbe.api.penalty.controller.dto.response.GetAdminPenaltyListResponse;
+import kea.enter.enterbe.api.penalty.service.dto.DeleteAdminPenaltyServiceDto;
+import kea.enter.enterbe.api.penalty.service.dto.GetAdminPenaltyListServiceDto;
+import kea.enter.enterbe.api.penalty.service.dto.PostAdminPenaltyServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
@@ -34,21 +34,21 @@ public class AdminPenaltyServiceImpl implements AdminPenaltyService {
 
     /* 페널티 부여 API */
     @Transactional
-    public void createPenalty(PostPenaltyServiceDto dto) {
+    public void createPenalty(PostAdminPenaltyServiceDto dto) {
         // memberId로 멤버 존재 여부를 검사하고 페널티를 부여한다
         Member member = findMemberById(dto.getMemberId());
         penaltyRepository.save(Penalty.of(member, dto.getReason(), dto.getLevel(), dto.getEtc()));
     }
 
     /* 페널티 목록 조회 API */
-    public List<GetPenaltyListResponse> getPenaltyList(GetPenaltyListServiceDto dto) {
+    public List<GetAdminPenaltyListResponse> getPenaltyList(GetAdminPenaltyListServiceDto dto) {
         // memberId로 멤버 존재 여부를 검사하고 페널티를 부여한다
         Member member = findMemberById(dto.getMemberId());
 
         // 해당 사용자의 페널티 내역을 조회한다
         List<Penalty> penaltyList = penaltyRepository.findAllByMemberIdAndStateOrderByCreatedAt(member.getId(), PenaltyState.ACTIVE);
         return penaltyList.stream()
-            .map(d -> GetPenaltyListResponse.builder()
+            .map(d -> GetAdminPenaltyListResponse.builder()
                 .penaltyId(d.getId())
                 .createdAt(localDateTimeToString(d.getCreatedAt()))
                 .reason(d.getReason())
@@ -59,7 +59,7 @@ public class AdminPenaltyServiceImpl implements AdminPenaltyService {
 
     /* 페널티 삭제 API */
     @Transactional
-    public void deletePenalty(DeletePenaltyServiceDto dto) {
+    public void deletePenalty(DeleteAdminPenaltyServiceDto dto) {
         // memberId로 멤버 존재 여부를 검사하고 페널티를 부여한다
         Member member = findMemberById(dto.getMemberId());
 

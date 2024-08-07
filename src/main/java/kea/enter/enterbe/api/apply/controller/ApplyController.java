@@ -2,21 +2,19 @@ package kea.enter.enterbe.api.apply.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kea.enter.enterbe.api.apply.controller.response.GetApplyResponse;
-import kea.enter.enterbe.api.apply.controller.response.GetApplyVehicleResponse;
+import java.time.LocalDate;
+import java.util.List;
+import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyResponse;
+import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyVehicleResponse;
 import kea.enter.enterbe.api.apply.service.ApplyService;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Tag(name = "신청", description = "사용자 신청 API")
 @RequiredArgsConstructor

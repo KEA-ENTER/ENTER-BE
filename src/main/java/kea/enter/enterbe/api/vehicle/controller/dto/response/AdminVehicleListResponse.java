@@ -7,7 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class AdminVehicleResponse {
+public class AdminVehicleListResponse {
+    // vehicle table
     @Schema(description = "차량 아이디", example = "1")
     private Long vehicleId;
 
@@ -23,16 +24,16 @@ public class AdminVehicleResponse {
     @Schema(description = "차량 탑승 정원", example = "5")
     private int seats;
 
-    @Schema(description = "차량 연료", example = "GASOLINE")
+    @Schema(description = "차량 연료", example = "GASOLINE", required = false)
     private VehicleFuel fuel;
 
     @Schema(description = "차량 이미지", example = "")
     private String img;
 
-    @Schema(description = "차량 생성일", example = "2024-08-03")
+    @Schema(description = "차량 생성일", example = "2024-08-03", required = false)
     private String createdAt;
 
-    @Schema(description = "차량 수정일", example = "2024-08-03")
+    @Schema(description = "차량 수정일", example = "2024-08-03", required = false)
     private String updatedAt;
 
     @Schema(description = "차량 상태", example = "AVAILABLE")
@@ -40,8 +41,8 @@ public class AdminVehicleResponse {
 
 
     @Builder
-    public AdminVehicleResponse(Long vehicleId, String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, String img, String createdAt, String updatedAt, VehicleState state) {
+    public AdminVehicleListResponse(Long vehicleId, String vehicleNo, String company, String model, int seats,
+        VehicleFuel fuel, String img, String createdAt, String updatedAt, VehicleState state) {
 
         this.vehicleId = vehicleId;
         this.vehicleNo = vehicleNo;
@@ -55,10 +56,10 @@ public class AdminVehicleResponse {
         this.state = state;
     }
 
-    public static AdminVehicleResponse of(Long vehicleId, String vehicleNo, String company, String model,
+    public static AdminVehicleListResponse of(Long vehicleId, String vehicleNo, String company, String model,
         int seats, VehicleFuel fuel, String img, String createdAt, String updatedAt, VehicleState state) {
 
-        return AdminVehicleResponse.builder()
+        return AdminVehicleListResponse.builder()
             .vehicleId(vehicleId)
             .vehicleNo(vehicleNo)
             .company(company)

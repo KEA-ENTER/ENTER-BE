@@ -50,3 +50,7 @@ src/main/resources/data.sql
 
 ### Query DSL ###
 /src/main/generated/
+
+### data.sql ###
+src/main/resources/data.sql
+gradle/wrapper/gradle-wrapper.properties
