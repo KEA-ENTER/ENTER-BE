@@ -3,6 +3,8 @@ package kea.enter.enterbe.api.question.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import kea.enter.enterbe.api.question.service.dto.EmailServiceDto;
+import kea.enter.enterbe.global.common.exception.CustomException;
+import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,15 +23,28 @@ public class EmailService {
 
     public void sendEmail(EmailServiceDto emailDto) {
         MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper;
+
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper = new MimeMessageHelper(message, true);
             helper.setTo(emailDto.getRecipient());
             helper.setSubject(emailDto.getTitle());
-            String body = getHtmlContent("templates/email-template.html", emailDto.getRecipient(), emailDto.getTitle(), emailDto.getQuestionContent(), emailDto.getAnswerContent());
+        } catch (MessagingException e) {
+            throw new CustomException(ResponseCode.FAILED_MAIL_CREATE);
+        }
+
+        String body;
+        try {
+            body = getHtmlContent("templates/email-template.html", emailDto.getRecipient(), emailDto.getTitle(), emailDto.getQuestionContent(), emailDto.getAnswerContent());
+        } catch (IOException e) {
+            throw new CustomException(ResponseCode.FAILED_MAIL_TEMPLATE);
+        }
+
+        try {
             helper.setText(body, true);  // true for HTML content
             mailSender.send(message);
-        } catch (MessagingException | IOException e) {
-            throw new RuntimeException("Failed to send email", e);
+        } catch (MessagingException e) {
+            throw new CustomException(ResponseCode.FAILED_MAIL_SEND);
         }
     }
 

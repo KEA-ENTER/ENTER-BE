@@ -7,8 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kea.enter.enterbe.api.penalty.controller.response.GetPenaltyListResponse;
-import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
 import kea.enter.enterbe.api.question.controller.dto.request.AnswerRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.request.GetAnswerRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
@@ -40,10 +38,12 @@ public class AnswerController {
         @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "MEM-ERR-001", description = "멤버가 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "QST-ERR-001", description = "문의사항이 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "QST-ERR-003", description = "삭제된 문의사항입니다.", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "QST-ERR-004", description = "답변 완료된 문의사항입니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "QST-ERR-003", description = "삭제 되었거나 답변 완료된 문의사항입니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "MAIL-ERR-001", description = "메일 생성에 실패했습니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "MAIL-ERR-002", description = "메일 template load에 실패했습니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "MAIL-ERR-003", description = "메일 전송에 실패했습니다.", content = @Content(mediaType = "application/json")),
     })
-    @PostMapping("/answers/{questionId}")
+    @PostMapping("/{questionId}/answers")
     public ResponseEntity<String> createAnswer(
         @PathVariable Long questionId,
         @Valid @RequestBody AnswerRequestDto dto) {
@@ -59,7 +59,7 @@ public class AnswerController {
         @ApiResponse(responseCode = "MEM-ERR-001", description = "멤버가 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "QST-ERR-001", description = "문의사항이 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
     })
-    @GetMapping("/answers/{questionId}")
+    @GetMapping("/{questionId}/answers")
     public ResponseEntity<GetAnswerResponseDto> getAnswer(@PathVariable Long questionId,
         @Valid @RequestBody GetAnswerRequestDto dto) {
 
