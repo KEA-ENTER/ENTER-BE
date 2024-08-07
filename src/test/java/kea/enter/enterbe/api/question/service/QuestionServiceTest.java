@@ -2,6 +2,7 @@ package kea.enter.enterbe.api.question.service;
 
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.question.controller.dto.request.QuestionRequestDto;
+import kea.enter.enterbe.api.question.service.dto.CreateQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.ModifyQuestionServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
@@ -32,7 +33,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
         memberRepository.save(member);
 
         // given
-        QuestionRequestDto requestDto = new QuestionRequestDto(member.getId(), questionContentTest,
+        CreateQuestionServiceDto requestDto = new CreateQuestionServiceDto(member.getId(), questionContentTest,
             QuestionCategory.USER);
 
         // when
@@ -56,7 +57,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
         memberRepository.save(member);
 
         // given
-        QuestionRequestDto requestDto = new QuestionRequestDto(memberIdTest, questionContentTest,
+        CreateQuestionServiceDto requestDto = new CreateQuestionServiceDto(memberIdTest, questionContentTest,
             QuestionCategory.USER);
 
         // when & then

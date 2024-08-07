@@ -2,6 +2,7 @@ package kea.enter.enterbe.api.question.service;
 
 import kea.enter.enterbe.api.question.controller.dto.request.AnswerRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
+import kea.enter.enterbe.api.question.service.dto.AnswerServiceDto;
 import kea.enter.enterbe.api.question.service.dto.EmailServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
@@ -32,11 +33,11 @@ public class AnswerService {
 
     /* 문의 사항 답변 작성 API */
     @Transactional
-    public void answerQuestion(Long questionId, AnswerRequestDto dto) {
+    public void answerQuestion(AnswerServiceDto dto) {
         // memberId로 멤버 존재 여부를 검사한다.
         Member member = getActiveMemberById(dto.getMemberId());
 
-        Question question = getFindByIdAndStateNot(questionId);
+        Question question = getFindByIdAndStateNot(dto.getQuestionId());
         if (question.getState() == QuestionState.COMPLETE) {
             throw new CustomException(ResponseCode.INVALID_QUESTION_STATE_COMPLETE);
         }
@@ -50,14 +51,12 @@ public class AnswerService {
         answerRepository.save(answer);
 
         // 이메일 전송 로직 추가
-        sendAnswerEmail(member, question, dto.getContent());
+        sendAnswerEmail(question, dto.getContent());
     }
 
     /* 답변 조회 API */
     @Transactional
     public GetAnswerResponseDto getAnswer(GetAnswerServiceDto dto) {
-        // memberId로 멤버 존재 여부를 검사한다.
-        Member member = getActiveMemberById(dto.getMemberId());
 
         // questionId로 문의사항 존재 여부를 검사한다.
         Question question = getFindByIdAndStateNot(dto.getQuestionId());
@@ -67,11 +66,11 @@ public class AnswerService {
         // 답변이 없을 시 null로 반환
         String content = optionalAnswer.map(Answer::getContent).orElse(null);
         LocalDateTime createdAt = optionalAnswer.map(Answer::getCreatedAt).orElse(null);
-        String memberRole = member.getRole().name();
-        return GetAnswerResponseDto.of(content, createdAt, memberRole);
+
+        return GetAnswerResponseDto.of(content, createdAt);
     }
 
-    private void sendAnswerEmail(Member member, Question question, String answerContent) {
+    private void sendAnswerEmail(Question question, String answerContent) {
         // 수신자 Email
         String recipient = question.getMember().getEmail();
         String questionContent = question.getContent();

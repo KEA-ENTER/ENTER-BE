@@ -1,6 +1,8 @@
 package kea.enter.enterbe.api.question.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -8,12 +10,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kea.enter.enterbe.api.question.controller.dto.request.AnswerRequestDto;
-import kea.enter.enterbe.api.question.controller.dto.request.GetAnswerRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
 import kea.enter.enterbe.api.question.service.AnswerService;
+import kea.enter.enterbe.api.question.service.dto.AnswerServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 
@@ -33,7 +35,10 @@ public class AnswerController {
 
     private final AnswerService answerService;
 
-    @Operation(summary = "문의사항 답변 작성 API")
+    @Operation(summary = "문의사항 답변 작성 API",
+        parameters = {
+            @Parameter(name = "Authorization", description = "Bearer Token", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
+        })
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "MEM-ERR-001", description = "멤버가 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
@@ -46,10 +51,12 @@ public class AnswerController {
     })
     @PostMapping("/{questionId}/answers")
     public ResponseEntity<String> createAnswer(
+        Authentication authentication,
         @PathVariable Long questionId,
         @Valid @RequestBody AnswerRequestDto dto) {
 
-        answerService.answerQuestion(questionId, dto);
+        Long memberId = Long.valueOf(authentication.getName());
+        answerService.answerQuestion(AnswerServiceDto.of(memberId, dto.getContent(), questionId));
         return ResponseEntity.ok(SUCCESS.getMessage());
     }
 
@@ -61,11 +68,10 @@ public class AnswerController {
         @ApiResponse(responseCode = "QST-ERR-001", description = "문의사항이 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
     })
     @GetMapping("/{questionId}/answers")
-    public ResponseEntity<GetAnswerResponseDto> getAnswer(@PathVariable Long questionId,
-        @Valid @RequestBody GetAnswerRequestDto dto) {
+    public ResponseEntity<GetAnswerResponseDto> getAnswer(@PathVariable Long questionId) {
 
         GetAnswerResponseDto response =  answerService.getAnswer(
-            GetAnswerServiceDto.of(questionId, dto.getMemberId()));
+            GetAnswerServiceDto.of(questionId));
         return ResponseEntity.ok(response);
     }
 }

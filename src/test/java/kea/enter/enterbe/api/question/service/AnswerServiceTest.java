@@ -1,8 +1,8 @@
 package kea.enter.enterbe.api.question.service;
 
 import kea.enter.enterbe.IntegrationTestSupport;
-import kea.enter.enterbe.api.question.controller.dto.request.AnswerRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
+import kea.enter.enterbe.api.question.service.dto.AnswerServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
@@ -31,10 +31,10 @@ public class AnswerServiceTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember());
         Question question = questionRepository.save(createQuestion(member));
 
-        AnswerRequestDto answerRequestDto = new AnswerRequestDto(member.getId(), questionContentTest);
+        AnswerServiceDto answerServiceDto = new AnswerServiceDto(member.getId(), questionContentTest, question.getId());
 
         // when
-        answerService.answerQuestion(question.getId(), answerRequestDto);
+        answerService.answerQuestion(answerServiceDto);
 
         //then
         // 답변 저장
@@ -42,7 +42,7 @@ public class AnswerServiceTest extends IntegrationTestSupport {
         assertThat(optionalAnswer).isPresent();
 
         Answer answer = optionalAnswer.get();
-        assertThat(answer.getContent()).isEqualTo(answerRequestDto.getContent());
+        assertThat(answer.getContent()).isEqualTo(answerServiceDto.getContent());
         assertThat(answer.getState()).isEqualTo(AnswerState.ACTIVE);
 
         // 답변 저장 시 QuestionState COMPLETE로 변경 되었는지
@@ -59,11 +59,11 @@ public class AnswerServiceTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember());
         Question question = questionRepository.save(createQuestion(member));
 
-        AnswerRequestDto answerRequestDto = new AnswerRequestDto(member.getId(), questionContentTest);
-        answerService.answerQuestion(question.getId(), answerRequestDto);
+        AnswerServiceDto answerServiceDto = new AnswerServiceDto(member.getId(), questionContentTest, question.getId());
+        answerService.answerQuestion(answerServiceDto);
 
         // when
-        GetAnswerServiceDto getAnswerServiceDto = GetAnswerServiceDto.of(question.getId(), member.getId());
+        GetAnswerServiceDto getAnswerServiceDto = GetAnswerServiceDto.of(question.getId());
         GetAnswerResponseDto responseDto = answerService.getAnswer(getAnswerServiceDto);
 
         // then
