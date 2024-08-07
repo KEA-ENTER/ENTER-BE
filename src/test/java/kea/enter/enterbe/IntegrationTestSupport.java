@@ -2,6 +2,10 @@ package kea.enter.enterbe;
 
 import java.time.Clock;
 import kea.enter.enterbe.api.apply.service.AdminApplyService;
+import kea.enter.enterbe.api.apply.service.ApplyService;
+import kea.enter.enterbe.api.lottery.service.AdminLotteryService;
+import kea.enter.enterbe.api.member.service.LicenseService;
+import kea.enter.enterbe.api.lottery.service.LotteryService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.question.service.AnswerService;
 import kea.enter.enterbe.api.question.service.EmailService;
@@ -22,9 +26,9 @@ import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.global.config.ClockConfig;
 import kea.enter.enterbe.global.config.ObjectStorageConfig;
 import kea.enter.enterbe.global.util.FileUtil;
+import kea.enter.enterbe.global.util.LicenseValidationUtil;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import org.junit.jupiter.api.AfterEach;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,55 +37,68 @@ import org.springframework.mail.javamail.JavaMailSender;
 
 @SpringBootTest
 public abstract class IntegrationTestSupport {
+
+    @Autowired
+    protected ApplyService applyService;
+    @Autowired
+    protected AdminApplyService adminApplyService;
+    @Autowired
+    protected AdminPenaltyService adminPenaltyService;
     @Autowired
     protected AnswerService answerService;
     @Autowired
     protected QuestionService questionService;
     @Autowired
+    protected AdminTakeService adminTakeService;
+    @Autowired
+    protected VehicleService vehicleService;
+    @Autowired
+    protected AdminVehicleService adminVehicleService;
+    @Autowired
+    protected LicenseService licenseService;
+
+    @Autowired
+    protected VehicleRepository vehicleRepository;
+    @Autowired
+    protected QuestionRepository questionRepository;
+    @Autowired
     protected AnswerRepository answerRepository;
     @Autowired
     protected WinningRepository winningRepository;
-    @Autowired
-    protected ApplyRepository applyRepository;
-    @Autowired
-    protected ApplyRoundRepository applyRoundRepository;
-    @Autowired
-    protected VehicleReportRepository vehicleReportRepository;
-    @Autowired
-    protected VehicleNoteRepository vehicleNoteRepository;
-    @Autowired
-    protected VehicleRepository vehicleRepository;
     @Autowired
     protected MemberRepository memberRepository;
     @Autowired
     protected PenaltyRepository penaltyRepository;
     @Autowired
-    protected VehicleService vehicleService;
+    protected VehicleNoteRepository vehicleNoteRepository;
+    @Autowired
+    protected VehicleReportRepository vehicleReportRepository;
+    @Autowired
+    protected ApplyRepository applyRepository;
+    @Autowired
+    protected ApplyRoundRepository applyRoundRepository;
+    @Autowired
+    protected LotteryService lotteryService;
+    @Autowired
+    protected AdminLotteryService adminLotteryService;
     @Autowired
     protected FileUtil fileUtil;
-    @Autowired
-    protected AdminPenaltyService adminPenaltyService;
-    @Autowired
-    protected AdminVehicleService adminVehicleService;
-    @Autowired
-    protected AdminApplyService adminApplyService;
-    @Autowired
-    protected AdminTakeService adminTakeService;
-    @MockBean
-    protected ObjectStorageConfig objectStorageConfig;
-    @MockBean
-    protected ObjectStorageUtil objectStorageUtil;
+
     @MockBean
     protected Clock clock;
     @MockBean
     protected ClockConfig clockConfig;
     @MockBean
+    protected ObjectStorageConfig objectStorageConfig;
+    @MockBean
+    protected ObjectStorageUtil objectStorageUtil;
+    @MockBean
+    protected LicenseValidationUtil licenseValidationUtil;
+    @MockBean
     protected JavaMailSender mailSender;
     @MockBean
     protected EmailService emailService;
 
-    @Autowired
-    protected QuestionRepository questionRepository;
 
     @AfterEach
     void tearDown() {
@@ -97,3 +114,4 @@ public abstract class IntegrationTestSupport {
         memberRepository.deleteAllInBatch();
     }
 }
+

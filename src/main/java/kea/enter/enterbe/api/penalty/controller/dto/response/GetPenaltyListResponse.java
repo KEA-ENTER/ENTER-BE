@@ -1,4 +1,4 @@
-package kea.enter.enterbe.api.penalty.controller.response;
+package kea.enter.enterbe.api.penalty.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kea.enter.enterbe.domain.penalty.entity.PenaltyLevel;

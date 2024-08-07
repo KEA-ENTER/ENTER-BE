@@ -2,6 +2,7 @@ package kea.enter.enterbe.domain.take.repository;
 
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.domain.apply.entity.Apply;
+import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
@@ -82,7 +83,7 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
     }
 
     private Member createMember() {
-        return Member.of("employeeNo", "name", "email", "password",
+        return Member.of("employeeNo", "name", "email", "password", LocalDate.of(1999,11,28),
             "licenseId", "licensePassword", true, true,
             1, MemberRole.USER, MemberState.ACTIVE);
     }
@@ -97,7 +98,7 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
     }
 
     private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyState.ACTIVE);
+        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
     private Winning createWinning(Vehicle vehicle, Apply apply, WinningState state) {

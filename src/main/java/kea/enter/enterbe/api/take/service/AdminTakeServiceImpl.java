@@ -1,6 +1,6 @@
 package kea.enter.enterbe.api.take.service;
 
-import kea.enter.enterbe.api.take.controller.response.GetTakeSituationResponse;
+import kea.enter.enterbe.api.take.controller.dto.response.GetTakeSituationResponse;
 import kea.enter.enterbe.api.take.service.dto.GetTakeSituationServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;

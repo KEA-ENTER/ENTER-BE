@@ -1,6 +1,6 @@
 package kea.enter.enterbe.api.apply.service;
 
-import kea.enter.enterbe.api.apply.controller.response.GetApplySituationResponse;
+import kea.enter.enterbe.api.apply.controller.dto.response.GetApplySituationResponse;
 import kea.enter.enterbe.api.apply.service.dto.GetApplySituationServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
