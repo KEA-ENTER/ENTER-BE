@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.AdminVehicleRequest;
-import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleListResponse;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleDto;
@@ -42,7 +42,7 @@ public class AdminVehicleController {
 
     @Operation(summary = "법인 차량 목록 조회 API")
     @GetMapping("")
-    public Page<AdminVehicleResponse> getVehicleList(
+    public Page<AdminVehicleListResponse> getVehicleList(
         @PageableDefault(size = 4) Pageable pageable,
         @RequestParam(required = false) String vehicleNo,
         @RequestParam(required = false) String model,

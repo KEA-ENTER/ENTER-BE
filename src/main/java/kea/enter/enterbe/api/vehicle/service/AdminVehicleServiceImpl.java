@@ -2,7 +2,7 @@ package kea.enter.enterbe.api.vehicle.service;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
-import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleListResponse;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
@@ -29,12 +29,11 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     private final ObjectStorageUtil objectStorageUtil;
 
     @Override
-    public Page<AdminVehicleResponse> getVehicleList(Pageable pageable, String vehicleNo, String model, VehicleState state) {
-        Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(
-            pageable, vehicleNo, model, state);
-        return vehicles.map(v -> AdminVehicleResponse.of(
-            v.getId(), v.getVehicleNo(), v.getCompany(), v.getModel(), v.getSeats(), v.getFuel(), v.getImg(), v.getCreatedAt().toLocalDate().toString(), v.getUpdatedAt().toLocalDate().toString(), v.getState()));
-
+    public Page<AdminVehicleListResponse> getVehicleList(Pageable pageable, String vehicleNo, String model, VehicleState state) {
+        Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(pageable, vehicleNo, model, state);
+        return vehicles.map(v -> AdminVehicleListResponse.of(
+            v.getId(), v.getVehicleNo(), v.getCompany(), v.getModel(), v.getSeats(), v.getFuel(), v.getImg(),
+            v.getCreatedAt().toLocalDate().toString(), v.getUpdatedAt().toLocalDate().toString(), v.getState()));
     }
 
     @Override
