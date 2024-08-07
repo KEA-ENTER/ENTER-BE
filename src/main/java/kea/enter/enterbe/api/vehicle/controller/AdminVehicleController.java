@@ -7,6 +7,7 @@ import kea.enter.enterbe.api.vehicle.controller.dto.request.AdminVehicleRequest;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
+import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.global.common.api.CustomResponseCode;
@@ -19,8 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,6 +83,16 @@ public class AdminVehicleController {
             ModifyVehicleDto.of(adminVehicleRequest.getId(), adminVehicleRequest.getVehicleNo(), adminVehicleRequest.getCompany(),
                 adminVehicleRequest.getModel(), adminVehicleRequest.getSeats(),
                 adminVehicleRequest.getFuel(), img, adminVehicleRequest.getState()));
+
+        return ResponseEntity.ok(CustomResponseCode.SUCCESS);
+    }
+
+    @Operation(summary = "법인 차량 삭제 API")
+    @DeleteMapping("/{vehicleId}")
+    public ResponseEntity<CustomResponseCode> deleteVehicle(
+        @PathVariable Long vehicleId) {
+
+        adminVehicleService.deleteVehicle(DeleteVehicleDto.of(vehicleId));
 
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }
