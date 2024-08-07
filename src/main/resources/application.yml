@@ -14,8 +14,10 @@ spring:
       - vault
       - kc
       - jwt
+      - email
       - licenseapi
       - monitoring
+      - quartz
       - redis
     active: local
   servlet:

@@ -6,6 +6,9 @@ spring:
             - vault
             - kc
             - jwt
-            - redis
+            - email
+            - licenseapi
             - monitoring
+            - quartz
+            - redis
         active: test

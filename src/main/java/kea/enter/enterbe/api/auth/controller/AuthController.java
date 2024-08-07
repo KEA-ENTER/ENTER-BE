@@ -1,10 +1,12 @@
 package kea.enter.enterbe.api.auth.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.enter.enterbe.api.auth.dto.LoginRequestDto;
 import kea.enter.enterbe.api.auth.dto.LoginResponseDto;
 import kea.enter.enterbe.api.auth.dto.ReissueResponseDto;
 import kea.enter.enterbe.api.auth.service.AuthService;
+import kea.enter.enterbe.global.common.api.CustomResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,36 +26,26 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Operation(summary = "로그인 API", description = "로그인을 수행합니다.")
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(
         @RequestBody LoginRequestDto loginRequestDto) {
         return ResponseEntity.ok(authService.login(loginRequestDto));
     }
 
+    @Operation(summary = "로그아웃 API", description = "로그아웃을 수행합니다.")
     @GetMapping("/logout")
-    public ResponseEntity<String> logout(
+    public ResponseEntity<CustomResponseCode> logout(
         @RequestHeader("Authorization") String accessToken
     ) {
         return ResponseEntity.ok(authService.logout(accessToken.substring(7)));
     }
 
+    @Operation(summary = "토큰 재발급 API", description = "토큰을 재발급합니다.")
     @GetMapping("/reissue")
     public ResponseEntity<ReissueResponseDto> reissue(
         @RequestHeader("Authorization") String refreshToken
     ) {
-        /*
-        authentication.getAuthorities() : 권한
-        authentication.getName() : memberId를 반환함
-
-        getName()이 기분이 나쁘다면...
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getId();
-        String token = redisUtil.getValue(userId.toString());
-        return ResponseEntity.ok(authService.reissue(token));
-
-        식으로 사용하면 됨
-
-        */
         return ResponseEntity.ok(authService.reissue(refreshToken.substring(7)));
     }
 

@@ -2,13 +2,6 @@ spring:
     config:
         activate:
             on-profile: local
-#    datasource:
-#        driver-class-name: com.mysql.jdbc.Driver
-#        url: jdbc:mysql://localhost:3306/talcar
-#        username: root
-#        password: root
-#    jpa:
-#        database: MySQL
     datasource:
         driver-class-name: org.h2.Driver
         url: jdbc:h2:mem:query;MODE=MySQL;

@@ -1,5 +1,7 @@
 package kea.enter.enterbe.api.question.controller;
 
+import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,8 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 
 @RestController
 @RequestMapping("/questions")

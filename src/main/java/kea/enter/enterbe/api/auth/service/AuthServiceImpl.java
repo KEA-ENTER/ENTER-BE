@@ -8,6 +8,7 @@ import kea.enter.enterbe.api.auth.dto.ReissueResponseDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
+import kea.enter.enterbe.global.common.api.CustomResponseCode;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import kea.enter.enterbe.global.redis.RedisUtil;
@@ -31,11 +32,11 @@ public class AuthServiceImpl implements AuthService {
     private final Duration expireTime = Duration.ofSeconds(864000); // 2 weeks
 
     @Override
-    public String logout(String accessToken) {
+    public CustomResponseCode logout(String accessToken) {
         // 로그아웃은 클라이언트에서 처리하도록 하자
         jwtUtil.validateToken(accessToken); // 어차피 안 되면 오류를 뿜으니까~
         redisUtil.deleteValue(jwtUtil.getMemberId(accessToken).toString()); // 로그아웃 처리
-        return "Logout Success";
+        return CustomResponseCode.LOGOUT_SUCCESS;
     }
 
     @Override
@@ -46,12 +47,14 @@ public class AuthServiceImpl implements AuthService {
         jwtUtil.validateToken(refreshToken);
 
         String newRefreshToken = jwtUtil.createRefreshToken(memberInfo);
+        String newAccessToken = jwtUtil.createAccessToken(memberInfo);
         redisUtil.deleteValue(jwtUtil.getMemberId(refreshToken).toString());
         redisUtil.setValues(memberInfo.getId().toString(), newRefreshToken, expireTime);
 
         return ReissueResponseDto.of(
-            jwtUtil.createAccessToken(memberInfo),
-            jwtUtil.createRefreshToken(memberInfo));
+            newAccessToken,
+            newRefreshToken
+        );
     }
 
     @Override
