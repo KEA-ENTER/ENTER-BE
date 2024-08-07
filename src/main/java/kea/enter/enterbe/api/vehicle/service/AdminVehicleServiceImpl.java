@@ -58,9 +58,11 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     @Override
     @Transactional
     public void modifyVehicle(ModifyVehicleDto dto) {
-        checkVehicle(dto.getVehicleNo());
-
         Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
+
+        if (vehicle.get().getVehicleNo() != dto.getVehicleNo())
+            checkVehicle(dto.getVehicleNo());
+
         if (vehicle.isPresent()) {
             String img = "";
             try {
