@@ -12,4 +12,6 @@ public interface VehicleReportRepository extends JpaRepository<VehicleReport,Lon
 
     VehicleReport findByWinningIdAndState(Long id, VehicleReportState vehicleReportState);
     List<VehicleReport> findAllByWinningApplyApplyRoundIdAndTypeAndState(Long applyRoundId, VehicleReportType type, VehicleReportState state);
+
+    List<VehicleReport> findAllByWinningIdAndState(Long id, VehicleReportState vehicleReportState);
 }
