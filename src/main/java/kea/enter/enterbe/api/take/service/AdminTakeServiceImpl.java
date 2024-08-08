@@ -88,15 +88,16 @@ public class AdminTakeServiceImpl implements AdminTakeService {
         // 해당 보고서가 존재하는지 확인한다
         VehicleReport report = findVehicleReportByWinningIdAndType(dto.getWinningId(), VehicleReportType.TAKE);
         VehicleNote note = findVehicleNoteByVehicleId(report.getVehicle().getId());
+        String noteContent = note == null ? null : note.getContent();
 
         ApplyRound applyRound = report.getWinning().getApply().getApplyRound();
         Member member = report.getWinning().getApply().getMember();
 
         ReportImage reportImageList = ReportImage.of(report.getDashboardImg(), report.getFrontImg(), report.getBackImg(), report.getLeftImg(), report.getRightImg());
 
-        return GetTakeReportResponse.of(report.getId(), member.getId(), localDateToString(applyRound.getTakeDate()), localDateToString(applyRound.getReturnDate()),
+        return GetTakeReportResponse.of(report.getId(), member.getId(), applyRound.getTakeDate().toString(), applyRound.getReturnDate().toString(),
             localDateTimeToString(report.getCreatedAt()), member.getName(),
-            reportImageList, note.getContent());
+            reportImageList, noteContent);
 
     }
 
@@ -117,11 +118,6 @@ public class AdminTakeServiceImpl implements AdminTakeService {
     }
 
     // 시간 형식 변환
-    public String localDateToString(LocalDate localDate) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.format(localDate);
-    }
-
     public String localDateTimeToString(LocalDateTime localDateTime) {
         Date date = java.sql.Timestamp.valueOf(localDateTime);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");

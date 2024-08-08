@@ -33,7 +33,7 @@ public class AdminTakeController {
     }
 
     /* 차량 인수 보고서 상세 조회 API */
-    @Operation(summary = "차량 인수 보고서 상세 조회 API", description = "이전 회차 인수 현황을 조회합니다.")
+    @Operation(summary = "차량 인수 보고서 상세 조회 API", description = "차량 인수 보고서를 조회합니다.")
     @GetMapping("/reports/{winningId}")
     public ResponseEntity<GetTakeReportResponse> getTakeReport(@PathVariable Long winningId) {
         GetTakeReportResponse response = adminTakeService.getTakeReport(GetTakeReportServiceDto.of(winningId));

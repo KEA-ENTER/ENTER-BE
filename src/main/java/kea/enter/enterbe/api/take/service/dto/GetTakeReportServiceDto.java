@@ -16,7 +16,7 @@ public class GetTakeReportServiceDto {
 
     public static GetTakeReportServiceDto of(Long winningId) {
         return GetTakeReportServiceDto.builder()
-            .winningId(builder().winningId)
+            .winningId(winningId)
             .build();
     }
 }
