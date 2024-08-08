@@ -25,10 +25,13 @@ import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.global.config.ClockConfig;
 import kea.enter.enterbe.global.config.ObjectStorageConfig;
+import kea.enter.enterbe.global.quartz.QuartzJobInitializer;
+import kea.enter.enterbe.global.quartz.QuartzUtils;
 import kea.enter.enterbe.global.util.FileUtil;
 import kea.enter.enterbe.global.util.LicenseValidationUtil;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import org.junit.jupiter.api.AfterEach;
+import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -98,7 +101,12 @@ public abstract class IntegrationTestSupport {
     protected JavaMailSender mailSender;
     @MockBean
     protected EmailService emailService;
-
+    @MockBean
+    protected QuartzUtils quartzUtils;
+    @MockBean
+    protected QuartzJobInitializer quartzJobInitializer;
+    @MockBean
+    protected Scheduler scheduler;
 
     @AfterEach
     void tearDown() {
