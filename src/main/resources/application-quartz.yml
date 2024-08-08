@@ -29,8 +29,8 @@ spring:
                     dataSource:
                         quartz:
                             provider: hikaricp
-                            driver-class-name: org.h2.Driver
-                            url: jdbc:h2:mem:query;MODE=MySQL;
+                            driver: org.h2.Driver
+                            URL: jdbc:h2:mem:query;MODE=MySQL;
                             username: sa
                             password:
                             maxConnections: 30
@@ -65,8 +65,8 @@ spring:
                     dataSource:
                         quartz:
                             provider: hikaricp
-                            driver-class-name: org.h2.Driver
-                            url: jdbc:h2:mem:query;MODE=MySQL;
+                            driver: org.h2.Driver
+                            URL: jdbc:h2:mem:query;MODE=MySQL;
                             username: sa
                             password:
                             maxConnections: 30
@@ -102,7 +102,7 @@ spring:
                         quartz:
                             provider: hikaricp
                             driver: com.mysql.cj.jdbc.Driver
-                            url: ${kakao-cloud-database-url}/quartz?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+                            URL: ${kakao-cloud-database-url}/enter?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
                             username: ${kakao-cloud-database-username}
                             password: ${kakao-cloud-database-password}
                             maxConnections: 30
