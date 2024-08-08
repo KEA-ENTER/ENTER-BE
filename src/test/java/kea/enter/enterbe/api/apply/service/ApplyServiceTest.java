@@ -1,5 +1,11 @@
 package kea.enter.enterbe.api.apply.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.List;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyResponse;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyVehicleResponse;
@@ -18,12 +24,6 @@ import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
 
 public class ApplyServiceTest extends IntegrationTestSupport {
     @DisplayName("신청 가능한 날짜를 조회한다.")
@@ -83,10 +83,10 @@ public class ApplyServiceTest extends IntegrationTestSupport {
         Member member4 = memberRepository.save(createMember());
 
         // 3명은 applyRound1, 1명은 applyRound2 지원
-        applyRepository.save(createApply(member1, applyRound1, vehicle1));
-        applyRepository.save(createApply(member2, applyRound1, vehicle1));
-        applyRepository.save(createApply(member3, applyRound1, vehicle1));
-        applyRepository.save(createApply(member4, applyRound2, vehicle2));
+        applyRepository.save(createApply(member1, applyRound1));
+        applyRepository.save(createApply(member2, applyRound1));
+        applyRepository.save(createApply(member3, applyRound1));
+        applyRepository.save(createApply(member4, applyRound2));
 
         // 인수, 반납일이 다음주 화요일인 차량의 목록을 조회
         GetApplyVehicleServiceDto dto = GetApplyVehicleServiceDto.of(nextTuesday, nextTuesday);
@@ -117,7 +117,7 @@ public class ApplyServiceTest extends IntegrationTestSupport {
     private ApplyRound createApplyRound2(Vehicle vehicle, LocalDate takeDate) {
         return ApplyRound.of(vehicle, 1, takeDate, takeDate.plusDays(1), ApplyRoundState.ACTIVE);
     }
-    private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
+    private Apply createApply(Member member, ApplyRound applyRound) {
         return Apply.of(member, applyRound,  ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 }
