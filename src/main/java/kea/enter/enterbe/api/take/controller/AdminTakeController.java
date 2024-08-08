@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
@@ -34,8 +35,8 @@ public class AdminTakeController {
 
     /* 차량 인수 보고서 상세 조회 API */
     @Operation(summary = "차량 인수 보고서 상세 조회 API", description = "차량 인수 보고서를 조회합니다.")
-    @GetMapping("/reports/{winningId}/take")
-    public ResponseEntity<GetTakeReportResponse> getTakeReport(@PathVariable Long winningId) {
+    @GetMapping("/take-report")
+    public ResponseEntity<GetTakeReportResponse> getTakeReport(@RequestParam Long winningId) {
         GetTakeReportResponse response = adminTakeService.getTakeReport(GetTakeReportServiceDto.of(winningId));
         return ResponseEntity.ok(response);
     }
