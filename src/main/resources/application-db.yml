@@ -57,16 +57,9 @@ spring:
         activate:
             on-profile: dev
     datasource:
-        driver-class-name: org.h2.Driver
-        url: jdbc:h2:mem:query;MODE=MySQL;
-        username: sa
-        password:
+        url: ${kakao-cloud-database-url}/enter?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+        username: ${kakao-cloud-database-username}
+        password: ${kakao-cloud-database-password}
+        driver-class-name: com.mysql.cj.jdbc.Driver
     jpa:
-        database: H2
-        defer-datasource-initialization: true
-    sql:
-        init:
-            mode: always
-    h2:
-        console:
-            enabled: true
+        database: mysql

@@ -2,7 +2,7 @@ spring:
     quartz:
         job-store-type: jdbc
         jdbc:
-            initialize-schema: always
+            initialize-schema: never
         properties:
             org:
                 quartz:
@@ -25,8 +25,8 @@ spring:
                     dataSource:
                         quartz:
                             provider: hikaricp
-                            driver: org.h2.Driver
-                            URL: jdbc:h2:mem:query;MODE=MySQL;
-                            user: sa
-                            password:
+                            driver: com.mysql.cj.jdbc.Driver
+                            url: ${kakao-cloud-database-url}/quartz?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+                            username: ${kakao-cloud-database-username}
+                            password: ${kakao-cloud-database-password}
                             maxConnections: 30
