@@ -66,6 +66,7 @@ public class AnswerController {
             schema = @Schema(implementation = GetAnswerResponseDto.class))),
         @ApiResponse(responseCode = "MEM-ERR-001", description = "멤버가 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "QST-ERR-001", description = "문의사항이 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "QST-ERR-004", description = "삭제된 문의사항입니다.", content = @Content(mediaType = "application/json")),
     })
     @GetMapping("/questions/{questionId}")
     public ResponseEntity<GetAnswerResponseDto> getDetail(@PathVariable Long questionId) {
