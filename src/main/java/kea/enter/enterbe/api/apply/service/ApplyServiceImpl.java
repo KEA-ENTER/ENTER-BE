@@ -120,15 +120,17 @@ public class ApplyServiceImpl implements ApplyService{
             .collect(Collectors.toList());
 
     }
-
+    // 차량 신청 내역 조회 API
     @Transactional(readOnly = true)
     public GetApplyDetailResponse getApplyDetail(GetApplyDetailServiceDto dto) {
         Long memberId = dto.getMemberId();
+        //해당 멤버의 모든 신청목록를 가져온다.
         List<Apply> applyList = findAppliesByMemberId(memberId);
 
         int max = 0;
         Apply recentlyApply = null;
 
+        //가장 최신 신청 목록을 가져온다.
         for (Apply apply : applyList) {
             int round = apply.getApplyRound().getApplyRound();
             if(max < round)
@@ -140,8 +142,9 @@ public class ApplyServiceImpl implements ApplyService{
             throw new CustomException(APPLY_NOT_FOUND);
         }
 
-        Vehicle vehicle = recentlyApply.getApplyRound().getVehicle();
+        // 최신 신청 목록의 신청 회차 정보와 차량 정보를 가져온다.
         ApplyRound applyRound = recentlyApply.getApplyRound();
+        Vehicle vehicle = recentlyApply.getApplyRound().getVehicle();
         int competition = countByApplyRound(applyRound);
 
         return GetApplyDetailResponse.builder()
