@@ -4,13 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
-import kea.enter.enterbe.domain.apply.entity.ApplyRound;
-import kea.enter.enterbe.domain.take.entity.VehicleReport;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -44,15 +38,6 @@ public class Vehicle extends BaseEntity {
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
     private VehicleState state;
-
-    @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
-    private List<ApplyRound> applyRoundList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
-    private List<VehicleNote> vehicleNoteList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
-    private List<VehicleReport> vehicleReportList = new ArrayList<>();
 
     @Builder
     public Vehicle(String vehicleNo, String company, String model, int seats, VehicleFuel fuel,
