@@ -1,7 +1,6 @@
 package kea.enter.enterbe.api.apply.controller.dto.response;
 
 import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
-import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +10,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 public class GetApplyDetailResponse {
+    private Long applyId;
     private LocalDate takeDate;
     private ApplyPurpose purpose;
     private int competition;
@@ -21,8 +21,9 @@ public class GetApplyDetailResponse {
     private String img;
 
     @Builder
-    public GetApplyDetailResponse(LocalDate takeDate, ApplyPurpose purpose, int competition,
+    public GetApplyDetailResponse(Long applyId, LocalDate takeDate, ApplyPurpose purpose, int competition,
     String model, VehicleFuel fuel, String company, int seat, String img){
+        this.applyId = applyId;
         this.takeDate = takeDate;
         this.purpose = purpose;
         this.competition = competition;
@@ -33,9 +34,10 @@ public class GetApplyDetailResponse {
         this.img = img;
     }
 
-    public static GetApplyDetailResponse of(LocalDate takeDate, ApplyPurpose purpose, int competition,
+    public static GetApplyDetailResponse of(Long applyId, LocalDate takeDate, ApplyPurpose purpose, int competition,
         String model, VehicleFuel fuel, String company, int seat, String img){
         return GetApplyDetailResponse.builder()
+            .applyId(applyId)
             .takeDate(takeDate)
             .purpose(purpose)
             .competition(competition)
