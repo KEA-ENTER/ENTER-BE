@@ -11,6 +11,7 @@ import kea.enter.enterbe.domain.member.repository.MemberRepository;
 import kea.enter.enterbe.domain.question.entity.Answer;
 import kea.enter.enterbe.domain.question.entity.AnswerState;
 import kea.enter.enterbe.domain.question.entity.Question;
+import kea.enter.enterbe.domain.question.entity.QuestionCategory;
 import kea.enter.enterbe.domain.question.entity.QuestionState;
 import kea.enter.enterbe.domain.question.repository.AnswerRepository;
 import kea.enter.enterbe.domain.question.repository.QuestionRepository;
@@ -54,20 +55,28 @@ public class AnswerService {
         sendAnswerEmail(question, dto.getContent());
     }
 
-    /* 답변 조회 API */
+    /* 문의사항 상세 내용 조회 API (관리자) */
     @Transactional
-    public GetAnswerResponseDto getAnswer(GetAnswerServiceDto dto) {
+    public GetAnswerResponseDto getDetail(GetAnswerServiceDto dto) {
 
-        // questionId로 문의사항 존재 여부를 검사한다.
+        /* 문의사항 조회 */
+        // 삭제 된 문의사항인지 확인 후 조회
         Question question = getFindByIdAndStateNot(dto.getQuestionId());
+        // 작성자 이름, 컨텐트, 카테고리, 질문 날짜
+        String questionMemberName = question.getMember().getName();
+        String questionContent = question.getContent();
+        QuestionCategory questionCategory = question.getCategory();
+        LocalDateTime questionCreatedAt = question.getCreatedAt();
 
+        /* 답변 조회 */
         // 답변 반환
         Optional<Answer> optionalAnswer = answerRepository.findByQuestionId(dto.getQuestionId());
         // 답변이 없을 시 null로 반환
-        String content = optionalAnswer.map(Answer::getContent).orElse(null);
-        LocalDateTime createdAt = optionalAnswer.map(Answer::getCreatedAt).orElse(null);
+        String answerContent = optionalAnswer.map(Answer::getContent).orElse(null);
+        LocalDateTime answerCreatedAt = optionalAnswer.map(Answer::getCreatedAt).orElse(null);
 
-        return GetAnswerResponseDto.of(content, createdAt);
+        return GetAnswerResponseDto.of(questionMemberName, questionContent, questionCategory,
+            questionCreatedAt, answerContent, answerCreatedAt);
     }
 
     private void sendAnswerEmail(Question question, String answerContent) {
@@ -93,6 +102,8 @@ public class AnswerService {
 
     // questionId로 문의사항의 상태 확인. 삭제된 문의인 경우 에러발생
     private Question getFindByIdAndStateNot(Long questionId) {
+        // 문의사항이 있는지 확인
+        questionRepository.findById(questionId).orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_QUESTION));
         return questionRepository.findByIdAndStateNot(questionId, QuestionState.INACTIVE)
             .orElseThrow(() -> new CustomException(ResponseCode.INVALID_QUESTION_STATE_DELETE));
     }
