@@ -56,7 +56,7 @@ public class ApplyServiceImpl implements ApplyService{
 
         for (ApplyRound applyRound : applyRoundList) {
             GetApplyResponse response = GetApplyResponse.builder()
-                .applyRound(applyRound.getApplyRound())
+                .round(applyRound.getRound())
                 .takeDate(applyRound.getTakeDate())
                 .returnDate(applyRound.getReturnDate())
                 .build();
@@ -132,7 +132,7 @@ public class ApplyServiceImpl implements ApplyService{
 
         //가장 최신 신청 목록을 가져온다.
         for (Apply apply : applyList) {
-            int round = apply.getApplyRound().getApplyRound();
+            int round = apply.getApplyRound().getRound();
             if(max < round)
                 max = round;
                 recentlyApply = apply;

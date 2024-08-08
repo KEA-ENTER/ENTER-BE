@@ -67,7 +67,7 @@ public class AdminLotteryServiceImpl implements AdminLotteryService {
             // 신청회차 정보 입력
             lotteryInfoList.add(LotteryInfo.of(
                 applyRound.getId(),
-                applyRound.getApplyRound(),
+                applyRound.getRound(),
                 applyRound.getTakeDate().toString(), applyRound.getReturnDate().toString(),
                 applyRound.getVehicle().getModel(), applyRound.getVehicle().getVehicleNo(),
                 applyCnt, winningCnt, noShowCnt, competition));

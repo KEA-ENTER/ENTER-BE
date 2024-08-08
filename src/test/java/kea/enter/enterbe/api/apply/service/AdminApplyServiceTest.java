@@ -54,7 +54,7 @@ class AdminApplyServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(response)
-            .extracting("applyRound", "applyCnt", "winningCnt", "cancelCnt")
+            .extracting("round", "applyCnt", "winningCnt", "cancelCnt")
             .contains(1, 2, 1, 1);
     }
 

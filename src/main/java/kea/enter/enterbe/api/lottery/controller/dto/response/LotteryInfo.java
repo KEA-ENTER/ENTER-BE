@@ -12,7 +12,7 @@ public class LotteryInfo {
     private Long applyRoundId;
 
     @Schema(description = "회차", example = "24")
-    private int applyRound;
+    private int round;
 
     @Schema(description = "인수 날짜", example = "2024-08-03")
     private String takeDate;
@@ -39,9 +39,9 @@ public class LotteryInfo {
     private String competition ;
 
     @Builder
-    public LotteryInfo(Long applyRoundId, int applyRound, String takeDate, String returnDate, String vehicleModel, String vehicleNo, int applyCnt, int winningCnt, int noShowCnt, String competition) {
+    public LotteryInfo(Long applyRoundId, int round, String takeDate, String returnDate, String vehicleModel, String vehicleNo, int applyCnt, int winningCnt, int noShowCnt, String competition) {
         this.applyRoundId = applyRoundId;
-        this.applyRound = applyRound;
+        this.round = round;
         this.takeDate = takeDate;
         this.returnDate = returnDate;
         this.vehicleModel = vehicleModel;
@@ -52,10 +52,10 @@ public class LotteryInfo {
         this.competition = competition;
     }
 
-    public static LotteryInfo of(Long applyRoundId, int applyRound, String takeDate, String returnDate,  String vehicleModel, String vehicleNo, int applyCnt, int winningCnt, int noShowCnt, String competition) {
+    public static LotteryInfo of(Long applyRoundId, int round, String takeDate, String returnDate,  String vehicleModel, String vehicleNo, int applyCnt, int winningCnt, int noShowCnt, String competition) {
         return LotteryInfo.builder()
             .applyRoundId(applyRoundId)
-            .applyRound(applyRound)
+            .round(round)
             .takeDate(takeDate)
             .returnDate(returnDate)
             .vehicleModel(vehicleModel)

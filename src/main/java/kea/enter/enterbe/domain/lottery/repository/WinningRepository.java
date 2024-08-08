@@ -53,9 +53,9 @@ public interface WinningRepository extends JpaRepository<Winning, Long> {
         @Param("endDate") LocalDateTime endDate
     );
 
-    Integer countByApplyApplyRoundApplyRoundAndState(int applyRound, WinningState winningState);
+    Integer countByApplyApplyRoundRoundAndState(int round, WinningState winningState);
 
-    List<Winning> findAllByApplyApplyRoundApplyRoundAndState(int round, WinningState winningState);
+    List<Winning> findAllByApplyApplyRoundRoundAndState(int round, WinningState winningState);
   
     Optional<Winning> findByApplyIdAndState(Long applyId, WinningState state);
 }
