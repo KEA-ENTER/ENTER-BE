@@ -88,7 +88,7 @@ public class AdminTakeServiceImpl implements AdminTakeService {
         // 해당 보고서가 존재하는지 확인한다
         VehicleReport report = findVehicleReportByWinningIdAndType(dto.getWinningId(), VehicleReportType.TAKE);
         VehicleNote note = findVehicleNoteByVehicleId(report.getVehicle().getId());
-        String noteContent = note == null ? null : note.getContent();
+        String noteContent = note == null ? "" : note.getContent();
 
         ApplyRound applyRound = report.getWinning().getApply().getApplyRound();
         Member member = report.getWinning().getApply().getMember();
