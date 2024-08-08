@@ -171,7 +171,7 @@ class ApplyRoundRepositoryTest extends IntegrationTestSupport {
 
         // then
         assertThat(applyRoundList).hasSize(2)
-            .extracting("applyRound")
+            .extracting("round")
             .contains(2, 2);
     }
 
