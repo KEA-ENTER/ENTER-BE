@@ -1,12 +1,13 @@
 package kea.enter.enterbe.domain.apply.repository;
 
-import kea.enter.enterbe.domain.apply.entity.ApplyRound;
-import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import kea.enter.enterbe.domain.apply.entity.ApplyRound;
+import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ApplyRoundRepository extends JpaRepository<ApplyRound, Long>, ApplyRoundCustomRepository {
@@ -16,6 +17,7 @@ public interface ApplyRoundRepository extends JpaRepository<ApplyRound, Long>, A
     // 인수, 반납 날짜를 지정하여 신청 회차를 조회
     List<ApplyRound> findAllByTakeDateAndReturnDateAndState(LocalDate takeDate, LocalDate returnDate, ApplyRoundState state);
     List<ApplyRound> findAllApplyRoundsByTakeDateBetweenAndState(LocalDate thisMonday, LocalDate thisSunday, ApplyRoundState applyRoundState);
-
+    @Query("SELECT ar FROM ApplyRound ar WHERE ar.round = (SELECT MAX(ar2.round) FROM ApplyRound ar2) AND ar.state = 'ACTIVE'")
+    ApplyRound findTopByOrderByRoundDescAndState();
 
 }

@@ -19,13 +19,15 @@ import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProcessingLottery {
+public class ProcessingLottery implements Job {
 
     private final ApplyRepository applyRepository;
     private final ApplyRoundRepository applyRoundRepository;
@@ -33,9 +35,18 @@ public class ProcessingLottery {
     private final WaitingRepository waitingRepository;
     private final Random random = new Random();
 
-    public void processingInitialLottery(long applyRoundId, int winnerCount) {
+
+    @Override
+    public void execute(JobExecutionContext context) {
+        processingInitialLottery(15 + 1);
+    }
+    public long getApplyRoundId() { // 가장 최신 회차 가져오기
+        return applyRoundRepository.findTopByOrderByRoundDescAndState().getId();
+    }
+
+    public void processingInitialLottery(int winnerCount) {
         // 회차에 참여한 회원 목록을 조회한다
-        List<Member> memberLists = getApplyMembers(applyRoundId);
+        List<Member> memberLists = getApplyMembers(getApplyRoundId());
         // 회원 목록을 점수로 변환한다
         List<ScoreDto> scoreList = getScore(memberLists);
         // 점수를 백분율로 변환한다
@@ -43,7 +54,7 @@ public class ProcessingLottery {
         // 당첨자를 선정한다
         List<WinnerDto> winnerLists = processingLottery(percentageMembers, winnerCount);
         // 회차를 조회한다
-        ApplyRound applyRound = getApplyRound(applyRoundId);
+        ApplyRound applyRound = getApplyRound(getApplyRoundId());
         // 당첨자와 대기자 데이터를 저장할 리스트
         List<Waiting> waitingList = new ArrayList<>();
         List<Winning> winningList = new ArrayList<>();
