@@ -118,6 +118,6 @@ public class ApplyServiceTest extends IntegrationTestSupport {
         return ApplyRound.of(vehicle, 1, takeDate, takeDate.plusDays(1), ApplyRoundState.ACTIVE);
     }
     private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
+        return Apply.of(member, applyRound,  ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 }
