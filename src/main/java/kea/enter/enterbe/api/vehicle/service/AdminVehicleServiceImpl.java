@@ -3,6 +3,7 @@ package kea.enter.enterbe.api.vehicle.service;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleListResponse;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
@@ -34,6 +35,15 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
         return vehicles.map(v -> AdminVehicleListResponse.of(
             v.getId(), v.getVehicleNo(), v.getCompany(), v.getModel(), v.getSeats(), v.getFuel(), v.getImg(),
             v.getCreatedAt().toLocalDate().toString(), v.getUpdatedAt().toLocalDate().toString(), v.getState()));
+    }
+
+    @Override
+    public AdminVehicleResponse getVehicle(Long id) {
+        if (vehicleRepository.findById(id).isPresent())
+            return vehicleRepository.findAdminVehicleResponsebyId(id);
+
+        else
+            throw new CustomException(ResponseCode.VEHICLE_NOT_VALID);
     }
 
     @Override
