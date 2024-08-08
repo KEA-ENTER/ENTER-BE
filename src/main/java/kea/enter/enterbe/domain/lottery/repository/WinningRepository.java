@@ -58,4 +58,6 @@ public interface WinningRepository extends JpaRepository<Winning, Long> {
     List<Winning> findAllByApplyApplyRoundRoundAndState(int round, WinningState winningState);
   
     Optional<Winning> findByApplyIdAndState(Long applyId, WinningState state);
+
+    Optional<Winning> findByApplyMemberIdAndApplyApplyRoundTakeDateBetweenAndState(Long memberId, LocalDate start, LocalDate end, WinningState winningState);
 }
