@@ -21,7 +21,8 @@ public enum ResponseCode {
     APPLY_NOT_FOUND("APL-ERR-001", HttpStatus.NOT_FOUND ,"지원 정보를 찾을 수 없습니다."),
     //WINNING
     WINNING_NOT_FOUND("WIN-ERR-001", HttpStatus.NOT_FOUND,"당첨 정보를 찾을 수 없습니다."),
-
+    //REPORT
+    NOT_REPORT_POST_TIME("REP-ERR-001",HttpStatus.BAD_REQUEST , "레포트 제출 시간이 아닙니다."),
     // APPLY_ROUND
     APPLY_ROUND_NOT_FOUND("APR-ERR-001", HttpStatus.NOT_FOUND, "신청 회차를 찾을 수 없습니다."),
 

@@ -57,12 +57,12 @@ class AdminLotteryServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(response.getLotteryList()).hasSize(4)
-            .extracting("applyRound")
+            .extracting("round")
             .contains(
-                applyRound4.getApplyRound(),
-                applyRound3.getApplyRound(),
-                applyRound2.getApplyRound(),
-                applyRound1.getApplyRound()
+                applyRound4.getRound(),
+                applyRound3.getRound(),
+                applyRound2.getRound(),
+                applyRound1.getRound()
             );
     }
 

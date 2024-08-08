@@ -1,19 +1,25 @@
 package kea.enter.enterbe.api.vehicle.service;
 
 import java.time.Clock;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import kea.enter.enterbe.api.vehicle.service.dto.PostVehicleReportServiceDto;
+import kea.enter.enterbe.domain.apply.entity.ApplyRound;
+import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
+import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.domain.take.entity.VehicleReport;
+import kea.enter.enterbe.domain.take.entity.VehicleReportPostTime;
 import kea.enter.enterbe.domain.take.entity.VehicleReportType;
 import kea.enter.enterbe.domain.take.repository.VehicleReportRepository;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleNote;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleNoteRepository;
-import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
@@ -34,14 +40,17 @@ public class VehicleServiceImpl implements VehicleService {
     private final WinningRepository winningRepository;
     private final VehicleReportRepository vehicleReportRepository;
     private final VehicleNoteRepository vehicleNoteRepository;
-    private final VehicleRepository vehicleRepository;
+    private final ApplyRoundRepository applyRoundRepository;
     private final Clock clock;
 
     @Override
     public void postVehicleReport(PostVehicleReportServiceDto dto) {
         List<String> images = new ArrayList<>();
-        Winning winning = getWinningByReportType(dto.getMemberId(), dto.getType());
-
+        LocalDateTime now = LocalDateTime.now(clock);
+        Winning winning = getWinningByMemberIdThisWeek(dto.getMemberId(), now.toLocalDate());
+        if (!checkTakeReturnTime(winning.getApply().getApplyRound(), now)) {
+            throw new CustomException(ResponseCode.NOT_REPORT_POST_TIME);
+        }
         try {
             String frontImg = uploadS3Image(dto.getFrontImg());
             images.add(frontImg);
@@ -55,12 +64,14 @@ public class VehicleServiceImpl implements VehicleService {
             images.add(dashboardImg);
 
             VehicleReport vehicleReport = vehicleReportRepository.save(
-                VehicleReport.create(winning, winning.getApply().getApplyRound().getVehicle(), frontImg, leftImg,
+                VehicleReport.create(winning, winning.getApply().getApplyRound().getVehicle(),
+                    frontImg, leftImg,
                     rightImg, backImg, dashboardImg, dto.getParkingLoc(), dto.getType()));
 
             if (StringUtils.hasText(dto.getNote())) {
                 vehicleNoteRepository.save(
-                    VehicleNote.create(winning.getApply().getApplyRound().getVehicle(), vehicleReport, dto.getNote()));
+                    VehicleNote.create(winning.getApply().getApplyRound().getVehicle(),
+                        vehicleReport, dto.getNote()));
             }
 
         } catch (Exception e) {
@@ -69,23 +80,17 @@ public class VehicleServiceImpl implements VehicleService {
         }
     }
 
-    private Winning getWinningByReportType(Long memberId, VehicleReportType type) {
-        if (type.equals(VehicleReportType.TAKE)) {
-            return findWinningByMemberIdAndTakeDate(memberId, LocalDate.now(clock));
-        } else {
-            return findWinningByMemberIdAndReturnDate(memberId, LocalDate.now(clock));
-        }
+    private boolean checkTakeReturnTime(ApplyRound applyRound, LocalDateTime now) {
+        LocalDateTime takeDate = applyRound.getTakeDate().minusDays(1)
+            .atTime(VehicleReportPostTime.TAKE_TIME.getTime());
+        LocalDateTime returnDate = applyRound.getReturnDate().plusDays(1)
+            .atTime(VehicleReportPostTime.RETURN_TIME.getTime());
+        //제출
+        return now.isAfter(takeDate) && now.isBefore(returnDate);
     }
 
-    private Winning findWinningByMemberIdAndReturnDate(Long memberId, LocalDate date) {
-        return winningRepository.findByMemberIdAndReturnDateAndState(memberId, date,
-                WinningState.ACTIVE)
-            .orElseThrow(() -> new CustomException(ResponseCode.WINNING_NOT_FOUND));
-    }
-
-    private Winning findWinningByMemberIdAndTakeDate(Long memberId, LocalDate date) {
-        return winningRepository.findByMemberIdAndTakeDateAndState(memberId, date,
-                WinningState.ACTIVE)
+    private Winning getWinningByMemberIdThisWeek(Long memberId,LocalDate now) {
+        return winningRepository.findByApplyMemberIdAndApplyApplyRoundTakeDateBetweenAndState(memberId,now.with(DayOfWeek.MONDAY),now.with(DayOfWeek.SUNDAY),WinningState.ACTIVE)
             .orElseThrow(() -> new CustomException(ResponseCode.WINNING_NOT_FOUND));
     }
 
@@ -102,5 +107,4 @@ public class VehicleServiceImpl implements VehicleService {
     private String uploadS3Image(MultipartFile images) {
         return objectStorageUtil.uploadFileToS3(images);
     }
-
 }

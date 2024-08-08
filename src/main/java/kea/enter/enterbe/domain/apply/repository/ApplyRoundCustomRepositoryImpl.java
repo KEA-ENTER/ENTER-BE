@@ -16,7 +16,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
-import static kea.enter.enterbe.domain.apply.entity.QApplyRound.applyRound1;
+import static kea.enter.enterbe.domain.apply.entity.QApplyRound.applyRound;
 import static kea.enter.enterbe.domain.vehicle.entity.QVehicle.vehicle;
 
 @Slf4j
@@ -28,7 +28,7 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
     public Page<ApplyRound> findAllApplyRoundByCondition(String keyword, LotterySearchType searchType, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
         builder
-            .and(applyRound1.state.eq(ApplyRoundState.ACTIVE));
+            .and(applyRound.state.eq(ApplyRoundState.ACTIVE));
 
         // 검색 조건에 따른 쿼리 처리
         BooleanBuilder searchBuilder = new BooleanBuilder();
@@ -47,19 +47,19 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
 
         // 조건에 맞는 신청 회차 조회
         List<ApplyRound> applyRoundList = jpaQueryFactory
-            .select(applyRound1)
-            .from(applyRound1)
+            .select(applyRound)
+            .from(applyRound)
             .where(builder)
-            .leftJoin(applyRound1.vehicle, vehicle).fetchJoin()
-            .orderBy(applyRound1.takeDate.desc())
+            .leftJoin(applyRound.vehicle, vehicle).fetchJoin()
+            .orderBy(applyRound.takeDate.desc())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
 
         // 전체 항목 수 쿼리
         List<Long> total = jpaQueryFactory
-            .select(applyRound1.id)
-            .from(applyRound1)
+            .select(applyRound.id)
+            .from(applyRound)
             .where(builder)
             .fetch();
 
@@ -70,7 +70,7 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
     private BooleanExpression roundContains(LotterySearchType searchType, String keyword) {
         if(searchType == LotterySearchType.VEHICLE) return null;
         try {
-            return keyword != null ? applyRound1.applyRound.eq(Integer.parseInt(keyword)) : null;
+            return keyword != null ? applyRound.round.eq(Integer.parseInt(keyword)) : null;
         } catch (NumberFormatException e) {
             // 전체 검색 시 키워드가 정수형이 아니면 null, 회차 검색 시 키워드가 정수형이 아니면 예외를 반환한다
             if(searchType == LotterySearchType.ALL) return null;
@@ -81,11 +81,11 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
     // 차량 검색
     private BooleanExpression vehicleModelContains(LotterySearchType searchType, String keyword) {
         if(searchType == LotterySearchType.ROUND) return null;
-        return keyword != null ? applyRound1.vehicle.model.contains(keyword) : null;
+        return keyword != null ? applyRound.vehicle.model.contains(keyword) : null;
     }
 
     private BooleanExpression vehicleNoContains(LotterySearchType searchType, String keyword) {
         if(searchType == LotterySearchType.ROUND) return null;
-        return keyword != null ? applyRound1.vehicle.vehicleNo.contains(keyword) : null;
+        return keyword != null ? applyRound.vehicle.vehicleNo.contains(keyword) : null;
     }
 }

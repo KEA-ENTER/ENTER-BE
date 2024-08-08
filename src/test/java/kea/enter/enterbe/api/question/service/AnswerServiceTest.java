@@ -49,26 +49,27 @@ public class AnswerServiceTest extends IntegrationTestSupport {
         assertThat(answer.getQuestion().getState()).isEqualTo(QuestionState.COMPLETE);
     }
 
-    @DisplayName(value = "문의사항 답변을 조회한다")
+    @DisplayName(value = "문의사항 세부 내용을 조회한다")
     @Test
     @Transactional
     public void testGetAnswer_Success() {
 
         // given
-        String questionContentTest = "답변 테스트 문장";
+        String answerContentTest = "답변 테스트 문장";
         Member member = memberRepository.save(createMember());
         Question question = questionRepository.save(createQuestion(member));
 
-        AnswerServiceDto answerServiceDto = new AnswerServiceDto(member.getId(), questionContentTest, question.getId());
+        AnswerServiceDto answerServiceDto = new AnswerServiceDto(member.getId(), answerContentTest, question.getId());
         answerService.answerQuestion(answerServiceDto);
 
         // when
         GetAnswerServiceDto getAnswerServiceDto = GetAnswerServiceDto.of(question.getId());
-        GetAnswerResponseDto responseDto = answerService.getAnswer(getAnswerServiceDto);
+        GetAnswerResponseDto responseDto = answerService.getDetail(getAnswerServiceDto);
 
         // then
         assertThat(responseDto).isNotNull();
-        assertThat(responseDto.getContent()).isEqualTo(questionContentTest);
+        assertThat(responseDto.getAnswerContent()).isEqualTo(answerContentTest);
+        assertThat(responseDto.getQuestionContent()).isEqualTo(question.getContent());
 
     }
 

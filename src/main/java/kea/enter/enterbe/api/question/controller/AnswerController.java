@@ -30,7 +30,7 @@ import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Tag(name = "문의사항 답변", description = "문의사항 답변 API")
+@Tag(name = "문의사항 작성 및 조회 (관리자)", description = "문의사항 작성 및 조회 API")
 public class AnswerController {
 
     private final AnswerService answerService;
@@ -60,17 +60,18 @@ public class AnswerController {
         return ResponseEntity.ok(SUCCESS.getMessage());
     }
 
-    @Operation(summary = "문의사항 답변 조회 API")
+    @Operation(summary = "문의사항 상세 내용 조회 API (관리자)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = GetAnswerResponseDto.class))),
         @ApiResponse(responseCode = "MEM-ERR-001", description = "멤버가 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "QST-ERR-001", description = "문의사항이 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "QST-ERR-004", description = "삭제된 문의사항입니다.", content = @Content(mediaType = "application/json")),
     })
-    @GetMapping("/{questionId}/answers")
-    public ResponseEntity<GetAnswerResponseDto> getAnswer(@PathVariable Long questionId) {
+    @GetMapping("/questions/{questionId}")
+    public ResponseEntity<GetAnswerResponseDto> getDetail(@PathVariable Long questionId) {
 
-        GetAnswerResponseDto response =  answerService.getAnswer(
+        GetAnswerResponseDto response =  answerService.getDetail(
             GetAnswerServiceDto.of(questionId));
         return ResponseEntity.ok(response);
     }

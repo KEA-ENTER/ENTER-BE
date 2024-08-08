@@ -80,7 +80,7 @@ public class AdminTakeServiceImpl implements AdminTakeService {
             noShowCnt += curNoShowCnt;
         }
 
-        return GetTakeSituationResponse.of(applyRoundList.get(0).getApplyRound(), applyCnt, takeCnt, noShowCnt);
+        return GetTakeSituationResponse.of(applyRoundList.get(0).getRound(), applyCnt, takeCnt, noShowCnt);
     }
 
     /* 차량 인수 보고서 상세 조회 API */

@@ -1,6 +1,5 @@
 package kea.enter.enterbe.api.apply.service.dto;
 
-import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyDetailResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
