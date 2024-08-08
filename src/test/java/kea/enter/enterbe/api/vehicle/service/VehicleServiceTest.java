@@ -5,8 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.*;
 
 import java.time.Clock;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.vehicle.service.dto.PostVehicleReportServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
@@ -39,22 +42,24 @@ class VehicleServiceTest extends IntegrationTestSupport {
     @Test
     public void postTakeVehicleReport() {
         //given
-        LocalDate takeDate = LocalDate.of(1999, 8, 20);
-        LocalDate returnDate = LocalDate.of(1999, 8, 30);
+        LocalDateTime now = LocalDateTime.of(1999,8,20,8,59).with(DayOfWeek.SATURDAY);
+        LocalDate takeDate = now.toLocalDate().with(DayOfWeek.SATURDAY);
+        LocalDate returnDate = now.toLocalDate().with(DayOfWeek.SUNDAY);
         Member member = memberRepository.save(createMember());
         Vehicle vehicle = vehicleRepository.save(createVehicle());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
         Apply apply = applyRepository.save(createApply(member, applyRound));
         Winning winning = winningRepository.save(createWinning(apply));
+
         String note = "note";
         String parkingLoc = null;
         VehicleReportType type = VehicleReportType.TAKE;
+
         PostVehicleReportServiceDto dto = PostVehicleReportServiceDto.of(member.getId(),
             mock(MultipartFile.class), mock(MultipartFile.class), mock(MultipartFile.class),
             mock(MultipartFile.class), mock(MultipartFile.class), note, parkingLoc, type);
-        Clock fixedClock = Clock.fixed(takeDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
-            ZoneId.systemDefault());
+        Clock fixedClock = Clock.fixed(now.toInstant(ZoneOffset.of("+9")), ZoneId.systemDefault());
         willReturn(fixedClock.instant()).given(clock).instant();
         willReturn(fixedClock.getZone()).given(clock).getZone();
 
@@ -73,8 +78,9 @@ class VehicleServiceTest extends IntegrationTestSupport {
     @Test
     public void postReturnVehicleReport() {
         //given
-        LocalDate takeDate = LocalDate.of(1999, 8, 20);
-        LocalDate returnDate = LocalDate.of(1999, 8, 30);
+        LocalDateTime now = LocalDateTime.of(1999,8,20,8,59).with(DayOfWeek.SUNDAY);
+        LocalDate takeDate = now.toLocalDate().with(DayOfWeek.SATURDAY);
+        LocalDate returnDate = now.toLocalDate().with(DayOfWeek.SUNDAY);
         Member member = memberRepository.save(createMember());
         Vehicle vehicle = vehicleRepository.save(createVehicle());
         ApplyRound applyRound = applyRoundRepository.save(
@@ -89,8 +95,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
         PostVehicleReportServiceDto dto = PostVehicleReportServiceDto.of(member.getId(),
             mock(MultipartFile.class), mock(MultipartFile.class), mock(MultipartFile.class),
             mock(MultipartFile.class), mock(MultipartFile.class), note, parkingLoc, type);
-        Clock fixedClock = Clock.fixed(returnDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
-            ZoneId.systemDefault());
+        Clock fixedClock = Clock.fixed(now.toInstant(ZoneOffset.of("+9")), ZoneId.systemDefault());
         willReturn(fixedClock.instant()).given(clock).instant();
         willReturn(fixedClock.getZone()).given(clock).getZone();
 
@@ -110,7 +115,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
     public void postTakeVehicleReportExceptionWithDifferentTakeDate() {
         //given
         LocalDate takeDate = LocalDate.of(1999, 8, 20);
-        LocalDate wrongDate = LocalDate.of(1999, 8, 10);
+        LocalDateTime wrongDate = LocalDate.of(1999, 8, 10).atStartOfDay();
         LocalDate returnDate = LocalDate.of(1999, 8, 30);
         Member member = memberRepository.save(createMember());
         Vehicle vehicle = vehicleRepository.save(createVehicle());
@@ -124,8 +129,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
         PostVehicleReportServiceDto dto = PostVehicleReportServiceDto.of(member.getId(),
             mock(MultipartFile.class), mock(MultipartFile.class), mock(MultipartFile.class),
             mock(MultipartFile.class), mock(MultipartFile.class), note, parkingLoc, type);
-        Clock fixedClock = Clock.fixed(wrongDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
-            ZoneId.systemDefault());
+        Clock fixedClock = Clock.fixed(wrongDate.toInstant(ZoneOffset.of("+9")), ZoneId.systemDefault());
         willReturn(fixedClock.instant()).given(clock).instant();
         willReturn(fixedClock.getZone()).given(clock).getZone();
 
