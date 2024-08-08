@@ -1,20 +1,20 @@
 package kea.enter.enterbe.domain.apply.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+
+import java.time.LocalDate;
+import java.util.List;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.lottery.controller.dto.request.ApplicantSearchType;
-import kea.enter.enterbe.api.lottery.controller.dto.request.LotterySearchType;
-import kea.enter.enterbe.api.lottery.controller.dto.response.GetApplicantListResponse;
-import kea.enter.enterbe.api.lottery.service.dto.GetApplicantListServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
+import kea.enter.enterbe.domain.apply.entity.ApplyRound;
+import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
-import kea.enter.enterbe.domain.lottery.entity.Winning;
-import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
 import kea.enter.enterbe.domain.member.entity.MemberState;
-import kea.enter.enterbe.domain.apply.entity.ApplyRound;
-import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
@@ -22,11 +22,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 class ApplyRepositoryTest extends IntegrationTestSupport {
     @DisplayName(value = "해당 신청 회차의 신청 목록을 조회한다.")
@@ -40,8 +35,8 @@ class ApplyRepositoryTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = createApply(member1, applyRound, vehicle);
-        Apply apply2 = createApply(member2, applyRound, vehicle);
+        Apply apply1 = createApply(member1, applyRound);
+        Apply apply2 = createApply(member2, applyRound);
         applyRepository.saveAll(List.of(apply1, apply2));
 
         // when
@@ -69,8 +64,8 @@ class ApplyRepositoryTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = createApply(member1, applyRound1, vehicle);
-        Apply apply2 = createApply(member2, applyRound1, vehicle);
+        Apply apply1 = createApply(member1, applyRound1);
+        Apply apply2 = createApply(member2, applyRound1);
         applyRepository.saveAll(List.of(apply1, apply2));
 
         // when
@@ -91,9 +86,9 @@ class ApplyRepositoryTest extends IntegrationTestSupport {
         Member member2 = memberRepository.save(createMember());
         Member member3 = memberRepository.save(createMember());
 
-        Apply apply1 = applyRepository.save(createApply(member1, applyRound, vehicle));
-        Apply apply2 = applyRepository.save(createApply(member2, applyRound, vehicle));
-        Apply apply3 = applyRepository.save(createApply(member3, applyRound, vehicle));
+        Apply apply1 = applyRepository.save(createApply(member1, applyRound));
+        Apply apply2 = applyRepository.save(createApply(member2, applyRound));
+        Apply apply3 = applyRepository.save(createApply(member3, applyRound));
 
         // when
         Page<Apply> applyList = applyRepository.findAllApplyByCondition(applyRound.getId(), null, ApplicantSearchType.ALL, PageRequest.of(0, 10));
@@ -115,9 +110,9 @@ class ApplyRepositoryTest extends IntegrationTestSupport {
         Member member2 = memberRepository.save(createMember("name", "test12"));
         Member member3 = memberRepository.save(createMember("name", "toast12"));
 
-        applyRepository.save(createApply(member1, applyRound, vehicle));
-        applyRepository.save(createApply(member2, applyRound, vehicle));
-        applyRepository.save(createApply(member3, applyRound, vehicle));
+        applyRepository.save(createApply(member1, applyRound));
+        applyRepository.save(createApply(member2, applyRound));
+        applyRepository.save(createApply(member3, applyRound));
 
         // when
         Page<Apply> applyList = applyRepository.findAllApplyByCondition(applyRound.getId(), "test", ApplicantSearchType.ID, PageRequest.of(0, 10));
@@ -139,9 +134,9 @@ class ApplyRepositoryTest extends IntegrationTestSupport {
         Member member2 = memberRepository.save(createMember("name2", "email"));
         Member member3 = memberRepository.save(createMember("number", "email"));
 
-        applyRepository.save(createApply(member1, applyRound, vehicle));
-        applyRepository.save(createApply(member2, applyRound, vehicle));
-        applyRepository.save(createApply(member3, applyRound, vehicle));
+        applyRepository.save(createApply(member1, applyRound));
+        applyRepository.save(createApply(member2, applyRound));
+        applyRepository.save(createApply(member3, applyRound));
 
         // when
         Page<Apply> applyList = applyRepository.findAllApplyByCondition(applyRound.getId(), "name", ApplicantSearchType.NAME, PageRequest.of(0, 10));
@@ -173,7 +168,7 @@ class ApplyRepositoryTest extends IntegrationTestSupport {
             1, MemberRole.USER, MemberState.ACTIVE);
     }
 
-    private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
+    private Apply createApply(Member member, ApplyRound applyRound) {
+        return Apply.of(member, applyRound, ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 }

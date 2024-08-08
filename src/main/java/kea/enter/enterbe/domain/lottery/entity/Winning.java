@@ -9,7 +9,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kea.enter.enterbe.domain.apply.entity.Apply;
-import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -21,10 +20,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "winning")
 public class Winning extends BaseEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_id", nullable = false)
-    private Vehicle vehicle;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apply_id", nullable = false)
     private Apply apply;
@@ -38,13 +33,12 @@ public class Winning extends BaseEntity {
     }
 
     @Builder
-    public Winning(Vehicle vehicle, Apply apply, WinningState state) {
-        this.vehicle = vehicle;
+    public Winning(Apply apply, WinningState state) {
         this.apply = apply;
         this.state = state;
     }
 
-    public static Winning of(Vehicle vehicle, Apply apply, WinningState state) {
-        return Winning.builder().vehicle(vehicle).apply(apply).state(state).build();
+    public static Winning of(Apply apply, WinningState state) {
+        return Winning.builder().apply(apply).state(state).build();
     }
 }

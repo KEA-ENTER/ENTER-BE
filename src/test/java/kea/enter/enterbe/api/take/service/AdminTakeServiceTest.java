@@ -1,5 +1,9 @@
 package kea.enter.enterbe.api.take.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.take.controller.dto.response.GetTakeSituationResponse;
 import kea.enter.enterbe.api.take.service.dto.GetTakeSituationServiceDto;
@@ -21,10 +25,6 @@ import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class AdminTakeServiceTest extends IntegrationTestSupport {
     @DisplayName("저번주의 인수 현황을 조회한다.")
@@ -47,11 +47,11 @@ class AdminTakeServiceTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = applyRepository.save(createApply(member1, applyRound1, vehicle1));
-        Apply apply2 = applyRepository.save(createApply(member2, applyRound2, vehicle2));
+        Apply apply1 = applyRepository.save(createApply(member1, applyRound1));
+        Apply apply2 = applyRepository.save(createApply(member2, applyRound2));
 
-        Winning winning = winningRepository.save(createWinning(vehicle1, apply1, WinningState.ACTIVE));
-        winningRepository.save(createWinning(vehicle2, apply2, WinningState.INACTIVE));
+        Winning winning = winningRepository.save(createWinning(apply1, WinningState.ACTIVE));
+        winningRepository.save(createWinning(apply2, WinningState.INACTIVE));
 
         vehicleReportRepository.save(createVehicleReport(winning));
 
@@ -81,16 +81,16 @@ class AdminTakeServiceTest extends IntegrationTestSupport {
         return ApplyRound.of(vehicle, 1, takeDate, takeDate.plusDays(1), ApplyRoundState.ACTIVE);
     }
 
-    private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
+    private Apply createApply(Member member, ApplyRound applyRound) {
+        return Apply.of(member, applyRound, ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
-    private Winning createWinning(Vehicle vehicle, Apply apply, WinningState state) {
-        return Winning.of(vehicle, apply, state);
+    private Winning createWinning(Apply apply, WinningState state) {
+        return Winning.of(apply, state);
     }
 
     private VehicleReport createVehicleReport(Winning winning) {
-        return VehicleReport.of(winning, "frontImg", "leftImg", "rightImg", "backImg", "dashboardImg",
+        return VehicleReport.of(winning, winning.getApply().getApplyRound().getVehicle(),"frontImg","leftImg", "rightImg", "backImg", "dashboardImg",
             "parkingLoc", VehicleReportType.TAKE, VehicleReportState.ACTIVE);
     }
 }

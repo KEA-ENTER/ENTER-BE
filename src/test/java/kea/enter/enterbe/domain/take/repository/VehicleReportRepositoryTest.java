@@ -1,5 +1,10 @@
 package kea.enter.enterbe.domain.take.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+
+import java.time.LocalDate;
+import java.util.List;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
@@ -19,11 +24,6 @@ import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 class VehicleReportRepositoryTest extends IntegrationTestSupport {
     @DisplayName(value = "해당 신청 회차의 당첨 목록을 조회한다.")
@@ -37,11 +37,11 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = applyRepository.save(createApply(member1, applyRound, vehicle));
-        Apply apply2 = applyRepository.save(createApply(member2, applyRound, vehicle));
+        Apply apply1 = applyRepository.save(createApply(member1, applyRound));
+        Apply apply2 = applyRepository.save(createApply(member2, applyRound));
 
-        Winning winning1 = createWinning(vehicle, apply1, WinningState.ACTIVE);
-        Winning winning2 = createWinning(vehicle, apply2, WinningState.ACTIVE);
+        Winning winning1 = createWinning(apply1, WinningState.ACTIVE);
+        Winning winning2 = createWinning(apply2, WinningState.ACTIVE);
         winningRepository.saveAll(List.of(winning1, winning2));
 
         // when
@@ -68,11 +68,11 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = applyRepository.save(createApply(member1, applyRound1, vehicle));
-        Apply apply2 = applyRepository.save(createApply(member2, applyRound1, vehicle));
+        Apply apply1 = applyRepository.save(createApply(member1, applyRound1));
+        Apply apply2 = applyRepository.save(createApply(member2, applyRound1));
 
-        Winning winning1 = createWinning(vehicle, apply1, WinningState.ACTIVE);
-        Winning winning2 = createWinning(vehicle, apply2, WinningState.ACTIVE);
+        Winning winning1 = createWinning(apply1, WinningState.ACTIVE);
+        Winning winning2 = createWinning(apply2, WinningState.ACTIVE);
         winningRepository.saveAll(List.of(winning1, winning2));
 
         // when
@@ -97,16 +97,16 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
         return ApplyRound.of(vehicle, 1, takeDate, takeDate.plusDays(1), ApplyRoundState.ACTIVE);
     }
 
-    private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
+    private Apply createApply(Member member, ApplyRound applyRound) {
+        return Apply.of(member, applyRound, ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
-    private Winning createWinning(Vehicle vehicle, Apply apply, WinningState state) {
-        return Winning.of(vehicle, apply, state);
+    private Winning createWinning(Apply apply, WinningState state) {
+        return Winning.of(apply, state);
     }
 
     private VehicleReport createVehicleReport(Winning winning) {
-        return VehicleReport.of(winning, "frontImg", "leftImg", "rightImg", "backImg", "dashboardImg",
+        return VehicleReport.of(winning, winning.getApply().getApplyRound().getVehicle(),"frontImg", "leftImg", "rightImg", "backImg", "dashboardImg",
             "parkingLoc", VehicleReportType.TAKE, VehicleReportState.ACTIVE);
     }
 }

@@ -45,8 +45,8 @@ class VehicleServiceTest extends IntegrationTestSupport {
         Vehicle vehicle = vehicleRepository.save(createVehicle());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        Winning winning = winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        Winning winning = winningRepository.save(createWinning(apply));
         String note = "note";
         String parkingLoc = null;
         VehicleReportType type = VehicleReportType.TAKE;
@@ -79,8 +79,8 @@ class VehicleServiceTest extends IntegrationTestSupport {
         Vehicle vehicle = vehicleRepository.save(createVehicle());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        Winning winning = winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        Winning winning = winningRepository.save(createWinning(apply));
 
         String note = "note";
         String parkingLoc = "parkingLoc";
@@ -116,8 +116,8 @@ class VehicleServiceTest extends IntegrationTestSupport {
         Vehicle vehicle = vehicleRepository.save(createVehicle());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        winningRepository.save(createWinning(apply));
         String note = "note";
         String parkingLoc = "parkingLoc";
         VehicleReportType type = VehicleReportType.TAKE;
@@ -147,8 +147,8 @@ class VehicleServiceTest extends IntegrationTestSupport {
         Vehicle vehicle = vehicleRepository.save(createVehicle());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        winningRepository.save(createWinning(apply));
         String note = "note";
         String parkingLoc = "parkingLoc";
         VehicleReportType type = VehicleReportType.RETURN;
@@ -177,8 +177,8 @@ class VehicleServiceTest extends IntegrationTestSupport {
         Vehicle vehicle = vehicleRepository.save(createVehicle());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        winningRepository.save(createWinning(apply));
         String note = "note";
         String parkingLoc = "parkingLoc";
         VehicleReportType type = VehicleReportType.TAKE;
@@ -205,12 +205,12 @@ class VehicleServiceTest extends IntegrationTestSupport {
         verify(objectStorageUtil, times(2)).delete(any(String.class));
     }
 
-    private Winning createWinning(Vehicle vehicle, Apply apply) {
-        return Winning.of(vehicle, apply, WinningState.ACTIVE);
+    private Winning createWinning(Apply apply) {
+        return Winning.of(apply, WinningState.ACTIVE);
     }
 
-    private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyPurpose.EVENT, ApplyState.ACTIVE);
+    private Apply createApply(Member member, ApplyRound applyRound) {
+        return Apply.of(member, applyRound, ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
     private ApplyRound createApplyRound(Vehicle vehicle, LocalDate takeDate, LocalDate returnDate) {
