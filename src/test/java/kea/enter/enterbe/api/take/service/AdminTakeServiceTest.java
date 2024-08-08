@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import kea.enter.enterbe.IntegrationTestSupport;
+import kea.enter.enterbe.api.take.controller.dto.response.GetReturnReportResponse;
 import kea.enter.enterbe.api.take.controller.dto.response.GetTakeSituationResponse;
+import kea.enter.enterbe.api.take.service.dto.GetReturnReportServiceDto;
 import kea.enter.enterbe.api.take.service.dto.GetTakeSituationServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
@@ -53,7 +55,7 @@ class AdminTakeServiceTest extends IntegrationTestSupport {
         Winning winning = winningRepository.save(createWinning(apply1, WinningState.ACTIVE));
         winningRepository.save(createWinning(apply2, WinningState.INACTIVE));
 
-        vehicleReportRepository.save(createVehicleReport(winning));
+        vehicleReportRepository.save(createVehicleReport(winning, VehicleReportType.TAKE));
 
         GetTakeSituationServiceDto dto = GetTakeSituationServiceDto.of(now);
 
@@ -64,6 +66,29 @@ class AdminTakeServiceTest extends IntegrationTestSupport {
         assertThat(response)
             .extracting("applyRound", "applyCnt", "takeCnt", "noShowCnt")
             .contains(1, 2, 1, 1);
+    }
+
+    @DisplayName("해당 당첨자의 차량 반납 보고서를 조회한다.")
+    @Test
+    void getReturnReport() {
+        // given
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024, 7, 29)));
+
+        Member member = memberRepository.save(createMember());
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        Winning winning = winningRepository.save(createWinning(apply, WinningState.ACTIVE));
+
+        VehicleReport vehicleReport = vehicleReportRepository.save(createVehicleReport(winning, VehicleReportType.RETURN));
+        GetReturnReportServiceDto dto = GetReturnReportServiceDto.of(winning.getId());
+
+        // when
+        GetReturnReportResponse response = adminTakeService.getReturnReport(dto);
+
+        // then
+        assertThat(response)
+            .extracting("reportId")
+            .isEqualTo(vehicleReport.getId());
     }
 
     private Member createMember() {
@@ -89,8 +114,8 @@ class AdminTakeServiceTest extends IntegrationTestSupport {
         return Winning.of(apply, state);
     }
 
-    private VehicleReport createVehicleReport(Winning winning) {
+    private VehicleReport createVehicleReport(Winning winning, VehicleReportType type) {
         return VehicleReport.of(winning, winning.getApply().getApplyRound().getVehicle(),"frontImg","leftImg", "rightImg", "backImg", "dashboardImg",
-            "parkingLoc", VehicleReportType.TAKE, VehicleReportState.ACTIVE);
+            "parkingLoc", type, VehicleReportState.ACTIVE);
     }
 }
