@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetApplySituationResponse {
     @Schema(description = "현재 회차", example = "24")
-    private int applyRound;
+    private int round;
 
     @Schema(description = "신청자수", example = "100")
     private int applyCnt;
@@ -21,16 +21,16 @@ public class GetApplySituationResponse {
     private int cancelCnt;
 
     @Builder
-    public GetApplySituationResponse(int applyRound, int applyCnt, int winningCnt, int cancelCnt) {
-        this.applyRound = applyRound;
+    public GetApplySituationResponse(int round, int applyCnt, int winningCnt, int cancelCnt) {
+        this.round = round;
         this.applyCnt = applyCnt;
         this.winningCnt = winningCnt;
         this.cancelCnt = cancelCnt;
     }
 
-    public static GetApplySituationResponse of(int applyRound, int applyCnt, int winningCnt, int cancelCnt) {
+    public static GetApplySituationResponse of(int round, int applyCnt, int winningCnt, int cancelCnt) {
         return GetApplySituationResponse.builder()
-            .applyRound(applyRound)
+            .round(round)
             .applyCnt(applyCnt)
             .winningCnt(winningCnt)
             .cancelCnt(cancelCnt)

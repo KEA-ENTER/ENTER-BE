@@ -41,7 +41,7 @@ public class LotteryServiceImpl implements LotteryService {
             return new ArrayList<>();
         }
         // 한 일주일에 관해서는 회차가 같다.
-        int round = thisWeekApplyRound.get(0).getApplyRound();
+        int round = thisWeekApplyRound.get(0).getRound();
         List<GetRecentCompetitionRateResponse> list = new ArrayList<>();
         Integer number;
         Integer winner;
@@ -50,9 +50,9 @@ public class LotteryServiceImpl implements LotteryService {
             if (i < 1) {
                 break;
             }
-            number = applyRepository.countByApplyRoundApplyRoundAndStateAndApplyRoundState(i,
+            number = applyRepository.countByApplyRoundRoundAndStateAndApplyRoundState(i,
                 ApplyState.ACTIVE, ApplyRoundState.ACTIVE);
-            winner = winningRepository.countByApplyApplyRoundApplyRoundAndState(i,
+            winner = winningRepository.countByApplyApplyRoundRoundAndState(i,
                 WinningState.ACTIVE);
             double result = (double) number / winner;
             if (winner == 0) {
@@ -73,7 +73,7 @@ public class LotteryServiceImpl implements LotteryService {
             return new ArrayList<>();
         }
         // 한 일주일에 관해서는 회차가 같다.
-        int round = thisWeekApplyRound.get(0).getApplyRound();
+        int round = thisWeekApplyRound.get(0).getRound();
         //최근 5회차
         List<Winning> winnings;
         int sum;
@@ -83,7 +83,7 @@ public class LotteryServiceImpl implements LotteryService {
                 break;
             }
             //라운드의 모든 당첨자 조회
-            winnings = winningRepository.findAllByApplyApplyRoundApplyRoundAndState(
+            winnings = winningRepository.findAllByApplyApplyRoundRoundAndState(
                 round, WinningState.ACTIVE);
             sum = 0;
             for (Winning winning : winnings) {

@@ -68,7 +68,7 @@ public class AdminTakeServiceImpl implements AdminTakeService {
             noShowCnt += curNoShowCnt;
         }
 
-        return GetTakeSituationResponse.of(applyRoundList.get(0).getApplyRound(), applyCnt, takeCnt, noShowCnt);
+        return GetTakeSituationResponse.of(applyRoundList.get(0).getRound(), applyCnt, takeCnt, noShowCnt);
     }
 
     public List<ApplyRound> findApplyRoundsByTakeDateBetween(LocalDate startDate, LocalDate endDate) {

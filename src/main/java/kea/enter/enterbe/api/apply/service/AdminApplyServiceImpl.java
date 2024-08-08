@@ -59,7 +59,7 @@ public class AdminApplyServiceImpl implements AdminApplyService {
             cancelCnt += cancelList.size();
         }
 
-        return GetApplySituationResponse.of(applyRoundList.get(0).getApplyRound(), applyCnt, winningCnt, cancelCnt);
+        return GetApplySituationResponse.of(applyRoundList.get(0).getRound(), applyCnt, winningCnt, cancelCnt);
     }
 
     public List<ApplyRound> findApplyRoundsByTakeDateBetween(LocalDate startDate, LocalDate endDate) {

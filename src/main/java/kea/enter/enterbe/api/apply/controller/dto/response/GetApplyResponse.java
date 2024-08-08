@@ -8,20 +8,20 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 public class GetApplyResponse {
-    private int applyRound;
+    private int round;
     private LocalDate takeDate;
     private LocalDate returnDate;
 
     @Builder
-    public GetApplyResponse(int applyRound, LocalDate takeDate, LocalDate returnDate){
-        this.applyRound = applyRound;
+    public GetApplyResponse(int round, LocalDate takeDate, LocalDate returnDate){
+        this.round = round;
         this.takeDate = takeDate;
         this.returnDate = returnDate;
     }
 
-    public static GetApplyResponse of(int applyRound, LocalDate takeDate, LocalDate returnDate){
+    public static GetApplyResponse of(int round, LocalDate takeDate, LocalDate returnDate){
         return GetApplyResponse.builder()
-            .applyRound(applyRound)
+            .round(round)
             .takeDate(takeDate)
             .returnDate(returnDate)
             .build();
