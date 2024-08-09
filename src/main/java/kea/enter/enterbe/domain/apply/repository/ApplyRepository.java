@@ -23,10 +23,20 @@ public interface ApplyRepository extends JpaRepository<Apply, Long>, ApplyCustom
     List<Member> findMembersBydApplyRoundAndState(@Param("applyRound") ApplyRound applyRound);
     List<Apply> findByApplyRoundAndMemberIdInAndState(ApplyRound applyRound, List<Long> memberIds, ApplyState state);
     Integer countByApplyRoundRoundAndStateAndApplyRoundState(int round, ApplyState applyState, ApplyRoundState applyRoundState);
-  
-    Optional<Apply> findByMemberAndApplyRoundAndState(Member member, ApplyRound applyRound, ApplyState state);
-
     List<Apply> findAllByMemberIdAndState(Long memberId, ApplyState state);
     Integer countByApplyRoundAndState(ApplyRound applyRound, ApplyState applyState);
     Optional<Apply> findByIdAndState(Long applyId, ApplyState applyState);
+    Optional<Apply> findByIdAndMemberIdAndState(Long applyId, Long memberId, ApplyState state);
+
+    //해당 멤버가 특정 가지고 있는 신청에서 주어진 round가 맞는 신청을 가져옴
+    @Query("SELECT a FROM Apply a WHERE a.member.id = :memberId AND a.applyRound.round = :round AND a.state = :state")
+    Optional<Apply> findByMemberIdAndRoundAndState(
+        @Param("memberId") Long memberId,
+        @Param("round") Integer round,
+        @Param("state") ApplyState state
+    );
+
+    // 위의 Refactoring으로 대체됨
+    //Optional<Apply> findByMemberAndApplyRoundAndState(Member member, ApplyRound applyRound, ApplyState state);
+
 }

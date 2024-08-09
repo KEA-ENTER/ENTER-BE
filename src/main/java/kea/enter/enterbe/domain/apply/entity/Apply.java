@@ -61,4 +61,7 @@ public class Apply extends BaseEntity {
         this.applyRound = applyRound;
         this.purpose = purpose;
     }
+    public void deleteApply(){
+        this.state = ApplyState.INACTIVE;
+    }
 }
