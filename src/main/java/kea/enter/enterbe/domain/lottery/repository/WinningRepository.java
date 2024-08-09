@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WinningRepository extends JpaRepository<Winning, Long> {
+public interface WinningRepository extends JpaRepository<Winning, Long>, WinningCustomRepository {
 
     @Query(value = "SELECT w "
         + "FROM Winning w "
