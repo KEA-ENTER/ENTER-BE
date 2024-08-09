@@ -1,12 +1,13 @@
 package kea.enter.enterbe.global.security;
 
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import java.util.List;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -32,10 +33,10 @@ public class SecurityConfig {
 
     private static final List<String> CORS_WHITELIST = List.of("http://localhost:3000", "http://localhost:5173", "http://localhost:8090", "https://moaboa.shop", "https://yamfubao.shop");
     private static final List<String> CORS_METHODS = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "FETCH");
-
-
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -45,27 +46,32 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .httpBasic(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(requests-> requests.anyRequest().permitAll())
+            .authorizeHttpRequests(requests -> requests
+                .requestMatchers("/auth/login", "/").permitAll()
+                .requestMatchers("/admin/**", "/test").hasRole("ADMIN")
+                .requestMatchers("/**").hasRole("USER")
+                .anyRequest().authenticated()
+            )
+            .exceptionHandling(
+                exceptionHandling -> exceptionHandling
+                    .accessDeniedHandler(jwtAccessDeniedHandler)
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            )
             .formLogin(AbstractAuthenticationFilterConfigurer::disable)
             .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
+    @Profile(("test"))
     @Bean
     public UserDetailsService userDetailsService(){
-        UserDetails test1 = User.builder()
-            .username("test1")
-            .password(passwordEncoder().encode("test1"))
+        UserDetails localhost = User.builder()
+            .username("localhost")
+            .password(passwordEncoder().encode("localhost"))
             .roles("USER")
             .build();
 
-        UserDetails test2 = User.builder()
-            .username("test2")
-            .password(passwordEncoder().encode("test2"))
-            .roles("ADMIN")
-            .build();
-
-        return new InMemoryUserDetailsManager(test1,test2);
+        return new InMemoryUserDetailsManager(localhost);
     }
 
 
