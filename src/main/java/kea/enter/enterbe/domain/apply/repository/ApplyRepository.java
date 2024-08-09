@@ -20,6 +20,6 @@ public interface ApplyRepository extends JpaRepository<Apply, Long>, ApplyCustom
     Integer countByApplyRoundAndState(ApplyRound applyRound, ApplyState applyRoundState);
     List<Apply> findByApplyRoundIdInAndState(List<Long> applyRoundIds, ApplyState state);
     List<Apply> findByApplyRoundIdInAndMemberIdInAndState(List<Long> applyRoundIds, List<Long> memberIds, ApplyState state);
-
-
+    Integer countByApplyRoundAndState(ApplyRound applyRound, ApplyState applyState);
+    Optional<Apply> findByIdAndState(Long applyId, ApplyState applyState);
 }

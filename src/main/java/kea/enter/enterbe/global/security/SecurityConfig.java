@@ -30,7 +30,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final List<String> CORS_WHITELIST = List.of("http://localhost:3000", "http://localhost:8090", "https://moaboa.shop", "https://yamfubao.shop");
+    private static final List<String> CORS_WHITELIST = List.of("http://localhost:3000", "http://localhost:5173", "http://localhost:8090", "https://moaboa.shop", "https://yamfubao.shop");
     private static final List<String> CORS_METHODS = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "FETCH");
 
 

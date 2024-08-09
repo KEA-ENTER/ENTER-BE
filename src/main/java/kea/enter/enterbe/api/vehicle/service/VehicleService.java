@@ -5,4 +5,6 @@ import kea.enter.enterbe.api.vehicle.service.dto.PostVehicleReportServiceDto;
 public interface VehicleService {
 
     void postVehicleReport(PostVehicleReportServiceDto dto);
+
+    void checkVehicleReport();
 }

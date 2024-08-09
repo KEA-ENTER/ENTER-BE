@@ -6,6 +6,7 @@ import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyVehicleRespon
 import kea.enter.enterbe.api.apply.service.dto.GetApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
+import kea.enter.enterbe.api.apply.service.dto.ModifyApplyDetailServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
@@ -14,6 +15,7 @@ import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.global.common.exception.CustomException;
+import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.time.*;
 
 
 import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_NOT_FOUND;
@@ -95,6 +99,7 @@ public class ApplyServiceImpl implements ApplyService{
                 //지원자 없을 경우
                     if(applyList.isEmpty()) {
                         return GetApplyVehicleResponse.builder()
+                            .vehicleId(vehicle.getId())
                             .competition(0)
                             .model(vehicle.getModel())
                             .fuel(vehicle.getFuel())
@@ -128,15 +133,15 @@ public class ApplyServiceImpl implements ApplyService{
         List<Apply> applyList = findAppliesByMemberId(memberId);
 
         int max = 0;
-        Apply recentlyApply = null;
 
+        Apply recentlyApply = null;
         //가장 최신 신청 목록을 가져온다.
         for (Apply apply : applyList) {
             int round = apply.getApplyRound().getRound();
             if(max < round)
-                max = round;
                 recentlyApply = apply;
         }
+
 
         if(recentlyApply.equals(null)) {
             throw new CustomException(APPLY_NOT_FOUND);
@@ -148,6 +153,7 @@ public class ApplyServiceImpl implements ApplyService{
         int competition = countByApplyRound(applyRound);
 
         return GetApplyDetailResponse.builder()
+            .applyId(recentlyApply.getId())
             .takeDate(recentlyApply.getApplyRound().getTakeDate())
             .competition(competition)
             .purpose(recentlyApply.getPurpose())
@@ -159,6 +165,44 @@ public class ApplyServiceImpl implements ApplyService{
             .build();
     }
 
+    @Transactional
+    public void modifyApplyDetail(ModifyApplyDetailServiceDto dto) {
+        // 수정 가능 시간을 확인
+        LocalDateTime now = LocalDateTime.now(); // Get the current date and time
+
+        // 이번주 월요일 9:00:00
+        LocalDate currentMonday = LocalDate.now().with(DayOfWeek.MONDAY);
+        LocalDateTime mondayStart = currentMonday.atTime(LocalTime.of(9, 0, 0));
+
+        // 이번주 화요일 23:59:59
+        LocalDate nextTuesday = currentMonday.with(DayOfWeek.THURSDAY);
+        LocalDateTime tuesdayEnd = nextTuesday.atTime(LocalTime.of(23, 59, 59));
+
+        boolean isInRange = now.isAfter(mondayStart) && now.isBefore(tuesdayEnd);
+        // 수정 기간이 아닐경우
+        if (!isInRange)
+            throw new CustomException(ResponseCode.INVALID_QUESTION_STATE);
+
+        // 새로 선택한 ApplyRound로 수정
+        Optional<Apply> applyOptional = findByApplyId(dto.getApplyId());
+        Optional<ApplyRound> applyRoundOptional = findByApplyRoundId(dto.getApplyRoundId());
+        if (!applyOptional.isPresent()) {
+            throw new CustomException(APPLY_NOT_FOUND);
+        }
+        if (!applyRoundOptional.isPresent()) {
+            throw new CustomException(APPLY_ROUND_NOT_FOUND);
+        }
+        Apply apply = applyOptional.get();
+        ApplyRound applyRound = applyRoundOptional.get();
+        apply.modifyApplyRound(applyRound, dto.getPurpose());
+
+    }
+    public Optional<ApplyRound> findByApplyRoundId(Long applyRoundId){
+        return applyRoundRepository.findByIdAndState(applyRoundId, ApplyRoundState.ACTIVE);
+    }
+    public Optional<Apply> findByApplyId(Long applyId){
+        return applyRepository.findByIdAndState(applyId, ApplyState.ACTIVE);
+    }
     public List<Apply> findAppliesByMemberId(Long memberId){
         return applyRepository.findAllByMemberIdAndState(memberId, ApplyState.ACTIVE);
     }

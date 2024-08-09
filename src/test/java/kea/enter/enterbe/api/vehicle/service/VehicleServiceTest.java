@@ -68,7 +68,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
 
         //then
         VehicleReport vehicleReport = vehicleReportRepository.findByWinningIdAndState(
-            winning.getId(), VehicleReportState.ACTIVE);
+            winning.getId(), VehicleReportState.ACTIVE).get(0);
         assertThat(vehicleReport)
             .extracting("type")
             .isEqualTo(VehicleReportType.TAKE);
@@ -104,7 +104,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
 
         //then
         VehicleReport vehicleReport = vehicleReportRepository.findByWinningIdAndState(
-            winning.getId(), VehicleReportState.ACTIVE);
+            winning.getId(), VehicleReportState.ACTIVE).get(0);
         assertThat(vehicleReport)
             .extracting("type")
             .isEqualTo(VehicleReportType.RETURN);
@@ -222,7 +222,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
     }
 
     private Member createMember() {
-        return Member.of("employeeNo", "name", "email", "password", LocalDate.of(1999,11,28) , "licenseId",
+        return Member.of("name", "email", "password", LocalDate.of(1999,11,28) , "licenseId",
             "licensePassword", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 

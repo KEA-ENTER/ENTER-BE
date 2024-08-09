@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WinningRepository extends JpaRepository<Winning, Long> {
+public interface WinningRepository extends JpaRepository<Winning, Long>, WinningCustomRepository {
 
     @Query(value = "SELECT w "
         + "FROM Winning w "
@@ -60,4 +60,6 @@ public interface WinningRepository extends JpaRepository<Winning, Long> {
     Optional<Winning> findByApplyIdAndState(Long applyId, WinningState state);
 
     Optional<Winning> findByApplyMemberIdAndApplyApplyRoundTakeDateBetweenAndState(Long memberId, LocalDate start, LocalDate end, WinningState winningState);
+
+    List<Winning> findAllByStateAndApplyApplyRoundReturnDate(WinningState state, LocalDate returnDate);
 }
