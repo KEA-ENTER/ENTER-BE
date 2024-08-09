@@ -1,7 +1,6 @@
 package kea.enter.enterbe.global.quartz.schedule;
 
 import jakarta.annotation.PostConstruct;
-import kea.enter.enterbe.global.algorithm.ProcessingLottery;
 import kea.enter.enterbe.global.quartz.job.CheckReportJob;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
-import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
 
