@@ -9,6 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kea.enter.enterbe.domain.member.entity.Member;
+import kea.enter.enterbe.domain.question.entity.QuestionCategory;
+import kea.enter.enterbe.domain.question.entity.QuestionState;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -53,5 +55,10 @@ public class Apply extends BaseEntity {
             .purpose(purpose)
             .state(state)
             .build();
+    }
+
+    public void modifyApplyRound(ApplyRound applyRound, ApplyPurpose purpose) {
+        this.applyRound = applyRound;
+        this.purpose = purpose;
     }
 }

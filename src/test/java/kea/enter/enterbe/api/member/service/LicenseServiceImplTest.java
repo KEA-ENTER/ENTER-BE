@@ -224,22 +224,22 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
 
     // 유형별 멤버 객체 생성
     private Member createNoDataMember() {
-        return Member.of("E001", "원우형", "email", "password", LocalDate.of(1999,11,28), "",
+        return Member.of("원우형", "email", "password", LocalDate.of(1999,11,28), "",
             "", false, false, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 
     private Member createAllowedConditionMember() {
-        return Member.of("E001", "원우형", "email", "password", LocalDate.of(1995,11,28), "111111111111",
+        return Member.of("원우형", "email", "password", LocalDate.of(1995,11,28), "111111111111",
             "123abc", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 
     private Member createNotHaveLicenseMember() {
-        return Member.of("E001", "원우형", "email", "password", LocalDate.of(1995,11,28), "",
+        return Member.of("원우형", "email", "password", LocalDate.of(1995,11,28), "",
             "", false, false, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 
     private Member createValidationCheckNeededMember() {
-        return Member.of("E001", "원우형", "email", "password", LocalDate.of(1995,11,28), "111111111111",
+        return Member.of("원우형", "email", "password", LocalDate.of(1995,11,28), "111111111111",
             "123abc", false, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 }
