@@ -25,9 +25,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
 public class Member extends BaseEntity {
-    @Column(name = "employee_no", nullable = false)
-    private String employeeNo;
-
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -70,13 +67,11 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(
-        String employeeNo,
         String name, String email, String password, LocalDate birthDate,
         String licenseId, String licensePassword, Boolean isLicenseValid,
         Boolean isAgreeTerms,
         Integer score, MemberRole role, MemberState state
     ) {
-        this.employeeNo = employeeNo;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -91,14 +86,12 @@ public class Member extends BaseEntity {
     }
 
     public static Member of(
-        String employeeNo,
         String name, String email, String password, LocalDate birthDate,
         String licenseId, String licensePassword, Boolean isLicenseValid,
         Boolean isAgreeTerms,
         Integer score, MemberRole role, MemberState state
     ) {
         return Member.builder()
-            .employeeNo(employeeNo)
             .name(name)
             .email(email)
             .password(password)

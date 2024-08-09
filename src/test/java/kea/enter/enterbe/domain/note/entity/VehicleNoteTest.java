@@ -65,7 +65,7 @@ class VehicleNoteTest extends IntegrationTestSupport {
     }
 
     private Member createMember() {
-        return Member.of("employeeNo", "name", "email", "password", LocalDate.of(1999,1,1), "licenseId",
+        return Member.of("name", "email", "password", LocalDate.of(1999,1,1), "licenseId",
             "licensePassword", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 
