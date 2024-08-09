@@ -101,6 +101,7 @@ public class ApplyServiceImpl implements ApplyService{
                     if(applyList.isEmpty()) {
                         return GetApplyVehicleResponse.builder()
                             .vehicleId(vehicle.getId())
+                            .round(applyRound.getRound())
                             .competition(0)
                             .model(vehicle.getModel())
                             .fuel(vehicle.getFuel())
@@ -113,6 +114,8 @@ public class ApplyServiceImpl implements ApplyService{
                     else{
                         int competition = applyList.size();
                         return GetApplyVehicleResponse.builder()
+                            .vehicleId(vehicle.getId())
+                            .round(applyRound.getRound())
                             .competition(competition)
                             .model(vehicle.getModel())
                             .fuel(vehicle.getFuel())
