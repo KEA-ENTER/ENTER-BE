@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.AdminVehicleRequest;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleListResponse;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
 import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleDto;
@@ -49,6 +50,14 @@ public class AdminVehicleController {
         @RequestParam(required = false) VehicleState state) {
 
         return adminVehicleService.getVehicleList(pageable, vehicleNo, model, state);
+    }
+
+    @Operation(summary = "법인 차량 상세 정보 조회 API")
+    @GetMapping("/{vehicleId}")
+    public AdminVehicleResponse getVehicle(
+        @PathVariable Long vehicleId) {
+
+        return adminVehicleService.getVehicle(vehicleId);
     }
 
     @Operation(summary = "법인 차량 등록 API")
