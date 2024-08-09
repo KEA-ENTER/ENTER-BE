@@ -57,7 +57,6 @@ class MemberTest extends IntegrationTestSupport {
 
     private Member createMember() {
         return Member.of(
-            "employeeNo",
             "name",
             "email",
             "password",

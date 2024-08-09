@@ -127,7 +127,7 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
     }
 
     private Member createMember() {
-        return Member.of("employeeNo", "name", "email", "password", LocalDate.of(1999,11,28),
+        return Member.of("name", "email", "password", LocalDate.of(1999,11,28),
             "licenseId", "licensePassword", true, true,
             1, MemberRole.USER, MemberState.ACTIVE);
     }
