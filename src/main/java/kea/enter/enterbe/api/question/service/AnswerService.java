@@ -1,7 +1,8 @@
 package kea.enter.enterbe.api.question.service;
 
-import kea.enter.enterbe.api.question.controller.dto.request.AnswerRequestDto;
+import kea.enter.enterbe.api.question.controller.dto.request.GetQuestionListRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
+import kea.enter.enterbe.api.question.controller.dto.response.GetQuestionListResponseDto;
 import kea.enter.enterbe.api.question.service.dto.AnswerServiceDto;
 import kea.enter.enterbe.api.question.service.dto.EmailServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
@@ -18,10 +19,18 @@ import kea.enter.enterbe.domain.question.repository.QuestionRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
@@ -79,6 +88,41 @@ public class AnswerService {
             questionCreatedAt, answerContent, answerCreatedAt);
     }
 
+    /* 문의사항 List 조회 API (관리자) */
+    @Transactional
+    public GetQuestionListResponseDto getQuestionList(GetQuestionListRequestDto dto) {
+
+        /* 문의사항 List 조회 */
+        // 삭제된 질문사항 제외
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdAt"));
+        Pageable pageable = PageRequest.of(dto.getPageNumber() - 1, 8, Sort.by(sorts));
+        Page<Question> questions = questionRepository.findAllByStateNot(QuestionState.INACTIVE,
+            pageable);
+
+        // getContent를 통해 리스트로 변환
+        List<GetQuestionListResponseDto.QuestionDetailDto> questionDetailDtos = new ArrayList<>();
+        for (Question question : questions.getContent()) {
+            questionDetailDtos.add(
+                GetQuestionListResponseDto.QuestionDetailDto.of(
+                    question.getId(),
+                    question.getMember().getName(),
+                    question.getContent(),
+                    question.getCategory(),
+                    localDateTimeToString(question.getCreatedAt()),
+                    question.getState()
+                )
+            );
+        }
+
+        return GetQuestionListResponseDto.of(
+            questionDetailDtos,
+            questions.getTotalPages(),
+            questions.hasNext()
+        );
+
+    }
+
     private void sendAnswerEmail(Question question, String answerContent) {
         // 수신자 Email
         String recipient = question.getMember().getEmail();
@@ -103,9 +147,16 @@ public class AnswerService {
     // questionId로 문의사항의 상태 확인. 삭제된 문의인 경우 에러발생
     private Question getFindByIdAndStateNot(Long questionId) {
         // 문의사항이 있는지 확인
-        questionRepository.findById(questionId).orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_QUESTION));
+        questionRepository.findById(questionId)
+            .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_QUESTION));
         return questionRepository.findByIdAndStateNot(questionId, QuestionState.INACTIVE)
             .orElseThrow(() -> new CustomException(ResponseCode.INVALID_QUESTION_STATE_DELETE));
+    }
+
+    public String localDateTimeToString(LocalDateTime localDateTime) {
+        Date date = java.sql.Timestamp.valueOf(localDateTime);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(date);
     }
 
 }

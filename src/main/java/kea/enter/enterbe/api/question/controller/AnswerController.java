@@ -10,7 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kea.enter.enterbe.api.question.controller.dto.request.AnswerRequestDto;
+import kea.enter.enterbe.api.question.controller.dto.request.GetQuestionListRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
+import kea.enter.enterbe.api.question.controller.dto.response.GetQuestionListResponseDto;
 import kea.enter.enterbe.api.question.service.AnswerService;
 import kea.enter.enterbe.api.question.service.dto.AnswerServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 
@@ -71,8 +72,23 @@ public class AnswerController {
     @GetMapping("/questions/{questionId}")
     public ResponseEntity<GetAnswerResponseDto> getDetail(@PathVariable Long questionId) {
 
-        GetAnswerResponseDto response =  answerService.getDetail(
+        GetAnswerResponseDto response = answerService.getDetail(
             GetAnswerServiceDto.of(questionId));
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "문의사항 목록 조회 API (관리자)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = GetQuestionListResponseDto.class))),
+        @ApiResponse(responseCode = "MEM-ERR-001", description = "멤버가 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "QST-ERR-001", description = "문의사항이 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
+    })
+    @GetMapping("/questions/list/{pages}")
+    public ResponseEntity<GetQuestionListResponseDto> getQuestionList(@PathVariable int pages) {
+
+        GetQuestionListResponseDto response = answerService.getQuestionList(
+            GetQuestionListRequestDto.of(pages));
         return ResponseEntity.ok(response);
     }
 }
