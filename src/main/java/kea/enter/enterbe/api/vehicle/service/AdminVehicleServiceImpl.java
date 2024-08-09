@@ -39,7 +39,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
 
     @Override
     public AdminVehicleResponse getVehicle(Long id) {
-        if (vehicleRepository.findById(id).isPresent())
+        if (vehicleRepository.findByIdAndStateNot(id, VehicleState.INACTIVE).isPresent())
             return vehicleRepository.findAdminVehicleResponsebyId(id);
 
         else
