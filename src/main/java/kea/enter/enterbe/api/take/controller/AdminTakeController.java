@@ -6,14 +6,12 @@ import kea.enter.enterbe.api.take.controller.dto.response.GetTakeReportResponse;
 import kea.enter.enterbe.api.take.controller.dto.response.GetTakeSituationResponse;
 import kea.enter.enterbe.api.take.service.dto.GetTakeReportServiceDto;
 import kea.enter.enterbe.api.take.controller.dto.response.GetReturnReportResponse;
-import kea.enter.enterbe.api.take.controller.dto.response.GetTakeSituationResponse;
 import kea.enter.enterbe.api.take.service.AdminTakeService;
 import kea.enter.enterbe.api.take.service.dto.GetReturnReportServiceDto;
 import kea.enter.enterbe.api.take.service.dto.GetTakeSituationServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +45,7 @@ public class AdminTakeController {
     /* 차량 반납 보고서 상세 조회 API */
     @Operation(summary = "차량 반납 보고서 상세 조회 API", description = "차량 반납 보고서를 조회합니다.")
     @GetMapping("/reports/return")
-    public ResponseEntity<GetReturnReportResponse> getTakeReport(@RequestParam Long winningId) {
+    public ResponseEntity<GetReturnReportResponse> getReturnReport(@RequestParam Long winningId) {
         GetReturnReportResponse response = adminTakeService.getReturnReport(GetReturnReportServiceDto.of(winningId));
         return ResponseEntity.ok(response);
     }

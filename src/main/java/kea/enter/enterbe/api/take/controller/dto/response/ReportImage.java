@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ReportImage {
-    // 사용일자(인수 일자, 반납 일자), 보고 시간, 사용자 이름, 계기판 사진, 차량 전면 사진, 차량 후면 사진, 차량 측면 사진 (왼쪽), 차량 측면 사진 (오른쪽), 특이사항
     @Schema(description = "계기판 사진", example = "1")
     private String dashboardImg;
 
