@@ -194,7 +194,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
     }
 
     private Member createMember() {
-        return Member.of("2", "name", "test@naver.com", "password", LocalDate.of(1999,11,28), "licenseId",
+        return Member.of("name", "test@naver.com", "password", LocalDate.of(1999,11,28), "licenseId",
             "licensePassword", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 
