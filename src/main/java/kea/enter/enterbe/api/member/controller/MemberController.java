@@ -3,9 +3,11 @@ package kea.enter.enterbe.api.member.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.enter.enterbe.api.member.controller.dto.response.GetMemberScoreResponse;
+import kea.enter.enterbe.api.member.controller.dto.response.GetRoutingResponse;
 import kea.enter.enterbe.api.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,5 +26,12 @@ public class MemberController {
         //todo: spring security 구현 완료 시 token에서 memberId 값 가져오기
         Long memberId = 1L;
         return ResponseEntity.ok(memberService.getMemberScorePercent(memberId));
+    }
+
+    @Operation(summary = "사용자 라우팅 정보 조회 (차량 신청 메뉴에 접근했을 때 라우팅)")
+    @GetMapping(value = "/routing")
+    public ResponseEntity<GetRoutingResponse> getUserRoutingInformation() {
+        Long memberId = 1L;
+        return ResponseEntity.ok(memberService.getRoutingInformation(memberId));
     }
 }
