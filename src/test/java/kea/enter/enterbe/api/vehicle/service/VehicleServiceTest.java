@@ -68,7 +68,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
 
         //then
         VehicleReport vehicleReport = vehicleReportRepository.findByWinningIdAndState(
-            winning.getId(), VehicleReportState.ACTIVE);
+            winning.getId(), VehicleReportState.ACTIVE).get(0);
         assertThat(vehicleReport)
             .extracting("type")
             .isEqualTo(VehicleReportType.TAKE);
@@ -104,7 +104,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
 
         //then
         VehicleReport vehicleReport = vehicleReportRepository.findByWinningIdAndState(
-            winning.getId(), VehicleReportState.ACTIVE);
+            winning.getId(), VehicleReportState.ACTIVE).get(0);
         assertThat(vehicleReport)
             .extracting("type")
             .isEqualTo(VehicleReportType.RETURN);

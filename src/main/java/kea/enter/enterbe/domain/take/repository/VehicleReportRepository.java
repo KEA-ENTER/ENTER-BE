@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface VehicleReportRepository extends JpaRepository<VehicleReport,Long> {
 
-    VehicleReport findByWinningIdAndState(Long id, VehicleReportState vehicleReportState);
+    List<VehicleReport> findByWinningIdAndState(Long id, VehicleReportState vehicleReportState);
 
     Optional<VehicleReport> findByWinningIdAndTypeAndState(Long id, VehicleReportType type, VehicleReportState vehicleReportState);
 
