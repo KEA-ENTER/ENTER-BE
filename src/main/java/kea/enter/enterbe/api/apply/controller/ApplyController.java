@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import java.util.List;
+import jakarta.validation.Valid;
+import kea.enter.enterbe.api.apply.controller.dto.request.ModifyApplyDetailRequest;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyDetailResponse;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyResponse;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyVehicleResponse;
@@ -11,13 +13,18 @@ import kea.enter.enterbe.api.apply.service.ApplyService;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
+import kea.enter.enterbe.api.apply.service.dto.ModifyApplyDetailServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 
 @Tag(name = "신청", description = "사용자 신청 API")
 @RequiredArgsConstructor
@@ -52,5 +59,17 @@ public class ApplyController {
         GetApplyDetailServiceDto dto = GetApplyDetailServiceDto.of(memberId);
         GetApplyDetailResponse response = applyService.getApplyDetail(dto);
         return ResponseEntity.ok(response);
+    }
+    @Operation(summary = "차량 신청 내역 수정 API", description = "차량 신청서를 수정합니다.")
+    @PatchMapping("/detail")
+    public ResponseEntity<String> modifyApplyDetail(
+        @Valid @RequestBody ModifyApplyDetailRequest request,
+        Authentication authentication
+        ) {
+        Long memberId = Long.valueOf(authentication.getName());
+        applyService.modifyApplyDetail(ModifyApplyDetailServiceDto.of(memberId, request.getApplyId(),
+                request.getApplyRoundId(), request.getPurpose()));
+
+        return ResponseEntity.ok(SUCCESS.getMessage());
     }
 }
