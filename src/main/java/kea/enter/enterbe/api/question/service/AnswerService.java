@@ -1,11 +1,11 @@
 package kea.enter.enterbe.api.question.service;
 
-import kea.enter.enterbe.api.question.controller.dto.request.GetQuestionListRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetQuestionListResponseDto;
 import kea.enter.enterbe.api.question.service.dto.AnswerServiceDto;
 import kea.enter.enterbe.api.question.service.dto.EmailServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
+import kea.enter.enterbe.api.question.service.dto.GetQuestionListServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
@@ -90,15 +90,15 @@ public class AnswerService {
 
     /* 문의사항 List 조회 API (관리자) */
     @Transactional
-    public GetQuestionListResponseDto getQuestionList(GetQuestionListRequestDto dto) {
+    public GetQuestionListResponseDto getQuestionList(GetQuestionListServiceDto dto) {
 
         /* 문의사항 List 조회 */
         // 삭제된 질문사항 제외
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createdAt"));
         Pageable pageable = PageRequest.of(dto.getPageNumber() - 1, 8, Sort.by(sorts));
-        Page<Question> questions = questionRepository.findAllByStateNot(QuestionState.INACTIVE,
-            pageable);
+        Page<Question> questions = questionRepository.searchQuestions(dto.getKeyword(),
+            dto.getSearchType(), pageable);
 
         // getContent를 통해 리스트로 변환
         List<GetQuestionListResponseDto.QuestionDetailDto> questionDetailDtos = new ArrayList<>();

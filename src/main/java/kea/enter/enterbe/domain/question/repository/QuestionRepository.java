@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface QuestionRepository extends JpaRepository<Question, Long> {
+public interface QuestionRepository extends JpaRepository<Question, Long>, CustomQuestionRepository {
 
     Optional<Question> findByIdAndMemberId(Long questionId, Long memberId);
 
@@ -19,6 +19,4 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     Optional<Question> findByIdAndStateNot(Long questionId, QuestionState state);
 
-    // Page로 조회
-    Page<Question> findAllByStateNot(QuestionState state, Pageable pageable);
 }
