@@ -5,7 +5,10 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
+import kea.enter.enterbe.api.take.controller.dto.response.GetTakeReportResponse;
+import kea.enter.enterbe.api.take.service.dto.GetTakeReportServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
@@ -82,6 +85,47 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
         assertThat(winningList).isEmpty();
     }
 
+    @DisplayName("해당 당첨에 해당하는 차량 인수 보고서를 조회한다.")
+    @Test
+    void findByWinningIdAndTypeAndState() {
+        // given
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024, 7, 29)));
+
+        Member member = memberRepository.save(createMember());
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        Winning winning = winningRepository.save(createWinning(apply, WinningState.ACTIVE));
+
+        vehicleReportRepository.save(createTakeVehicleReport(winning));
+
+        // when
+        Optional<VehicleReport> response = vehicleReportRepository.findByWinningIdAndTypeAndState(winning.getId(), VehicleReportType.TAKE, VehicleReportState.ACTIVE);
+
+        // then
+        assertThat(response).isPresent();
+    }
+
+    @DisplayName("당첨 아이디가 다른 경우 인수보고서가 조회되지 않는다.")
+    @Test
+    void findByWinningIdAndTypeAndStateWithOtherWinningId() {
+        // given
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024, 7, 29)));
+
+        Member member = memberRepository.save(createMember());
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        Winning winning1 = winningRepository.save(createWinning(apply, WinningState.ACTIVE));
+        Winning winning2 = winningRepository.save(createWinning(apply, WinningState.ACTIVE));
+
+        vehicleReportRepository.save(createTakeVehicleReport(winning1));
+
+        // when
+        Optional<VehicleReport> response = vehicleReportRepository.findByWinningIdAndTypeAndState(winning2.getId(), VehicleReportType.TAKE, VehicleReportState.ACTIVE);
+
+        // then
+        assertThat(response).isEmpty();
+    }
+
     private Member createMember() {
         return Member.of("employeeNo", "name", "email", "password", LocalDate.of(1999,11,28),
             "licenseId", "licensePassword", true, true,
@@ -105,8 +149,8 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
         return Winning.of(apply, state);
     }
 
-    private VehicleReport createVehicleReport(Winning winning) {
-        return VehicleReport.of(winning, winning.getApply().getApplyRound().getVehicle(),"frontImg", "leftImg", "rightImg", "backImg", "dashboardImg",
-            "parkingLoc", VehicleReportType.TAKE, VehicleReportState.ACTIVE);
+    private VehicleReport createTakeVehicleReport(Winning winning) {
+        return VehicleReport.of(winning, winning.getApply().getApplyRound().getVehicle(),"frontImg","leftImg", "rightImg", "backImg", "dashboardImg",
+            null, VehicleReportType.TAKE, VehicleReportState.ACTIVE);
     }
 }

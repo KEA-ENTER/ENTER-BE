@@ -4,6 +4,8 @@ import kea.enter.enterbe.api.take.controller.dto.response.GetReturnReportRespons
 import kea.enter.enterbe.api.take.controller.dto.response.GetTakeSituationResponse;
 import kea.enter.enterbe.api.take.controller.dto.response.ReportImage;
 import kea.enter.enterbe.api.take.service.dto.GetReturnReportServiceDto;
+import kea.enter.enterbe.api.take.controller.dto.response.GetTakeReportResponse;
+import kea.enter.enterbe.api.take.service.dto.GetTakeReportServiceDto;
 import kea.enter.enterbe.api.take.service.dto.GetTakeSituationServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
@@ -82,7 +84,24 @@ public class AdminTakeServiceImpl implements AdminTakeService {
 
         return GetTakeSituationResponse.of(applyRoundList.get(0).getRound(), applyCnt, takeCnt, noShowCnt);
     }
+  
+    /* 차량 인수 보고서 상세 조회 API */
+    public GetTakeReportResponse getTakeReport(GetTakeReportServiceDto dto) {
+        // 해당 보고서가 존재하는지 확인한다
+        VehicleReport report = findVehicleReportByWinningIdAndType(dto.getWinningId(), VehicleReportType.TAKE);
+        VehicleNote note = findVehicleNoteByVehicleId(report.getVehicle().getId());
+        String noteContent = note == null ? "" : note.getContent();
 
+        ApplyRound applyRound = report.getWinning().getApply().getApplyRound();
+        Member member = report.getWinning().getApply().getMember();
+
+        ReportImage reportImageList = ReportImage.of(report.getDashboardImg(), report.getFrontImg(), report.getBackImg(), report.getLeftImg(), report.getRightImg());
+        
+        return GetTakeReportResponse.of(report.getId(), member.getId(), applyRound.getTakeDate().toString(), applyRound.getReturnDate().toString(),
+            localDateTimeToString(report.getCreatedAt()), member.getName(),
+            reportImageList, noteContent);
+    }
+  
     /* 차량 반납 보고서 상세 조회 API */
     public GetReturnReportResponse getReturnReport(GetReturnReportServiceDto dto) {
         // 해당 보고서가 존재하는지 확인한다
@@ -94,11 +113,10 @@ public class AdminTakeServiceImpl implements AdminTakeService {
         Member member = report.getWinning().getApply().getMember();
 
         ReportImage reportImageList = ReportImage.of(report.getDashboardImg(), report.getFrontImg(), report.getBackImg(), report.getLeftImg(), report.getRightImg());
-
+        
         return GetReturnReportResponse.of(report.getId(), member.getId(), applyRound.getTakeDate().toString(), applyRound.getReturnDate().toString(),
             localDateTimeToString(report.getCreatedAt()), report.getParkingLoc(), member.getName(),
             reportImageList, noteContent);
-
     }
 
     // 차량 보고서를 조회한다
@@ -116,7 +134,6 @@ public class AdminTakeServiceImpl implements AdminTakeService {
     public List<ApplyRound> findApplyRoundsByTakeDateBetween(LocalDate startDate, LocalDate endDate) {
         return applyRoundRepository.findAllByTakeDateBetweenAndState(startDate, endDate, ApplyRoundState.ACTIVE);
     }
-
 
     // 시간 형식 변환
     public String localDateTimeToString(LocalDateTime localDateTime) {
