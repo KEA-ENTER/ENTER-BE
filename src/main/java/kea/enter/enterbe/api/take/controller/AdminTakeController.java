@@ -2,6 +2,9 @@ package kea.enter.enterbe.api.take.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import kea.enter.enterbe.api.take.controller.dto.request.GetReportListRequest;
+import kea.enter.enterbe.api.take.controller.dto.response.GetReportListResponse;
 import kea.enter.enterbe.api.take.controller.dto.response.GetTakeReportResponse;
 import kea.enter.enterbe.api.take.controller.dto.response.GetTakeSituationResponse;
 import kea.enter.enterbe.api.take.service.dto.GetTakeReportServiceDto;
@@ -10,6 +13,8 @@ import kea.enter.enterbe.api.take.service.AdminTakeService;
 import kea.enter.enterbe.api.take.service.dto.GetReturnReportServiceDto;
 import kea.enter.enterbe.api.take.service.dto.GetTakeSituationServiceDto;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +36,17 @@ public class AdminTakeController {
         // TODO: 어드민 권한 검사
         GetTakeSituationServiceDto dto = GetTakeSituationServiceDto.of(LocalDate.now());
         GetTakeSituationResponse response = adminTakeService.getTakeSituation(dto);
+        return ResponseEntity.ok(response);
+    }
+
+    /* 인수 관리 목록 조회 API */
+    @Operation(summary = "인수 관리 목록 조회 API", description = "인수 관리 목록을 조회합니다.")
+    @GetMapping("/reports")
+    public ResponseEntity<GetReportListResponse> getTakeReport(
+        @Valid @ParameterObject GetReportListRequest request,
+        @ParameterObject Pageable pageable
+    ) {
+        GetReportListResponse response = adminTakeService.getReportList(request.toService(pageable));
         return ResponseEntity.ok(response);
     }
   
