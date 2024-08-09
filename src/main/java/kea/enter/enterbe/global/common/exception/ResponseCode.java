@@ -38,7 +38,6 @@ public enum ResponseCode {
     // VEHICLE REPORT
     VEHICLE_REPORT_NOT_FOUND("VHR-ERR-001", HttpStatus.NOT_FOUND, "차량 보고서를 찾을 수 없습니다."),
 
-
     // PENALTY
     PENALTY_NOT_FOUND("PEN-ERR-001", HttpStatus.NOT_FOUND, "페널티를 찾을 수 없습니다."),
 
