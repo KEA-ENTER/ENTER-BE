@@ -7,6 +7,7 @@ import kea.enter.enterbe.api.member.controller.dto.response.GetMemberScoreRespon
 import kea.enter.enterbe.api.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ public class MemberController {
     }
 
     @Operation(summary = "사용자 어떤 보고서 제출해야하는지 조회")
-    @PostMapping(value = "/report/post-type")
+    @GetMapping(value = "/report/post-type")
     public ResponseEntity<GetMemberPostReportTypeResponse> getMemberPostReportType() {
         Long memberId = 1L;
         return ResponseEntity.ok(memberService.getMemberPostReportType(memberId));
