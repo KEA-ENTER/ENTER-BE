@@ -7,9 +7,6 @@ import java.time.LocalDate;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.take.controller.dto.response.GetReturnReportResponse;
 import kea.enter.enterbe.api.take.service.dto.GetReturnReportServiceDto;
-import kea.enter.enterbe.api.lottery.controller.dto.request.ApplicantSearchType;
-import kea.enter.enterbe.api.lottery.controller.dto.response.GetApplicantListResponse;
-import kea.enter.enterbe.api.lottery.service.dto.GetApplicantListServiceDto;
 import kea.enter.enterbe.api.take.controller.dto.response.GetTakeReportResponse;
 import kea.enter.enterbe.api.take.controller.dto.response.GetTakeSituationResponse;
 import kea.enter.enterbe.api.take.service.dto.GetTakeReportServiceDto;
@@ -32,7 +29,6 @@ import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.PageRequest;
 
 class AdminTakeServiceTest extends IntegrationTestSupport {
     @DisplayName("저번주의 인수 현황을 조회한다.")
@@ -85,7 +81,7 @@ class AdminTakeServiceTest extends IntegrationTestSupport {
         Apply apply = applyRepository.save(createApply(member, applyRound));
         Winning winning = winningRepository.save(createWinning(apply, WinningState.ACTIVE));
       
-        VehicleReport vehicleReport = vehicleReportRepository.save(createTakeVehicleReport(winning, VehicleReportType.TAKE));
+        VehicleReport vehicleReport = vehicleReportRepository.save(createVehicleReport(winning, VehicleReportType.TAKE));
         GetTakeReportServiceDto dto = GetTakeReportServiceDto.of(winning.getId());
 
         // when
