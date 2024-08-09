@@ -35,6 +35,10 @@ public enum ResponseCode {
     VEHICLE_DUPLICATED("VHC_ERR_003", HttpStatus.BAD_REQUEST, "이미 존재하는 차량입니다."),
     NEED_PARKING_LOC_FOR_RETURN_REPORT("VHC-ERR-004",HttpStatus.BAD_REQUEST , "주차 위치를 입력해주세요."),
 
+    // VEHICLE REPORT
+    VEHICLE_REPORT_NOT_FOUND("VHR-ERR-001", HttpStatus.NOT_FOUND, "차량 보고서를 찾을 수 없습니다."),
+
+
     // PENALTY
     PENALTY_NOT_FOUND("PEN-ERR-001", HttpStatus.NOT_FOUND, "페널티를 찾을 수 없습니다."),
 
