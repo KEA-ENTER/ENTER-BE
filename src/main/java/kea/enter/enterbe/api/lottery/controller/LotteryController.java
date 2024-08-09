@@ -3,11 +3,13 @@ package kea.enter.enterbe.api.lottery.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentCompetitionRateResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAverageNumbersResponse;
 import kea.enter.enterbe.api.lottery.service.LotteryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,5 +32,12 @@ public class LotteryController {
     @GetMapping("average-waiting-numbers")
     public ResponseEntity<List<GetRecentWaitingAverageNumbersResponse>> getAverageWaitingNumbers() {
         return ResponseEntity.ok(lotteryService.getAverageWaitingNumbers());
+    }
+
+    @Operation(summary = "당첨 여부 조회")
+    @GetMapping("resultes")
+    public ResponseEntity<GetLotteryResponse> getLottery(Authentication authentication) {
+        Long memberId = Long.valueOf(authentication.getName());
+        return ResponseEntity.ok(lotteryService.getLottery());
     }
 }

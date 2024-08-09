@@ -5,6 +5,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentCompetitionRateResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAverageNumbersResponse;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
@@ -96,6 +97,11 @@ public class LotteryServiceImpl implements LotteryService {
             list.add(GetRecentWaitingAverageNumbersResponse.of(i, String.format("%.2f", result)));
         }
         return list;
+    }
+
+    @Override
+    public GetLotteryResponse getLottery() {
+        return null;
     }
 
     private List<ApplyRound> getApplyRoundByThisWeek() {
