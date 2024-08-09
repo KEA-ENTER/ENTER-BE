@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
+import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class CheckReportScheduler {
+
     private final SchedulerFactoryBean schedulerFactoryBean;
 
     @PostConstruct
@@ -34,7 +36,9 @@ public class CheckReportScheduler {
             .startNow()
             .withSchedule(CronScheduleBuilder.cronSchedule("0 0 10 * * ?"))
             .build();
-
-        schedulerFactoryBean.getScheduler().scheduleJob(job, trigger);
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        if (!scheduler.checkExists(job.getKey())) {
+            schedulerFactoryBean.getScheduler().scheduleJob(job, trigger);
+        }
     }
 }
