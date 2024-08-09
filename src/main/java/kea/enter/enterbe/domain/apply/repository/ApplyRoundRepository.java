@@ -6,7 +6,6 @@ import java.util.Optional;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,7 +16,9 @@ public interface ApplyRoundRepository extends JpaRepository<ApplyRound, Long>, A
     // 인수, 반납 날짜를 지정하여 신청 회차를 조회
     List<ApplyRound> findAllByTakeDateAndReturnDateAndState(LocalDate takeDate, LocalDate returnDate, ApplyRoundState state);
     List<ApplyRound> findAllApplyRoundsByTakeDateBetweenAndState(LocalDate thisMonday, LocalDate thisSunday, ApplyRoundState applyRoundState);
-    @Query("SELECT ar FROM ApplyRound ar WHERE ar.round = (SELECT MAX(ar2.round) FROM ApplyRound ar2) AND ar.state = 'ACTIVE'")
-    ApplyRound findTopByOrderByRoundDescAndState();
 
+    // 가장 큰 round 값을 찾는 메서드
+    Optional<Integer> findMaxRoundByState(ApplyRoundState state);
+
+    List<Long> findIdByStateAndRound(ApplyRoundState state, Integer round);
 }

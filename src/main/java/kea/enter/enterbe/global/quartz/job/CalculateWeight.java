@@ -1,15 +1,11 @@
-package kea.enter.enterbe.api.lottery.service;
+package kea.enter.enterbe.global.quartz.job;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import kea.enter.enterbe.api.lottery.service.dto.WeightDto;
-import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
-import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
@@ -27,13 +23,11 @@ public class CalculateWeight implements Job {
 
     private final MemberRepository memberRepository;
     private final WinningRepository winningRepository;
-    private final ApplyRepository applyRepository;
-    private final ApplyRoundRepository applyRoundRepository;
 
     @Override
     public void execute(JobExecutionContext context) {
-        List<WeightDto> weightDtoList = getApplyMemberList();
-        updateWeight(weightDtoList);
+        calculateYearsScore();
+        calculateHistoryScore();
     }
 
     public List<WeightDto> getApplyMemberList() { // 반기 별 당첨자를 조회한다.
@@ -52,32 +46,31 @@ public class CalculateWeight implements Job {
         return winningRepository.countActiveEntitiesByHalfYearAndState(startDate, endDate);
     }
 
-    public long getApplyRoundId() { // 가장 최신 회차 가져오기
-        return applyRoundRepository.findTopByOrderByRoundDescAndState().getId();
-    }
 
-    private void updateWeight(List<WeightDto> weightDtoList) {
-        List<Member> memberList = new ArrayList<>();
-        List<Long> applyMemberList = applyRepository.findMemberIdsByApplyRoundIdAndState(getApplyRoundId());
-
-        Map<Long, WeightDto> weightDtoMap = weightDtoList.stream()
-            .collect(Collectors.toMap(WeightDto::getMemberId, dto -> dto));
-
-        for (Long memberId : applyMemberList) {
-            if (weightDtoMap.containsKey(memberId)) {
-                WeightDto weightDto = weightDtoMap.get(memberId);
-                Member member = memberRepository.findByIdAndState(memberId, MemberState.ACTIVE)
-                    .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
-                member.setScore(
-                    20 + calculateYears(member) + calculateHistory(
-                        weightDto.getWeight()));
-                memberList.add(member);
-            }
+    private void calculateHistoryScore() {
+        // 당첨 내역이 있는 멤버를 당첨 횟수와 함께 가져온다.
+        List<Member> members = new ArrayList<>();
+        List<WeightDto> weightDtoList = getApplyMemberList();
+        for (WeightDto weightDto : weightDtoList) {
+            Member member = memberRepository.findByIdAndState(weightDto.getMemberId(), MemberState.ACTIVE)
+                .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
+            member.setScore(member.getScore() + calculateHistoryWeight(weightDto.getWeight()));
+            members.add(member);
         }
-        memberRepository.saveAll(memberList);
+        memberRepository.saveAll(members);
     }
 
-    private int calculateYears(Member member) { // 근속일수로 가중치를 계산한다.
+    private void calculateYearsScore() { // 근속일수로 가중치를 계산한다.
+        List<Member> members = memberRepository.findAllByState(MemberState.ACTIVE).orElseThrow(
+            () -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
+
+        for (Member member : members) { // 전체 멤버를 조회하여 가중치를 계산한다.
+            member.setScore(20 + calculateYearsWeight(member));
+        }
+        memberRepository.saveAll(members);
+    }
+
+    private int calculateYearsWeight(Member member) {
         LocalDateTime now = LocalDateTime.now();
         Period period = Period.between(member.getCreatedAt().toLocalDate(), now.toLocalDate());
         return switch (period.getYears()) {
@@ -89,7 +82,7 @@ public class CalculateWeight implements Job {
         };
     }
 
-    private int calculateHistory(Long score) {
+    private int calculateHistoryWeight(Long score) {
         if (score >= 1 && score <= 2) {
             return -1;
         } else if (score >= 3 && score <= 5) {
