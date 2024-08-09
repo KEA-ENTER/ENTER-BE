@@ -10,15 +10,19 @@ import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyDetailRespons
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyResponse;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyVehicleResponse;
 import kea.enter.enterbe.api.apply.service.ApplyService;
+import kea.enter.enterbe.api.apply.service.dto.DeleteApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.ModifyApplyDetailServiceDto;
+import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,14 +65,26 @@ public class ApplyController {
         return ResponseEntity.ok(response);
     }
     @Operation(summary = "차량 신청 내역 수정 API", description = "차량 신청서를 수정합니다.")
-    @PatchMapping("/detail")
+    @PatchMapping("/detail/{applyId}")
     public ResponseEntity<String> modifyApplyDetail(
+        @PathVariable Long applyId,
         @Valid @RequestBody ModifyApplyDetailRequest request,
         Authentication authentication
         ) {
         Long memberId = Long.valueOf(authentication.getName());
-        applyService.modifyApplyDetail(ModifyApplyDetailServiceDto.of(memberId, request.getApplyId(),
+        applyService.modifyApplyDetail(ModifyApplyDetailServiceDto.of(memberId, applyId,
                 request.getApplyRoundId(), request.getPurpose()));
+
+        return ResponseEntity.ok(SUCCESS.getMessage());
+    }
+    @Operation(summary = "차량 신청 내역 취소 API", description = "차량 신청서를 취소합니다.")
+    @DeleteMapping("/detail/{applyId}")
+    public ResponseEntity<String> deleteApplyDetail(
+        @PathVariable Long applyId,
+        Authentication authentication
+    ) {
+        Long memberId = Long.valueOf(authentication.getName());
+        applyService.deleteApplyDetail(DeleteApplyDetailServiceDto.of(memberId, applyId));
 
         return ResponseEntity.ok(SUCCESS.getMessage());
     }

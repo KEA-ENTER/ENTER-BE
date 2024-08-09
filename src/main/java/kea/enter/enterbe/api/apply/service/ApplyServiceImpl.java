@@ -3,6 +3,7 @@ package kea.enter.enterbe.api.apply.service;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyDetailResponse;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyResponse;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyVehicleResponse;
+import kea.enter.enterbe.api.apply.service.dto.DeleteApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
@@ -129,23 +130,11 @@ public class ApplyServiceImpl implements ApplyService{
     @Transactional(readOnly = true)
     public GetApplyDetailResponse getApplyDetail(GetApplyDetailServiceDto dto) {
         Long memberId = dto.getMemberId();
-        //해당 멤버의 모든 신청목록를 가져온다.
-        List<Apply> applyList = findAppliesByMemberId(memberId);
+        int maxRound = getMaxRoundByState();
 
-        int max = 0;
+        Optional<Apply> applyOptional= findByMemberIdAndRound(memberId, maxRound);
+        Apply recentlyApply = applyOptional.orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
 
-        Apply recentlyApply = null;
-        //가장 최신 신청 목록을 가져온다.
-        for (Apply apply : applyList) {
-            int round = apply.getApplyRound().getRound();
-            if(max < round)
-                recentlyApply = apply;
-        }
-
-
-        if(recentlyApply.equals(null)) {
-            throw new CustomException(APPLY_NOT_FOUND);
-        }
 
         // 최신 신청 목록의 신청 회차 정보와 차량 정보를 가져온다.
         ApplyRound applyRound = recentlyApply.getApplyRound();
@@ -167,21 +156,8 @@ public class ApplyServiceImpl implements ApplyService{
 
     @Transactional
     public void modifyApplyDetail(ModifyApplyDetailServiceDto dto) {
-        // 수정 가능 시간을 확인
-        LocalDateTime now = LocalDateTime.now(); // Get the current date and time
-
-        // 이번주 월요일 9:00:00
-        LocalDate currentMonday = LocalDate.now().with(DayOfWeek.MONDAY);
-        LocalDateTime mondayStart = currentMonday.atTime(LocalTime.of(9, 0, 0));
-
-        // 이번주 화요일 23:59:59
-        LocalDate nextTuesday = currentMonday.with(DayOfWeek.THURSDAY);
-        LocalDateTime tuesdayEnd = nextTuesday.atTime(LocalTime.of(23, 59, 59));
-
-        boolean isInRange = now.isAfter(mondayStart) && now.isBefore(tuesdayEnd);
-        // 수정 기간이 아닐경우
-        if (!isInRange)
-            throw new CustomException(ResponseCode.INVALID_QUESTION_STATE);
+        //수정 가능 시간 확인
+        timeCheck(LocalDateTime.now());
 
         // 새로 선택한 ApplyRound로 수정
         Optional<Apply> applyOptional = findByApplyId(dto.getApplyId());
@@ -197,14 +173,50 @@ public class ApplyServiceImpl implements ApplyService{
         apply.modifyApplyRound(applyRound, dto.getPurpose());
 
     }
+
+    @Override
+    public void deleteApplyDetail(DeleteApplyDetailServiceDto dto) {
+        //수정 가능 시간 확인
+        timeCheck(LocalDateTime.now());
+
+        // Apply 존재 여부 확인
+        Optional<Apply> applyOptional = findByIdAndMemberId(dto.getApplyId(), dto.getMemberId());
+        if (!applyOptional.isPresent()) {
+            throw new CustomException(APPLY_NOT_FOUND);
+        }
+
+        Apply apply = applyOptional.get();
+        apply.deleteApply();
+
+    }
+    public void timeCheck(LocalDateTime now){
+        // 이번주 수요일 0:00:00
+        LocalDate currentMonday = LocalDate.now().with(DayOfWeek.WEDNESDAY);
+        LocalDateTime mondayStart = currentMonday.atTime(LocalTime.of(0, 0, 0));
+
+        // 이번주 수요일 9:59:59
+        LocalDate nextTuesday = currentMonday.with(DayOfWeek.WEDNESDAY);
+        LocalDateTime tuesdayEnd = nextTuesday.atTime(LocalTime.of(9, 59, 59));
+
+        boolean isInRange = now.isAfter(mondayStart) && now.isBefore(tuesdayEnd);
+        // 수정 기간이 아닐경우
+        if (isInRange)
+            throw new CustomException(ResponseCode.INVALID_QUESTION_STATE);
+    }
+    public Optional<Apply> findByMemberIdAndRound(Long memberId, int maxRound) {
+        return applyRepository.findByMemberIdAndRoundAndState(memberId, maxRound, ApplyState.ACTIVE);
+    }
+    public Integer getMaxRoundByState() {
+        return applyRoundRepository.findMaxRoundByState(ApplyRoundState.ACTIVE);
+    }
+    public  Optional<Apply>findByIdAndMemberId(Long applyId, Long memberId){
+        return applyRepository.findByIdAndMemberIdAndState(applyId, memberId, ApplyState.ACTIVE);
+    }
     public Optional<ApplyRound> findByApplyRoundId(Long applyRoundId){
         return applyRoundRepository.findByIdAndState(applyRoundId, ApplyRoundState.ACTIVE);
     }
     public Optional<Apply> findByApplyId(Long applyId){
         return applyRepository.findByIdAndState(applyId, ApplyState.ACTIVE);
-    }
-    public List<Apply> findAppliesByMemberId(Long memberId){
-        return applyRepository.findAllByMemberIdAndState(memberId, ApplyState.ACTIVE);
     }
     public List<ApplyRound> findApplyRoundsByTakeDateBetween(LocalDate startDate, LocalDate endDate) {
         return applyRoundRepository.findAllByTakeDateBetweenAndState(startDate, endDate, ApplyRoundState.ACTIVE);

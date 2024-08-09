@@ -8,19 +8,16 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ModifyApplyDetailRequest {
-    private Long applyId;
     private Long applyRoundId;
     private ApplyPurpose purpose;
     @Builder
-    public ModifyApplyDetailRequest(Long applyId, Long applyRoundId, ApplyPurpose purpose){
-        this.applyId = applyId;
+    public ModifyApplyDetailRequest(Long applyRoundId, ApplyPurpose purpose){
         this.applyRoundId =applyRoundId;
         this.purpose = purpose;
     }
 
-    public static ModifyApplyDetailRequest of(Long applyId, Long applyRoundId, ApplyPurpose purpose){
+    public static ModifyApplyDetailRequest of(Long applyRoundId, ApplyPurpose purpose){
         return ModifyApplyDetailRequest.builder()
-            .applyId(applyId)
             .applyRoundId(applyRoundId)
             .purpose(purpose)
             .build();
