@@ -14,8 +14,13 @@ import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
+import kea.enter.enterbe.domain.penalty.entity.Penalty;
+import kea.enter.enterbe.domain.penalty.entity.PenaltyLevel;
+import kea.enter.enterbe.domain.penalty.entity.PenaltyReason;
+import kea.enter.enterbe.domain.penalty.repository.PenaltyRepository;
 import kea.enter.enterbe.domain.take.entity.VehicleReport;
 import kea.enter.enterbe.domain.take.entity.VehicleReportPostTime;
+import kea.enter.enterbe.domain.take.entity.VehicleReportState;
 import kea.enter.enterbe.domain.take.entity.VehicleReportType;
 import kea.enter.enterbe.domain.take.repository.VehicleReportRepository;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleNote;
@@ -41,6 +46,7 @@ public class VehicleServiceImpl implements VehicleService {
     private final VehicleReportRepository vehicleReportRepository;
     private final VehicleNoteRepository vehicleNoteRepository;
     private final ApplyRoundRepository applyRoundRepository;
+    private final PenaltyRepository penaltyRepository;
     private final Clock clock;
 
     @Override
@@ -77,6 +83,33 @@ public class VehicleServiceImpl implements VehicleService {
         } catch (Exception e) {
             deleteS3Images(images);
             throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void checkVehicleReport() {
+        List<VehicleReport> vehicleReports;
+        int returnReport, takeReport;
+        LocalDate now = LocalDate.now(clock);
+        List<Winning> winning = winningRepository.findAllByStateAndApplyApplyRoundReturnDate(WinningState.ACTIVE,now.minusDays(1));
+        for (Winning w : winning) {
+            takeReport = 0;
+            returnReport = 0;
+            vehicleReports = vehicleReportRepository.findAllByWinningIdAndState(w.getId(),
+                VehicleReportState.ACTIVE);
+            for (VehicleReport vr : vehicleReports) {
+                if(vr.getType().equals(VehicleReportType.TAKE))
+                    takeReport++;
+                else if(vr.getType().equals(VehicleReportType.RETURN))
+                    returnReport++;
+            }
+            if(takeReport==0)
+                penaltyRepository.save(Penalty.create(w.getApply().getMember(),PenaltyReason.TAKE,
+                    PenaltyLevel.MEDIUM,null));
+            else if(returnReport==0)
+                penaltyRepository.save(Penalty.create(w.getApply().getMember(),PenaltyReason.RETURN,
+                    PenaltyLevel.MEDIUM,null));
         }
     }
 
