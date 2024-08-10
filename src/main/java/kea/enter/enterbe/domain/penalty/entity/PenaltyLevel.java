@@ -6,7 +6,7 @@ import kea.enter.enterbe.global.common.exception.ResponseCode;
 public enum PenaltyLevel {
     MINIMUM, LOW, MEDIUM, HIGH, BLACKLIST;
 
-    public String getDuration(PenaltyLevel level) {
+    public static String getDuration(PenaltyLevel level) {
         switch (level) {
             case MINIMUM:
                 return "2주";
