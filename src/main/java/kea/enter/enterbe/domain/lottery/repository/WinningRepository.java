@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import kea.enter.enterbe.api.lottery.service.dto.WeightDto;
+import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -54,4 +55,6 @@ public interface WinningRepository extends JpaRepository<Winning, Long> {
     );
 
     Integer countByApplyApplyRoundApplyRoundAndState(int applyRound, WinningState winningState);
+
+    Optional<Winning> findByApplyAAndState(Apply apply, WinningState state);
 }

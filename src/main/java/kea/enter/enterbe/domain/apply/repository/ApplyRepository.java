@@ -1,5 +1,6 @@
 package kea.enter.enterbe.domain.apply.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import kea.enter.enterbe.domain.apply.entity.Apply;
@@ -23,7 +24,14 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     List<Member> findMembersBydApplyRoundAndState(@Param("applyRound") ApplyRound applyRound);
 
     Integer countByApplyRoundApplyRoundAndStateAndApplyRoundState(int applyRound, ApplyState applyState, ApplyRoundState applyRoundState);
-  
+
     Optional<Apply> findByMemberAndApplyRoundAndState(Member member, ApplyRound applyRound, ApplyState state);
+
+    @Query("SELECT a FROM Apply a " +
+        "WHERE a.member.id = :memberId " +
+        "AND a.state = :state "+
+        "AND a.createdAt BETWEEN :startOfRound AND :endOfRound"
+    )
+    Optional<Apply> findByMemberIdAndStateCurrentWeek(Long memberId, ApplyState state, LocalDateTime startOfRound, LocalDateTime endOfRound);
 
 }
