@@ -7,6 +7,7 @@ import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentCompetitionRateResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAverageNumbersResponse;
 import kea.enter.enterbe.api.lottery.service.LotteryService;
+import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -38,6 +39,6 @@ public class LotteryController {
     @GetMapping("resultes")
     public ResponseEntity<GetLotteryResponse> getLottery(Authentication authentication) {
         Long memberId = Long.valueOf(authentication.getName());
-        return ResponseEntity.ok(lotteryService.getLottery());
+        return ResponseEntity.ok(lotteryService.getLottery(GetLotteryServiceDto.of(memberId)));
     }
 }

@@ -5,9 +5,12 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentCompetitionRateResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAverageNumbersResponse;
+import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
+import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
@@ -18,10 +21,13 @@ import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import kea.enter.enterbe.domain.lottery.repository.WaitingRepository;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
+import kea.enter.enterbe.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -100,7 +106,13 @@ public class LotteryServiceImpl implements LotteryService {
     }
 
     @Override
-    public GetLotteryResponse getLottery() {
+    public GetLotteryResponse getLottery(GetLotteryServiceDto dto) {
+        Long memberId = dto.getMemeberId();
+        int maxRound = getMaxRoundByState();
+
+        Optional<Apply> applyOptional= findByMemberIdAndRound(memberId, maxRound);
+        Apply recentlyApply = applyOptional.orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
+
         return null;
     }
 
@@ -112,5 +124,12 @@ public class LotteryServiceImpl implements LotteryService {
         LocalDate thisSunday = today.with(DayOfWeek.SUNDAY);  // 이번주 일요일
         return applyRoundRepository.findAllApplyRoundsByTakeDateBetweenAndState(
             thisMonday, thisSunday, ApplyRoundState.ACTIVE);
+    }
+
+    public Integer getMaxRoundByState() {
+        return applyRoundRepository.findMaxRoundByState(ApplyRoundState.ACTIVE);
+    }
+    public Optional<Apply> findByMemberIdAndRound(Long memberId, int maxRound) {
+        return applyRepository.findByMemberIdAndRoundAndState(memberId, maxRound, ApplyState.ACTIVE);
     }
 }
