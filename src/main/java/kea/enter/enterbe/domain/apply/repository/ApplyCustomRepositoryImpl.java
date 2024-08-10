@@ -2,19 +2,28 @@ package kea.enter.enterbe.domain.apply.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kea.enter.enterbe.api.lottery.controller.dto.request.ApplicantSearchType;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
 import kea.enter.enterbe.domain.apply.entity.Apply;
+import kea.enter.enterbe.domain.apply.entity.ApplyRound;
+import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
+import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
+import static kea.enter.enterbe.domain.lottery.entity.QWinning.winning;
 import static kea.enter.enterbe.domain.apply.entity.QApply.apply;
+import static kea.enter.enterbe.domain.apply.entity.QApplyRound.applyRound;
 import static kea.enter.enterbe.domain.member.entity.QMember.member;
 
 @Slf4j
@@ -60,6 +69,54 @@ public class ApplyCustomRepositoryImpl implements ApplyCustomRepository {
 
         return PageableExecutionUtils.getPage(applyList, pageable, total::size);
     }
+
+    public List<GetLotteryResponse> findAllLotteryResponsebyId(Long memberId) {
+        List<GetLotteryResponse> responses = new ArrayList<>();
+
+        List<ApplyRound> applyRounds = jpaQueryFactory.selectFrom(applyRound)
+            .innerJoin(apply).on(applyRound.id.eq(apply.applyRound.id))
+            .innerJoin(member).on(apply.member.id.eq(member.id))
+            .where(apply.state.eq(ApplyState.ACTIVE)
+                .and(applyRound.state.eq(ApplyRoundState.ACTIVE)
+                    .and(member.id.eq(memberId))))
+            .fetch();
+
+        for (ApplyRound round : applyRounds) {
+            // 경쟁률
+            long applyCount = jpaQueryFactory
+                .selectFrom(apply)
+                .innerJoin(applyRound).on(apply.applyRound.id.eq(applyRound.id))
+                .where(apply.state.eq(ApplyState.ACTIVE))
+                .fetchCount();
+
+            // 당첨 여부
+            String result = jpaQueryFactory
+                .select(
+                    new CaseBuilder()
+                        .when(winning.state.eq(WinningState.ACTIVE)).then("당첨")
+                        .when(winning.state.eq(WinningState.INACTIVE)).then("당첨취소")
+                        .otherwise("미당첨")
+                )
+                .from(apply)
+                .leftJoin(winning).on(winning.apply.id.eq(apply.id))
+                .where(
+                    apply.state.eq(ApplyState.ACTIVE)
+                        .and(apply.member.id.eq(memberId))
+                )
+                .fetchFirst();
+
+            responses.add(GetLotteryResponse.builder()
+                .round(round.getRound())
+                .takeDate(round.getTakeDate().format(DateTimeFormatter.ofPattern("MM-dd")))
+                .returnDate(round.getReturnDate().format(DateTimeFormatter.ofPattern("MM-dd")))
+                .competitionRate(applyCount)
+                .result(result)
+                .build());
+        }
+
+        return responses;
+    }
+
 
     // 사용자 아이디(이메일) 검색
     private BooleanExpression idContains(ApplicantSearchType searchType, String keyword) {
