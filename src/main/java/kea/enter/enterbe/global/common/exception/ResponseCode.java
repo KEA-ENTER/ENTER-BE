@@ -40,6 +40,7 @@ public enum ResponseCode {
 
     // PENALTY
     PENALTY_NOT_FOUND("PEN-ERR-001", HttpStatus.NOT_FOUND, "페널티를 찾을 수 없습니다."),
+    PENALTY_LEVEL_NOT_FOUND("PEN-ERR-002", HttpStatus.NOT_FOUND, "페널티 수준을 찾을 수 없습니다."),
 
     // AUTh
     PASSWORD_INCORRECT("AUT-ERR-001", HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다"),
