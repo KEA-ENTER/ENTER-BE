@@ -47,8 +47,8 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .httpBasic(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/auth/login", "/").permitAll()
-                .requestMatchers("/admin/**", "/actuator/**").hasRole("ADMIN")
+                .requestMatchers("/auth/login").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/**").hasRole("USER")
                 .anyRequest().authenticated()
             )
@@ -98,8 +98,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer configureH2ConsoleEnable() {
 
         return web -> web.ignoring()
-            .requestMatchers("/h2-console/**")
-            .requestMatchers("favicon.ico");
+            .requestMatchers("/","/actuator/**", "/h2-console/**", "/favicon.ico", "/api/swagger-ui/**", "/api/swagger-ui.html", "/api/v3/api-docs/**", "/api/swagger-resources/**");
 
     }
 }
