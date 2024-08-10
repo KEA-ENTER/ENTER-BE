@@ -1,9 +1,8 @@
 package kea.enter.enterbe.global.quartz.schedule;
 
 import jakarta.annotation.PostConstruct;
-import kea.enter.enterbe.global.quartz.job.CheckReportJob;
+import kea.enter.enterbe.global.quartz.job.CalculateWeight;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -16,24 +15,23 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
-public class CheckReportScheduler {
+public class WeightScheduler{
 
     private final SchedulerFactoryBean schedulerFactoryBean;
 
     @PostConstruct
     public void init() throws SchedulerException {
-
-        JobDetail job = JobBuilder.newJob(CheckReportJob.class)
-            .withIdentity("CheckReportJob", "Report")
-            .withDescription("인수 반납 보고서 제출을 확인한다.")
+        JobDetail job = JobBuilder.newJob(CalculateWeight.class)
+            .withIdentity("calculateWeight", "Lottery")
+            .withDescription("반기 별 당첨자를 조회하여 가중치를 계산한다.")
             .build();
 
         Trigger trigger = TriggerBuilder.newTrigger()
-            .withIdentity("CheckReportTrigger", "Report")
+            .withIdentity("calculateWeightTrigger", "Lottery")
             .startNow()
-            .withSchedule(CronScheduleBuilder.cronSchedule("0 0 10 * * ?"))
+            .withSchedule(CronScheduleBuilder.cronSchedule("0 0 8 ? * MON"))
             .build();
+
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         if (!scheduler.checkExists(job.getKey())) {
             schedulerFactoryBean.getScheduler().scheduleJob(job, trigger);
