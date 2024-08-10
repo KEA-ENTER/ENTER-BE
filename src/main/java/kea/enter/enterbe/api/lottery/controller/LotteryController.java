@@ -43,8 +43,8 @@ public class LotteryController {
         @Parameter(name = "Authorization", description = "Bearer Token", required = true,
             in = ParameterIn.HEADER, schema = @Schema(type = "string"))})
     @GetMapping("")
-    public ResponseEntity<List<GetLotteryResponse>> getLotteryList() {
-        Long memberId = 1l;
-        return ResponseEntity.ok(lotteryService.getLotteryList(GetLotteryServiceDto.of(memberId)));
+    public ResponseEntity<List<GetLotteryResponse>> getLotteryList(
+        Authentication authentication) {
+        return ResponseEntity.ok(lotteryService.getLotteryList(GetLotteryServiceDto.of(Long.valueOf(authentication.getName()))));
     }
 }
