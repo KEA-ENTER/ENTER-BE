@@ -31,11 +31,15 @@ public class CustomQuestionRepositoryImpl implements CustomQuestionRepository {
             if (searchType == QuestionSearchType.CATEGORY) {
                 // CATEGORY 검색일 경우 프론트에서 전달된 문자열을 Enum으로 매핑
                 QuestionCategory category = mapToCategoryEnum(keyword);
-                builder.and(question.category.eq(category));
+                if(category != null){
+                    builder.and(question.category.eq(category));
+                }
             } else if (searchType == QuestionSearchType.STATE) {
                 // STATE 검색일 경우 프론트에서 전달된 문자열을 Enum으로 매핑
                 QuestionState state = mapToStateEnum(keyword);
-                builder.and(question.state.eq(state));
+                if(state != null){
+                    builder.and(question.state.eq(state));
+                }
             } else if (searchType == QuestionSearchType.WRITER) {
                 builder.and(question.member.name.contains(keyword));
             } else if (searchType == QuestionSearchType.ALL) {
