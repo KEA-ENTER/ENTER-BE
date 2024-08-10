@@ -18,7 +18,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 
 @WebMvcTest(controllers = AdminVehicleController.class)
-@WithMockUser(username = "admin", roles = "ADMIN")
 class AdminVehicleControllerTest extends ControllerTestSupport {
 
     @DisplayName(value = "법인 차량 추가 Ctrl")

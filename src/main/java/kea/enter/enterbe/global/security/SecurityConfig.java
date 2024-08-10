@@ -4,7 +4,6 @@ package kea.enter.enterbe.global.security;
 import java.util.List;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -35,6 +34,8 @@ public class SecurityConfig {
     private static final List<String> CORS_METHODS = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "FETCH");
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -45,10 +46,15 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .httpBasic(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/auth/login", "/").permitAll()
-                .requestMatchers("/admin/**", "/actuator/**").hasRole("ADMIN")
+                .requestMatchers("/auth/login").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/**").hasRole("USER")
                 .anyRequest().authenticated()
+            )
+            .exceptionHandling(
+                exceptionHandling -> exceptionHandling
+                    .accessDeniedHandler(jwtAccessDeniedHandler)
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             )
             .formLogin(AbstractAuthenticationFilterConfigurer::disable)
             .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class);
@@ -87,12 +93,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
     public WebSecurityCustomizer configureH2ConsoleEnable() {
 
         return web -> web.ignoring()
-            .requestMatchers("/h2-console/**")
-            .requestMatchers("favicon.ico");
+            .requestMatchers("/","/actuator/**", "/h2-console/**", "/favicon.ico", "/api/swagger-ui/**", "/api/swagger-ui.html", "/api/v3/api-docs/**", "/api/swagger-resources/**");
 
     }
 }
