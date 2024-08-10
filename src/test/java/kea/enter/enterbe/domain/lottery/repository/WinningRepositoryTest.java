@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.domain.apply.entity.Apply;
+import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
@@ -35,8 +36,8 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        winningRepository.save(createWinning(apply));
         //when
         Optional<Winning> savedWinning = winningRepository.findByMemberIdAndTakeDateAndState(
             member.getId(), takeDate, WinningState.ACTIVE);
@@ -55,8 +56,8 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        winningRepository.save(createWinning(apply));
         //when
         Optional<Winning> savedWinning = winningRepository.findByMemberIdAndTakeDateAndState(
             wrongMemberId, takeDate, WinningState.ACTIVE);
@@ -75,8 +76,8 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember());
         ApplyRound applyRound = applyRoundRepository.save(
             createApplyRound(vehicle, takeDate, returnDate));
-        Apply apply = applyRepository.save(createApply(member, applyRound, vehicle));
-        winningRepository.save(createWinning(vehicle, apply));
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+        winningRepository.save(createWinning(apply));
         //when
         Optional<Winning> savedWinning = winningRepository.findByMemberIdAndTakeDateAndState(
             member.getId(), wrongDate, WinningState.ACTIVE);
@@ -95,11 +96,11 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = createApply(member1, applyRound, vehicle);
-        Apply apply2 = createApply(member2, applyRound, vehicle);
+        Apply apply1 = createApply(member1, applyRound);
+        Apply apply2 = createApply(member2, applyRound);
         applyRepository.saveAll(List.of(apply1, apply2));
 
-        Winning winning = winningRepository.save(createWinning(vehicle, apply1));
+        Winning winning = winningRepository.save(createWinning(apply1));
 
         // when
         List<Winning> winningList = winningRepository.findAllByApplyApplyRoundIdAndState(applyRound.getId(), WinningState.ACTIVE);
@@ -124,11 +125,11 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = createApply(member1, applyRound, vehicle);
-        Apply apply2 = createApply(member2, applyRound, vehicle);
+        Apply apply1 = createApply(member1, applyRound);
+        Apply apply2 = createApply(member2, applyRound);
         applyRepository.saveAll(List.of(apply1, apply2));
 
-        Winning winning = winningRepository.save(createWinning(vehicle, apply1));
+        Winning winning = winningRepository.save(createWinning(apply1));
         winning.deleteWinning();
 
         // when
@@ -155,8 +156,8 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember());
         Member member2 = memberRepository.save(createMember());
 
-        Apply apply1 = createApply(member1, applyRound1, vehicle);
-        Apply apply2 = createApply(member2, applyRound1, vehicle);
+        Apply apply1 = createApply(member1, applyRound1);
+        Apply apply2 = createApply(member2, applyRound1);
         applyRepository.saveAll(List.of(apply1, apply2));
 
         // when
@@ -166,12 +167,32 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         assertThat(applyList).isEmpty();
     }
 
-    private Winning createWinning(Vehicle vehicle, Apply apply) {
-        return Winning.of(vehicle, apply, WinningState.ACTIVE);
+    @Transactional
+    @DisplayName(value = "해당 신청 내역의 당첨 여부를 조회한다.")
+    @Test
+    public void findByApplyIdAndState() {
+        // given
+        Vehicle vehicle = vehicleRepository.save(createVehicle());
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024, 7, 29), LocalDate.of(2024, 7, 30)));
+
+        Member member = memberRepository.save(createMember());
+        Apply apply = applyRepository.save(createApply(member, applyRound));
+
+        winningRepository.save(createWinning(apply));
+
+        // when
+        Optional<Winning> winningOptional = winningRepository.findByApplyIdAndState(apply.getId(), WinningState.ACTIVE);
+
+        // then
+        assertThat(winningOptional).isPresent();
     }
 
-    private Apply createApply(Member member, ApplyRound applyRound, Vehicle vehicle) {
-        return Apply.of(member, applyRound, vehicle, "departures", "arrivals", ApplyState.ACTIVE);
+    private Winning createWinning(Apply apply) {
+        return Winning.of(apply, WinningState.ACTIVE);
+    }
+
+    private Apply createApply(Member member, ApplyRound applyRound) {
+        return Apply.of(member, applyRound, ApplyPurpose.EVENT, ApplyState.ACTIVE);
     }
 
     private ApplyRound createApplyRound(Vehicle vehicle, LocalDate takeDate, LocalDate returnDate) {
@@ -179,7 +200,7 @@ class WinningRepositoryTest extends IntegrationTestSupport {
     }
 
     private Member createMember() {
-        return Member.of("employeeNo", "name", "email", "password", LocalDate.of(1999,1,1), "licenseId",
+        return Member.of("name", "email", "password", LocalDate.of(1999,1,1), "licenseId",
             "licensePassword", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 

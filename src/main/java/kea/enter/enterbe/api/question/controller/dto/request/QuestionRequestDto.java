@@ -11,9 +11,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class QuestionRequestDto {
 
-    @NotNull(message = "멤버 아이디를 입력해야 합니다.")
-    @Schema(description = "멤버 ID", example = "2")
-    private Long memberId;
     @NotBlank(message = "내용을 입력해야 합니다.")
     @Schema(description = "문의사항 내용", example = "추첨 날짜는 언제인가요?")
     private String content;

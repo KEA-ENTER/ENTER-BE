@@ -14,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ApplyRepository extends JpaRepository<Apply, Long> {
+public interface ApplyRepository extends JpaRepository<Apply, Long>, ApplyCustomRepository {
     List<Apply> findAllByApplyRoundIdAndState(Long applyRoundId, ApplyState state);
 
     @Query("SELECT a.member.id FROM Apply a WHERE a.applyRound.id = :applyRoundId AND a.state = 'ACTIVE' ")
@@ -22,16 +22,33 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
     @Query("SELECT a.member FROM Apply a WHERE a.applyRound = :applyRound AND a.state = 'ACTIVE' ")
     List<Member> findMembersBydApplyRoundAndState(@Param("applyRound") ApplyRound applyRound);
+    List<Apply> findByApplyRoundAndMemberIdInAndState(ApplyRound applyRound, List<Long> memberIds, ApplyState state);
+    Integer countByApplyRoundRoundAndStateAndApplyRoundState(int round, ApplyState applyState, ApplyRoundState applyRoundState);
+    List<Apply> findAllByMemberIdAndState(Long memberId, ApplyState state);
+    Integer countByApplyRoundAndState(ApplyRound applyRound, ApplyState applyState);
+    Optional<Apply> findByIdAndState(Long applyId, ApplyState applyState);
+    Optional<Apply> findByIdAndMemberIdAndState(Long applyId, Long memberId, ApplyState state);
 
-    Integer countByApplyRoundApplyRoundAndStateAndApplyRoundState(int applyRound, ApplyState applyState, ApplyRoundState applyRoundState);
+    //해당 멤버가 특정 가지고 있는 신청에서 주어진 round가 맞는 신청을 가져옴
+    @Query("SELECT a FROM Apply a WHERE a.member.id = :memberId AND a.applyRound.round = :round AND a.state = :state")
+    Optional<Apply> findByMemberIdAndRoundAndState(
+        @Param("memberId") Long memberId,
+        @Param("round") Integer round,
+        @Param("state") ApplyState state
+    );
 
-    Optional<Apply> findByMemberAndApplyRoundAndState(Member member, ApplyRound applyRound, ApplyState state);
+    // 위의 Refactoring으로 대체됨
+    //Optional<Apply> findByMemberAndApplyRoundAndState(Member member, ApplyRound applyRound, ApplyState state);
 
     @Query("SELECT a FROM Apply a " +
         "WHERE a.member.id = :memberId " +
         "AND a.state = :state "+
         "AND a.createdAt BETWEEN :startOfRound AND :endOfRound"
     )
-    Optional<Apply> findByMemberIdAndStateCurrentWeek(Long memberId, ApplyState state, LocalDateTime startOfRound, LocalDateTime endOfRound);
+    Optional<Apply> findByMemberIdAndStateCurrentWeek(
+        @Param("memberId") Long memberId,
+        @Param("state") ApplyState state,
+        @Param("startOfRound") LocalDateTime startOfRound,
+        @Param("endOfRound") LocalDateTime endOfRound);
 
 }

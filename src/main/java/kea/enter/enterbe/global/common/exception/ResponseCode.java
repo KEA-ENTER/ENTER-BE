@@ -22,7 +22,8 @@ public enum ResponseCode {
     APPLY_NOT_FOUND("APL-ERR-001", HttpStatus.NOT_FOUND ,"지원 정보를 찾을 수 없습니다."),
     //WINNING
     WINNING_NOT_FOUND("WIN-ERR-001", HttpStatus.NOT_FOUND,"당첨 정보를 찾을 수 없습니다."),
-
+    //REPORT
+    NOT_REPORT_POST_TIME("REP-ERR-001",HttpStatus.BAD_REQUEST , "레포트 제출 시간이 아닙니다."),
     // APPLY_ROUND
     APPLY_ROUND_NOT_FOUND("APR-ERR-001", HttpStatus.NOT_FOUND, "신청 회차를 찾을 수 없습니다."),
 
@@ -35,8 +36,12 @@ public enum ResponseCode {
     VEHICLE_DUPLICATED("VHC_ERR_003", HttpStatus.BAD_REQUEST, "이미 존재하는 차량입니다."),
     NEED_PARKING_LOC_FOR_RETURN_REPORT("VHC-ERR-004",HttpStatus.BAD_REQUEST , "주차 위치를 입력해주세요."),
 
+    // VEHICLE REPORT
+    VEHICLE_REPORT_NOT_FOUND("VHR-ERR-001", HttpStatus.NOT_FOUND, "차량 보고서를 찾을 수 없습니다."),
+
     // PENALTY
     PENALTY_NOT_FOUND("PEN-ERR-001", HttpStatus.NOT_FOUND, "페널티를 찾을 수 없습니다."),
+    PENALTY_LEVEL_NOT_FOUND("PEN-ERR-002", HttpStatus.NOT_FOUND, "페널티 수준을 찾을 수 없습니다."),
 
     // AUTh
     PASSWORD_INCORRECT("AUT-ERR-001", HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다"),
@@ -57,9 +62,20 @@ public enum ResponseCode {
     // Question
     NOT_FOUND_MEMBER("MEM-ERR-001", HttpStatus.NOT_FOUND, "멤버가 존재하지 않습니다."),
     NOT_FOUND_QUESTION("QST-ERR-001", HttpStatus.NOT_FOUND, "문의사항이 존재하지 않습니다."),
-    INVALID_QUESTION_STATE("QST-ERR-002", HttpStatus.INTERNAL_SERVER_ERROR, "수정할 수 없는 문의 사항입니다."),
+    INVALID_QUESTION_STATE("QST-ERR-002", HttpStatus.INTERNAL_SERVER_ERROR, "수정할 수 없는 문의사항입니다."),
+    INVALID_QUESTION_STATE_COMPLETE("QST-ERR-003", HttpStatus.INTERNAL_SERVER_ERROR, "답변 완료된 문의사항입니다."),
+    INVALID_QUESTION_STATE_DELETE("QST-ERR-004", HttpStatus.INTERNAL_SERVER_ERROR, "삭제된 문의사항입니다."),
+    INVALID_QUESTION_SEARCH_CATEGORY("QST-ERR-005", HttpStatus.BAD_REQUEST, "잘못된 카테고리입니다."),
+    INVALID_QUESTION_SEARCH_STATE("QST-ERR-006", HttpStatus.BAD_REQUEST, "잘못된 상태입니다."),
 
-    NOT_IMAGE_FILE("GLB-ERR-004", HttpStatus.BAD_REQUEST, "이미지 파일이 아닙니다.");
+    // Email
+    FAILED_MAIL_CREATE("MAIL-ERR-001", HttpStatus.INTERNAL_SERVER_ERROR, "메일 생성에 실패했습니다."),
+    FAILED_MAIL_TEMPLATE("MAIL-ERR-002", HttpStatus.INTERNAL_SERVER_ERROR, "메일 template load에 실패했습니다."),
+    FAILED_MAIL_SEND("MAIL-ERR-003", HttpStatus.INTERNAL_SERVER_ERROR, "메일 전송에 실패했습니다."),
+
+
+    NOT_IMAGE_FILE("GLB-ERR-004", HttpStatus.BAD_REQUEST, "이미지 파일이 아닙니다."),
+    INVALID_QUARTZ_EXPRESSION_TRIGGER("GLB-ERR-005",HttpStatus.INTERNAL_SERVER_ERROR , "잘못된Quartz expression trigger입니다.");
 
 
     private final String code;

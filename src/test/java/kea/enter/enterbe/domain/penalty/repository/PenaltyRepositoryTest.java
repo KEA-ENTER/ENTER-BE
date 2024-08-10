@@ -189,7 +189,7 @@ class PenaltyRepositoryTest extends IntegrationTestSupport {
     }
 
     private Member createMember(MemberState state) {
-        return Member.of("1234", "name", "test@naver.com", "password", LocalDate.of(1999,11,28), "licenseId",
+        return Member.of("name", "test@naver.com", "password", LocalDate.of(1999,11,28), "licenseId",
             "licensePassword", true, true, 1, MemberRole.USER, state);
     }
 

@@ -9,7 +9,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kea.enter.enterbe.domain.apply.entity.Apply;
-import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,28 +22,23 @@ import lombok.NoArgsConstructor;
 public class Waiting extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_id", nullable = false)
-    private Vehicle vehicle;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apply_id", nullable = false)
     private Apply apply;
 
     @Column(name = "waiting_no")
-    private Integer waiting_no;
+    private Integer waitingNo;
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private WaitingState state;
 
     @Builder
-    public Waiting(Vehicle vehicle, Apply apply, int waiting_no) {
-        this.vehicle = vehicle;
+    public Waiting(Apply apply, int waitingNo) {
         this.apply = apply;
-        this.waiting_no = waiting_no;
+        this.waitingNo = waitingNo;
     }
 
-    public static Waiting of(Vehicle vehicle, Apply apply, int waiting_no) {
-        return Waiting.builder().vehicle(vehicle).apply(apply).waiting_no(waiting_no).build();
+    public static Waiting of(Apply apply, int waitingNo) {
+        return Waiting.builder().apply(apply).waitingNo(waitingNo).build();
     }
 }

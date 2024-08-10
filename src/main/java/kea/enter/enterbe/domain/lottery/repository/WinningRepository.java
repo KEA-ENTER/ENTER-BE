@@ -14,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WinningRepository extends JpaRepository<Winning, Long> {
+public interface WinningRepository extends JpaRepository<Winning, Long>, WinningCustomRepository {
 
     @Query(value = "SELECT w "
         + "FROM Winning w "
@@ -54,7 +54,15 @@ public interface WinningRepository extends JpaRepository<Winning, Long> {
         @Param("endDate") LocalDateTime endDate
     );
 
-    Integer countByApplyApplyRoundApplyRoundAndState(int applyRound, WinningState winningState);
+    Integer countByApplyApplyRoundRoundAndState(int round, WinningState winningState);
 
-    Optional<Winning> findByApplyAAndState(Apply apply, WinningState state);
+    List<Winning> findAllByApplyApplyRoundRoundAndState(int round, WinningState winningState);
+
+    Optional<Winning> findByApplyIdAndState(Long applyId, WinningState state);
+
+    Optional<Winning> findByApplyMemberIdAndApplyApplyRoundTakeDateBetweenAndState(Long memberId, LocalDate start, LocalDate end, WinningState winningState);
+
+    List<Winning> findAllByStateAndApplyApplyRoundReturnDate(WinningState state, LocalDate returnDate);
+
+    Optional<Winning> findByApplyAndState(Apply apply, WinningState state);
 }

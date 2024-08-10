@@ -1,11 +1,9 @@
 package kea.enter.enterbe.api.apply.service.dto;
 
-import kea.enter.enterbe.api.apply.controller.response.GetApplyResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

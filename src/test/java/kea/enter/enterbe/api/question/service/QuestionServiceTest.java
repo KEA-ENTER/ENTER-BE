@@ -2,6 +2,7 @@ package kea.enter.enterbe.api.question.service;
 
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.question.controller.dto.request.QuestionRequestDto;
+import kea.enter.enterbe.api.question.service.dto.CreateQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.ModifyQuestionServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
@@ -12,7 +13,6 @@ import kea.enter.enterbe.domain.question.entity.QuestionCategory;
 import kea.enter.enterbe.domain.question.entity.QuestionState;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
@@ -33,7 +33,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
         memberRepository.save(member);
 
         // given
-        QuestionRequestDto requestDto = new QuestionRequestDto(member.getId(), questionContentTest,
+        CreateQuestionServiceDto requestDto = new CreateQuestionServiceDto(member.getId(), questionContentTest,
             QuestionCategory.USER);
 
         // when
@@ -57,7 +57,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
         memberRepository.save(member);
 
         // given
-        QuestionRequestDto requestDto = new QuestionRequestDto(memberIdTest, questionContentTest,
+        CreateQuestionServiceDto requestDto = new CreateQuestionServiceDto(memberIdTest, questionContentTest,
             QuestionCategory.USER);
 
         // when & then
@@ -194,7 +194,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
     }
 
     private Member createMember() {
-        return Member.of("2", "name", "test@naver.com", "password", LocalDate.of(1999,11,28), "licenseId",
+        return Member.of("name", "test@naver.com", "password", LocalDate.of(1999,11,28), "licenseId",
             "licensePassword", true, true, 1, MemberRole.USER, MemberState.ACTIVE);
     }
 

@@ -14,7 +14,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByIdAndState(Long id, MemberState state);
 
-    Optional<Member> findMemberByEmail(String email);
+    Optional<Member> findMemberByEmailAndState(String email, MemberState state);
 
     Optional<List<Member>> findAllByState(MemberState state);
 

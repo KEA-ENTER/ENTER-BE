@@ -1,6 +1,7 @@
 package kea.enter.enterbe.api.vehicle.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Getter;
 
 @Getter
 public class AdminVehicleResponse {
+    // vehicle table
     @Schema(description = "차량 아이디", example = "1")
     private Long vehicleId;
 
@@ -39,9 +41,22 @@ public class AdminVehicleResponse {
     private VehicleState state;
 
 
+    // member table
+    @Schema(description = "작성자 이름 목록", example = "[\"김가천\", \"이나천\"]", required = false)
+    private List<String> names;
+
+    // vehicle_note table
+    @Schema(description = "특이사항 생성일 목록", example = "[\"2024-08-06\", \"2024-08-07\"]", required = false)
+    private List<String> reportCreatedAts;
+
+    @Schema(description = "특이사항 내용 목록", example = "[\"차량 내부가 너무 더럽습니다.\", \"차량 내부가 너무 더럽습니다.\"]", required = false)
+    private List<String> contents;
+
+
     @Builder
     public AdminVehicleResponse(Long vehicleId, String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, String img, String createdAt, String updatedAt, VehicleState state) {
+        int seats, VehicleFuel fuel, String img, String createdAt, String updatedAt,
+        VehicleState state, List<String> names, List<String> reportCreatedAts, List<String> contents) {
 
         this.vehicleId = vehicleId;
         this.vehicleNo = vehicleNo;
@@ -53,10 +68,14 @@ public class AdminVehicleResponse {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.state = state;
+        this.names = names;
+        this.reportCreatedAts = reportCreatedAts;
+        this.contents = contents;
     }
 
-    public static AdminVehicleResponse of(Long vehicleId, String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, String img, String createdAt, String updatedAt, VehicleState state) {
+    public static AdminVehicleResponse of(Long vehicleId, String vehicleNo, String company,
+        String model, int seats, VehicleFuel fuel, String img, String createdAt, String updatedAt,
+        VehicleState state, List<String> names, List<String> reportCreatedAts, List<String> contents) {
 
         return AdminVehicleResponse.builder()
             .vehicleId(vehicleId)
@@ -69,6 +88,9 @@ public class AdminVehicleResponse {
             .createdAt(createdAt)
             .updatedAt(updatedAt)
             .state(state)
+            .names(names)
+            .reportCreatedAts(reportCreatedAts)
+            .contents(contents)
             .build();
     }
 }

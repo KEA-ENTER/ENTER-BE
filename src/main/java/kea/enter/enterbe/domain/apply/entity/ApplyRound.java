@@ -31,8 +31,8 @@ public class ApplyRound extends BaseEntity {
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
-    @Column(name = "apply_round", nullable = false)
-    private Integer applyRound;
+    @Column(name = "round", nullable = false)
+    private Integer round;
 
     @Column(name = "take_date")
     private LocalDate takeDate;
@@ -48,20 +48,20 @@ public class ApplyRound extends BaseEntity {
     private List<Apply> applyList = new ArrayList<>();
 
     @Builder
-    public ApplyRound(Vehicle vehicle, Integer applyRound, LocalDate takeDate, LocalDate returnDate,
+    public ApplyRound(Vehicle vehicle, Integer round, LocalDate takeDate, LocalDate returnDate,
         ApplyRoundState state) {
         this.vehicle = vehicle;
         this.takeDate = takeDate;
         this.returnDate = returnDate;
-        this.applyRound = applyRound;
+        this.round = round;
         this.state = state;
     }
 
-    public static ApplyRound of(Vehicle vehicle, Integer applyRound, LocalDate takeDate,
+    public static ApplyRound of(Vehicle vehicle, Integer round, LocalDate takeDate,
         LocalDate returnDate, ApplyRoundState state) {
         return ApplyRound.builder()
             .vehicle(vehicle)
-            .applyRound(applyRound)
+            .round(round)
             .takeDate(takeDate)
             .returnDate(returnDate)
             .state(state)

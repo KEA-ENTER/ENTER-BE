@@ -1,6 +1,5 @@
 package kea.enter.enterbe.api.question.service.dto;
 
-import kea.enter.enterbe.api.penalty.service.dto.DeletePenaltyServiceDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
