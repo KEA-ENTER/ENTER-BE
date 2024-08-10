@@ -36,7 +36,7 @@ public class LotteryController {
     }
 
     @Operation(summary = "당첨 여부 조회")
-    @GetMapping("resultes")
+    @GetMapping("result")
     public ResponseEntity<GetLotteryResponse> getLottery(Authentication authentication) {
         Long memberId = Long.valueOf(authentication.getName());
         return ResponseEntity.ok(lotteryService.getLottery(GetLotteryServiceDto.of(memberId)));

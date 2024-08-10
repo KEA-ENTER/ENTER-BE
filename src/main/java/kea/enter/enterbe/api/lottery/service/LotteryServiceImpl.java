@@ -6,6 +6,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentCompetitionRateResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAverageNumbersResponse;
@@ -16,6 +21,7 @@ import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
+import kea.enter.enterbe.domain.lottery.entity.Waiting;
 import kea.enter.enterbe.domain.lottery.entity.WaitingState;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
@@ -105,6 +111,19 @@ public class LotteryServiceImpl implements LotteryService {
         return list;
     }
 
+
+    @Operation(summary = "당첨 여부 조회",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "당첨 여부 응답",
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = GetLotteryResponse.class),
+                    examples = {
+                        @ExampleObject(name = "당첨된 경우", value = "{\"winning\": true, \"waitingNumber\": null}"),
+                        @ExampleObject(name = "대기 중인 경우", value = "{\"winning\": false, \"waitingNumber\": 123}"),
+                        @ExampleObject(name = "탈락된 경우", value = "{\"winning\": false, \"waitingNumber\": null}")
+                    }
+                ))
+        })
     @Override
     public GetLotteryResponse getLottery(GetLotteryServiceDto dto) {
         Long memberId = dto.getMemeberId();
@@ -113,7 +132,32 @@ public class LotteryServiceImpl implements LotteryService {
         Optional<Apply> applyOptional= findByMemberIdAndRound(memberId, maxRound);
         Apply recentlyApply = applyOptional.orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
 
-        return null;
+        Optional<Winning> winningOptional = findWinningByApplyId(recentlyApply.getId());
+        //winning 테이블에 없을 경우 -> 대기 or 탈락
+        if (!winningOptional.isPresent()) {
+            Optional<Waiting> waitingOptional = finWaittingdByApplyId(recentlyApply.getId());
+            //waiting 테이블에 없을 경우 -> 탈락
+            if (!waitingOptional.isPresent()) {
+                return GetLotteryResponse.builder()
+                    .winning(false)
+                    .waitingNumber(null)
+                    .build();
+            }
+            //waiting 테이블에 있을 경우 -> 대기
+            else {
+                return GetLotteryResponse.builder()
+                    .winning(false)
+                    .waitingNumber(waitingOptional.get().getWaitingNo())
+                    .build();
+            }
+        }
+        // winning 테이블에 있을 경우 -> 당첨
+        else {
+            return GetLotteryResponse.builder()
+                .winning(true)
+                .waitingNumber(null)
+                .build();
+        }
     }
 
     private List<ApplyRound> getApplyRoundByThisWeek() {
@@ -131,5 +175,11 @@ public class LotteryServiceImpl implements LotteryService {
     }
     public Optional<Apply> findByMemberIdAndRound(Long memberId, int maxRound) {
         return applyRepository.findByMemberIdAndRoundAndState(memberId, maxRound, ApplyState.ACTIVE);
+    }
+    public Optional<Winning> findWinningByApplyId(Long applyId){
+        return winningRepository.findByApplyIdAndState(applyId, WinningState.ACTIVE);
+    }
+    public Optional<Waiting> finWaittingdByApplyId(Long applyId){
+        return waitingRepository.findByApplyIdAndState(applyId, WaitingState.ACTIVE);
     }
 }
