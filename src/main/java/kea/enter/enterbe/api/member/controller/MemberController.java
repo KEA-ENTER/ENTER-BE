@@ -8,6 +8,7 @@ import kea.enter.enterbe.api.member.controller.dto.response.GetRoutingResponse;
 import kea.enter.enterbe.api.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,23 +24,22 @@ public class MemberController {
 
     @Operation(summary = "가중치 조회")
     @PostMapping(value = "/score")
-    public ResponseEntity<GetMemberScoreResponse> getMemberScorePercent() {
-        //todo: spring security 구현 완료 시 token에서 memberId 값 가져오기
-        Long memberId = 1L;
+    public ResponseEntity<GetMemberScoreResponse> getMemberScorePercent(Authentication authentication) {
+        Long memberId = Long.valueOf(authentication.getName());
         return ResponseEntity.ok(memberService.getMemberScorePercent(memberId));
     }
 
     @Operation(summary = "사용자 어떤 보고서 제출해야하는지 조회")
     @GetMapping(value = "/report/post-type")
-    public ResponseEntity<GetMemberPostReportTypeResponse> getMemberPostReportType() {
-        Long memberId = 1L;
+    public ResponseEntity<GetMemberPostReportTypeResponse> getMemberPostReportType(Authentication authentication) {
+        Long memberId = Long.valueOf(authentication.getName());
         return ResponseEntity.ok(memberService.getMemberPostReportType(memberId));
     }
 
     @Operation(summary = "사용자 라우팅 정보 조회 (차량 신청 메뉴에 접근했을 때 라우팅)")
     @GetMapping(value = "/routing")
-    public ResponseEntity<GetRoutingResponse> getUserRoutingInformation() {
-        Long memberId = 1L;
+    public ResponseEntity<GetRoutingResponse> getUserRoutingInformation(Authentication authentication) {
+        Long memberId = Long.valueOf(authentication.getName());
         return ResponseEntity.ok(memberService.getRoutingInformation(memberId));
     }
 }
