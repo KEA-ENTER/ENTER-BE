@@ -5,8 +5,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentCompetitionRateResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAverageNumbersResponse;
+import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
@@ -96,6 +98,10 @@ public class LotteryServiceImpl implements LotteryService {
             list.add(GetRecentWaitingAverageNumbersResponse.of(i, String.format("%.2f", result)));
         }
         return list;
+    }
+
+    public List<GetLotteryResponse> getLotteryList(GetLotteryServiceDto dto) {
+        return applyRepository.findAllLotteryResponsebyId(dto.getMemberId());
     }
 
     private List<ApplyRound> getApplyRoundByThisWeek() {
