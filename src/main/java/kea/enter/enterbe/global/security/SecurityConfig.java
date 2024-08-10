@@ -35,6 +35,8 @@ public class SecurityConfig {
     private static final List<String> CORS_METHODS = List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "FETCH");
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -49,6 +51,11 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**", "/actuator/**").hasRole("ADMIN")
                 .requestMatchers("/**").hasRole("USER")
                 .anyRequest().authenticated()
+            )
+            .exceptionHandling(
+                exceptionHandling -> exceptionHandling
+                    .accessDeniedHandler(jwtAccessDeniedHandler)
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             )
             .formLogin(AbstractAuthenticationFilterConfigurer::disable)
             .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class);
