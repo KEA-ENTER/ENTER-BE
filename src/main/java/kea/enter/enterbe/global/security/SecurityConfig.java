@@ -4,7 +4,6 @@ package kea.enter.enterbe.global.security;
 import java.util.List;
 import kea.enter.enterbe.api.auth.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -94,7 +93,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
     public WebSecurityCustomizer configureH2ConsoleEnable() {
 
         return web -> web.ignoring()
