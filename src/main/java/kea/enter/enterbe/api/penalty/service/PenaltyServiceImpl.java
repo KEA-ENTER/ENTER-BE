@@ -2,12 +2,17 @@ package kea.enter.enterbe.api.penalty.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import io.swagger.v3.oas.annotations.media.Schema;
 import kea.enter.enterbe.api.penalty.controller.dto.response.GetPenaltyListResponse;
+import kea.enter.enterbe.api.penalty.controller.dto.response.GetPenaltyResponse;
 import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
+import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyServiceDto;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
 import kea.enter.enterbe.domain.penalty.entity.Penalty;
 import kea.enter.enterbe.domain.penalty.entity.PenaltyLevel;
+import kea.enter.enterbe.domain.penalty.entity.PenaltyReason;
 import kea.enter.enterbe.domain.penalty.entity.PenaltyState;
 import kea.enter.enterbe.domain.penalty.repository.PenaltyRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
@@ -32,15 +37,13 @@ public class PenaltyServiceImpl implements PenaltyService {
         List<Penalty> penaltyList = penaltyRepository.findAllByMemberIdAndStateOrderByCreatedAt(dto.getMemberId(), PenaltyState.ACTIVE);
 
         List<GetPenaltyListResponse> responses = new ArrayList<>();
-        String level;
 
         for (Penalty penalty : penaltyList) {
-            level = PenaltyLevel.getDuration(penalty.getLevel());
 
             responses.add(GetPenaltyListResponse.builder()
                     .penaltyId(penalty.getId())
                     .reason(penalty.getReason())
-                    .level(level)
+                    .level(PenaltyLevel.getDuration(penalty.getLevel()))
                     .createdAt(penalty.getCreatedAt().toLocalDate().toString())
                 .build());
         }
@@ -48,4 +51,19 @@ public class PenaltyServiceImpl implements PenaltyService {
         return responses;
     }
 
+    public GetPenaltyResponse getPenalty(GetPenaltyServiceDto dto) {
+        memberRepository.findByIdAndState(dto.getMemberId(), MemberState.ACTIVE)
+            .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
+
+        Penalty penalty = penaltyRepository.findByIdAndMemberIdAndState(dto.getPenaltyId(), dto.getMemberId(), PenaltyState.ACTIVE)
+            .orElseThrow(() -> new CustomException(ResponseCode.PENALTY_NOT_FOUND));
+
+        return GetPenaltyResponse.builder()
+            .penaltyId(penalty.getId())
+            .reason(penalty.getReason())
+            .level(PenaltyLevel.getDuration(penalty.getLevel()))
+            .etc(penalty.getEtc())
+            .createdAt(penalty.getCreatedAt().toLocalDate().toString())
+            .build();
+    }
 }
