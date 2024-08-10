@@ -15,12 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 
-
+@WithMockUser(roles = "USER")
 class VehicleControllerTest extends ControllerTestSupport {
 
     @DisplayName(value = "보고서를 작성한다.")
     @Test
-    @WithMockUser(roles = "USER")
     public void postVehicleReport() throws Exception {
         //given
         MockMultipartFile image1 = new MockMultipartFile("front_img", "test.jpg",

@@ -25,6 +25,8 @@ import kea.enter.enterbe.api.vehicle.controller.VehicleController;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.global.redis.RedisUtil;
+import kea.enter.enterbe.global.security.JwtAccessDeniedHandler;
+import kea.enter.enterbe.global.security.JwtAuthenticationEntryPoint;
 import kea.enter.enterbe.global.security.JwtUtil;
 import kea.enter.enterbe.global.security.SecurityConfig;
 import kea.enter.enterbe.global.util.FileUtil;
@@ -81,6 +83,10 @@ public abstract class ControllerTestSupport {
     protected RedisUtil redisUtil;
     @MockBean
     protected JwtUtil jwtUtil;
+    @MockBean
+    protected JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @MockBean
+    protected JwtAccessDeniedHandler jwtAccessDeniedHandler;
     @Autowired
     protected MockMvc mockMvc;
     @Autowired

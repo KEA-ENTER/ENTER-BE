@@ -16,9 +16,11 @@ import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
+@WithMockUser(roles = "ADMIN")
 class AdminVehicleServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName(value = "법인 차량 추가 Serv (성공)")
