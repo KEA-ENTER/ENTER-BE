@@ -63,6 +63,8 @@ public enum ResponseCode {
     INVALID_QUESTION_STATE("QST-ERR-002", HttpStatus.INTERNAL_SERVER_ERROR, "수정할 수 없는 문의사항입니다."),
     INVALID_QUESTION_STATE_COMPLETE("QST-ERR-003", HttpStatus.INTERNAL_SERVER_ERROR, "답변 완료된 문의사항입니다."),
     INVALID_QUESTION_STATE_DELETE("QST-ERR-004", HttpStatus.INTERNAL_SERVER_ERROR, "삭제된 문의사항입니다."),
+    INVALID_QUESTION_SEARCH_CATEGORY("QST-ERR-005", HttpStatus.BAD_REQUEST, "잘못된 카테고리입니다."),
+    INVALID_QUESTION_SEARCH_STATE("QST-ERR-006", HttpStatus.BAD_REQUEST, "잘못된 상태입니다."),
 
     // Email
     FAILED_MAIL_CREATE("MAIL-ERR-001", HttpStatus.INTERNAL_SERVER_ERROR, "메일 생성에 실패했습니다."),
