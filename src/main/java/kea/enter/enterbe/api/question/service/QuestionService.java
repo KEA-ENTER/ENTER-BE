@@ -1,8 +1,9 @@
 package kea.enter.enterbe.api.question.service;
 
-import kea.enter.enterbe.api.question.controller.dto.request.QuestionRequestDto;
+import kea.enter.enterbe.api.question.controller.dto.response.GetQuestionListResponseDto;
 import kea.enter.enterbe.api.question.service.dto.CreateQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
+import kea.enter.enterbe.api.question.service.dto.GetQuestionListServiceDto;
 import kea.enter.enterbe.api.question.service.dto.ModifyQuestionServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
@@ -13,8 +14,18 @@ import kea.enter.enterbe.domain.question.repository.QuestionRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +78,41 @@ public class QuestionService {
         question.modifyQuestion(modifyDto.getContent(), modifyDto.getCategory(), QuestionState.WAIT);
     }
 
+    /* 문의사항 List 조회 API (사용자) */
+    @Transactional
+    public GetQuestionListResponseDto getQuestionList(GetQuestionListServiceDto dto) {
+
+        /* 문의사항 List 조회 */
+        // 삭제된 질문사항 제외
+        List<Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdAt"));
+        Pageable pageable = PageRequest.of(dto.getPageNumber() - 1, 8, Sort.by(sorts));
+        Page<Question> questions = questionRepository.searchQuestions(dto.getKeyword(),
+            dto.getSearchType(), pageable);
+
+        // getContent를 통해 리스트로 변환
+        List<GetQuestionListResponseDto.QuestionDetailDto> questionDetailDtos = new ArrayList<>();
+        for (Question question : questions.getContent()) {
+            questionDetailDtos.add(
+                GetQuestionListResponseDto.QuestionDetailDto.of(
+                    question.getId(),
+                    question.getMember().getName(),
+                    question.getContent(),
+                    question.getCategory(),
+                    localDateTimeToString(question.getCreatedAt()),
+                    question.getState()
+                )
+            );
+        }
+
+        return GetQuestionListResponseDto.of(
+            questionDetailDtos,
+            questions.getTotalPages(),
+            questions.hasNext()
+        );
+
+    }
+
     // memberId로 멤버의 존재 여부와 상태를 검사하는 메소드
     private Member getActiveMemberById(Long memberId) {
         return memberRepository.findByIdAndState(memberId, MemberState.ACTIVE)
@@ -77,5 +123,11 @@ public class QuestionService {
     private Question getQuestionByIdAndMemberId(Long questionId, Long memberId) {
         return questionRepository.findByIdAndMemberId(questionId, memberId)
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_QUESTION));
+    }
+
+    public String localDateTimeToString(LocalDateTime localDateTime) {
+        Date date = java.sql.Timestamp.valueOf(localDateTime);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(date);
     }
 }
