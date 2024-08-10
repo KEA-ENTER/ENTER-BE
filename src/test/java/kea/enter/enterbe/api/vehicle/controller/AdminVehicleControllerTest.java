@@ -4,7 +4,6 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import kea.enter.enterbe.ControllerTestSupport;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.AdminVehicleRequest;
@@ -13,15 +12,19 @@ import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import org.apache.hc.core5.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.security.test.context.support.WithMockUser;
 
+@WebMvcTest(controllers = AdminVehicleController.class)
+@WithMockUser(username = "admin", roles = "ADMIN")
 class AdminVehicleControllerTest extends ControllerTestSupport {
+
     @DisplayName(value = "법인 차량 추가 Ctrl")
     @Test
-    public void createVehicle() throws Exception {
+    @WithMockUser(roles = "ADMIN")
+    void createVehicle() throws Exception {
         // given
         String vehicleNo = "12가3456";
         String company = "현대";

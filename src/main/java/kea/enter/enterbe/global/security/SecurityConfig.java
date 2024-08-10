@@ -48,7 +48,7 @@ public class SecurityConfig {
             .httpBasic(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/auth/login", "/").permitAll()
-                .requestMatchers("/admin/**", "/test").hasRole("ADMIN")
+                .requestMatchers("/admin/**", "/actuator/**").hasRole("ADMIN")
                 .requestMatchers("/**").hasRole("USER")
                 .anyRequest().authenticated()
             )
@@ -68,7 +68,7 @@ public class SecurityConfig {
         UserDetails localhost = User.builder()
             .username("localhost")
             .password(passwordEncoder().encode("localhost"))
-            .roles("USER")
+            .roles("ADMIN")
             .build();
 
         return new InMemoryUserDetailsManager(localhost);
