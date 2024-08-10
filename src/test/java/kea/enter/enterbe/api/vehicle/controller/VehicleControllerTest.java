@@ -1,5 +1,10 @@
 package kea.enter.enterbe.api.vehicle.controller;
 
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import kea.enter.enterbe.ControllerTestSupport;
@@ -8,17 +13,14 @@ import org.apache.hc.core5.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
-
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.security.test.context.support.WithMockUser;
 
 
 class VehicleControllerTest extends ControllerTestSupport {
 
     @DisplayName(value = "보고서를 작성한다.")
     @Test
+    @WithMockUser(roles = "USER")
     public void postVehicleReport() throws Exception {
         //given
         MockMultipartFile image1 = new MockMultipartFile("front_img", "test.jpg",

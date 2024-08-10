@@ -48,8 +48,7 @@ public class ProcessingLottery implements Job {
     }
 
     public List<Long> getApplyRoundIdList() { // 가장 최신 회차 가져오기
-        Integer round = applyRoundRepository.findMaxRoundByState(ApplyRoundState.ACTIVE).orElseThrow(
-            () -> new CustomException(ResponseCode.APPLY_ROUND_NOT_FOUND));
+        Integer round = applyRoundRepository.findMaxRoundByState(ApplyRoundState.ACTIVE);
         // 가장 최신 회차(round)를 찾는다
 
         return applyRoundRepository.findIdByStateAndRound(ApplyRoundState.ACTIVE, round);
