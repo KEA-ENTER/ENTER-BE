@@ -46,7 +46,7 @@ public class AdminVehicleController {
     @GetMapping("")
     public GetAdminVehicleListResponse getVehicleList(
         @PageableDefault(size = 4) Pageable pageable,
-        @ModelAttribute GetAdminVehicleListRequest request) {
+        @ModelAttribute @Valid GetAdminVehicleListRequest request) {
 
         return adminVehicleService.getVehicleList(
             GetVehicleListServiceDto.of(
