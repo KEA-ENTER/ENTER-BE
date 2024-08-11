@@ -6,6 +6,7 @@ import kea.enter.enterbe.api.apply.service.ApplyService;
 import kea.enter.enterbe.api.lottery.service.AdminLotteryService;
 import kea.enter.enterbe.api.member.service.LicenseService;
 import kea.enter.enterbe.api.lottery.service.LotteryService;
+import kea.enter.enterbe.api.member.service.MemberService;
 import kea.enter.enterbe.api.penalty.service.AdminPenaltyService;
 import kea.enter.enterbe.api.question.service.AnswerService;
 import kea.enter.enterbe.api.question.service.EmailService;
@@ -58,6 +59,8 @@ public abstract class IntegrationTestSupport {
     protected AdminVehicleService adminVehicleService;
     @Autowired
     protected LicenseService licenseService;
+    @Autowired
+    protected MemberService memberService;
 
     @Autowired
     protected VehicleRepository vehicleRepository;

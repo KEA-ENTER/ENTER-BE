@@ -2,21 +2,19 @@ package kea.enter.enterbe.api.lottery.service.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-public class GetLotteryServiceDto {
-    private Long memeberId;
+    public class GetLotteryServiceDto {
+    private Long memberId;
 
     @Builder
-    public GetLotteryServiceDto(Long memeberId){
-        this.memeberId = memeberId;
+    public GetLotteryServiceDto(Long memberId) {
+        this.memberId = memberId;
     }
 
-    public static GetLotteryServiceDto of(Long memeberId){
+    public static GetLotteryServiceDto of(Long memberId) {
         return GetLotteryServiceDto.builder()
-            .memeberId(memeberId)
+            .memberId(memberId)
             .build();
     }
 }

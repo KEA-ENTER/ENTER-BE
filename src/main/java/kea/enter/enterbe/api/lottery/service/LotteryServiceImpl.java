@@ -6,14 +6,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResultResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentCompetitionRateResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAverageNumbersResponse;
+import kea.enter.enterbe.api.lottery.service.dto.GetLotteryResultServiceDto;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
@@ -111,25 +108,12 @@ public class LotteryServiceImpl implements LotteryService {
         return list;
     }
 
-
-    @Operation(summary = "당첨 여부 조회",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "당첨 여부 응답",
-                content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = GetLotteryResponse.class),
-                    examples = {
-                        @ExampleObject(name = "당첨된 경우", value = "{\"winning\": true, \"waitingNumber\": null}"),
-                        @ExampleObject(name = "대기 중인 경우", value = "{\"winning\": false, \"waitingNumber\": 123}"),
-                        @ExampleObject(name = "탈락된 경우", value = "{\"winning\": false, \"waitingNumber\": null}")
-                    }
-                ))
-        })
     @Override
-    public GetLotteryResponse getLottery(GetLotteryServiceDto dto) {
+    public GetLotteryResultResponse getLottery(GetLotteryResultServiceDto dto) {
         Long memberId = dto.getMemeberId();
         int maxRound = getMaxRoundByState();
 
-        Optional<Apply> applyOptional= findByMemberIdAndRound(memberId, maxRound);
+        Optional<Apply> applyOptional = findByMemberIdAndRound(memberId, maxRound);
         Apply recentlyApply = applyOptional.orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
 
         Optional<Winning> winningOptional = findWinningByApplyId(recentlyApply.getId());
@@ -138,17 +122,21 @@ public class LotteryServiceImpl implements LotteryService {
             Optional<Waiting> waitingOptional = finWaittingdByApplyId(recentlyApply.getId());
             //waiting 테이블에 없을 경우 -> 탈락
             if (!waitingOptional.isPresent()) {
-                return GetLotteryResponse.of(false, null);
+                return GetLotteryResultResponse.of(false, null);
             }
             //waiting 테이블에 있을 경우 -> 대기
             else {
-                return GetLotteryResponse.of(false, waitingOptional.get().getWaitingNo());
+                return GetLotteryResultResponse.of(false, waitingOptional.get().getWaitingNo());
             }
         }
         // winning 테이블에 있을 경우 -> 당첨
         else {
-            return GetLotteryResponse.of(true, null);
+            return GetLotteryResultResponse.of(true, null);
         }
+    }
+
+    public List<GetLotteryResponse> getLotteryList(GetLotteryServiceDto dto) {
+        return applyRepository.findAllLotteryResponsebyId(dto.getMemberId());
     }
 
     private List<ApplyRound> getApplyRoundByThisWeek() {

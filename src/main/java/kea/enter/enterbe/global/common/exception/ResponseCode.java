@@ -17,6 +17,7 @@ public enum ResponseCode {
     LICENSE_AUTHENTICITY_INCORRECT("MEM-ERR-004", HttpStatus.BAD_REQUEST, "면허 정보가 유효하지 않습니다."),
     NOT_APPLY_PERIOD("MEM-ERR-005", HttpStatus.NOT_FOUND, "신청 기간이 아닙니다."),
     AGE_NOT_ALLOWED("MEM-ERR-006", HttpStatus.NOT_FOUND, "만 나이가 26살 미만입니다."),
+    ROUTING_NOT_FOUND("MEM-ERR-007", HttpStatus.NOT_FOUND, "라우팅 정보를 찾을 수 없습니다."),
     //APPLY
     APPLY_NOT_FOUND("APL-ERR-001", HttpStatus.NOT_FOUND ,"지원 정보를 찾을 수 없습니다."),
     //WINNING
@@ -40,8 +41,9 @@ public enum ResponseCode {
 
     // PENALTY
     PENALTY_NOT_FOUND("PEN-ERR-001", HttpStatus.NOT_FOUND, "페널티를 찾을 수 없습니다."),
+    PENALTY_LEVEL_NOT_FOUND("PEN-ERR-002", HttpStatus.NOT_FOUND, "페널티 수준을 찾을 수 없습니다."),
 
-    // AUTh
+    // AUTH
     PASSWORD_INCORRECT("AUT-ERR-001", HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다"),
     ALREADY_LOGGED_IN("AUT-ERR-002", HttpStatus.BAD_REQUEST, "이미 로그인 되어있습니다."),
     NOT_FOUND_USER("AUT-ERR-003", HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
@@ -51,6 +53,8 @@ public enum ResponseCode {
     EXPIRED_TOKEN("AUT-ERR-007", HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
     UNSUPPORTED_TOKEN("AUT-ERR-008", HttpStatus.UNAUTHORIZED, "지원되지 않는 토큰입니다."),
     INVALID_HEADER_OR_COMPACT_JWT("AUT-ERR-009", HttpStatus.UNAUTHORIZED, "헤더 또는 컴팩트 JWT가 잘못되었습니다."),
+    UNAUTHORIZED("AUT-ERR-010", HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
+    FORBIDDEN("AUT-ERR-011", HttpStatus.FORBIDDEN, "권한이 없습니다."),
 
     //GLOBAL
     BAD_REQUEST("GLB-ERR-001", HttpStatus.NOT_FOUND, "잘못된 요청입니다."),
@@ -63,6 +67,8 @@ public enum ResponseCode {
     INVALID_QUESTION_STATE("QST-ERR-002", HttpStatus.INTERNAL_SERVER_ERROR, "수정할 수 없는 문의사항입니다."),
     INVALID_QUESTION_STATE_COMPLETE("QST-ERR-003", HttpStatus.INTERNAL_SERVER_ERROR, "답변 완료된 문의사항입니다."),
     INVALID_QUESTION_STATE_DELETE("QST-ERR-004", HttpStatus.INTERNAL_SERVER_ERROR, "삭제된 문의사항입니다."),
+    INVALID_QUESTION_SEARCH_CATEGORY("QST-ERR-005", HttpStatus.BAD_REQUEST, "잘못된 카테고리입니다."),
+    INVALID_QUESTION_SEARCH_STATE("QST-ERR-006", HttpStatus.BAD_REQUEST, "잘못된 상태입니다."),
 
     // Email
     FAILED_MAIL_CREATE("MAIL-ERR-001", HttpStatus.INTERNAL_SERVER_ERROR, "메일 생성에 실패했습니다."),
