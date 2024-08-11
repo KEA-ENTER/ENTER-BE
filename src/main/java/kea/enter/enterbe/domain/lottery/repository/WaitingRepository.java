@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
-    int findWaitingNoByApplyIdAndState(Long id, WaitingState winningState);
-
+    int findWaitingNoByApplyIdAndState(Long id, WaitingState waitingState);
+    Optional<Waiting> findByApplyIdAndState(Long applyId, WaitingState waitingState);
     Optional<Waiting> findByApplyAndState(Apply apply, WaitingState winningState);
 }
