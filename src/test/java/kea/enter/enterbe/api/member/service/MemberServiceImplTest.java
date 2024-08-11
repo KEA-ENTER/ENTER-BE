@@ -23,7 +23,7 @@ import java.time.ZoneId;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-class MemberServiceImplTest extends IntegrationTestSupport {
+class MemberSerRviceImplTest extends IntegrationTestSupport {
 
     @DisplayName("신청 기간에 신청자인지 아직 사원 상태인지 확인한다. (성공 : 신청자)")
     @Test
@@ -31,7 +31,7 @@ class MemberServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember());
         Vehicle vehicle = vehicleRepository.save(createVehicle());
-        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024,8,11)));
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024,8,5)));
         Apply apply = applyRepository.save(createApply(member, applyRound));
         // 월요일 11시로 고정
         given(clock.instant()).willReturn(Instant.parse("2024-08-05T11:00:00Z"));
@@ -53,9 +53,9 @@ class MemberServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember());
         Vehicle vehicle = vehicleRepository.save(createVehicle());
-        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024,8,11)));
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024,8,5)));
         // 월요일 11시로 고정
-        given(clock.instant()).willReturn(Instant.parse("2024-08-05T11:00:00Z"));
+        given(clock.instant()).willReturn(Instant.parse("2024-08-12T11:00:00Z"));
         given(clock.getZone()).willReturn(ZoneId.systemDefault());
 
         Long memberId = member.getId();
