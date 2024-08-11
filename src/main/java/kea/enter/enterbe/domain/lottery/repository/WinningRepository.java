@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import kea.enter.enterbe.api.lottery.service.dto.WeightDto;
+import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,7 +41,7 @@ public interface WinningRepository extends JpaRepository<Winning, Long>, Winning
         @Param("returnDate") LocalDate returnDate,
         @Param("state") WinningState state
     );
-  
+
     List<Winning> findAllByApplyApplyRoundIdAndState(Long applyRoundId, WinningState state);
 
     @Query("SELECT new kea.enter.enterbe.api.lottery.service.dto.WeightDto(w.id, COUNT(w.id)) " +
@@ -56,10 +57,12 @@ public interface WinningRepository extends JpaRepository<Winning, Long>, Winning
     Integer countByApplyApplyRoundRoundAndState(int round, WinningState winningState);
 
     List<Winning> findAllByApplyApplyRoundRoundAndState(int round, WinningState winningState);
-  
+
     Optional<Winning> findByApplyIdAndState(Long applyId, WinningState state);
 
     Optional<Winning> findByApplyMemberIdAndApplyApplyRoundTakeDateBetweenAndState(Long memberId, LocalDate start, LocalDate end, WinningState winningState);
 
     List<Winning> findAllByStateAndApplyApplyRoundReturnDate(WinningState state, LocalDate returnDate);
+
+    Optional<Winning> findByApplyAndState(Apply apply, WinningState state);
 }
