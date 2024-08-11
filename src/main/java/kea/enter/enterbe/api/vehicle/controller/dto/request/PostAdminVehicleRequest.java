@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
+import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleServiceDto;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor
-public class AdminVehicleRequest {
+public class PostAdminVehicleRequest {
     @Schema(description = "차량 아이디", example = "1")
     @Positive(message = "양수만 가능합니다.")
     private Long id;
@@ -42,13 +42,13 @@ public class AdminVehicleRequest {
     @Schema(description = "차량 이미지", example = "")
     private MultipartFile img;
 
-    @Schema(description = "차량 상태", example = "")
-    @NotNull(message = "차량 상태를 입력해야 합니다.")
+    @Schema(description = "차량 상태", example = "AVAILABLE")
+    @NotNull(message = "차량 상태를 입력해야 합니다. (AVAILABLE, WAIT_TAKE, TAKE_COMPLETE, ON_RENT, WAIT_RETURN, RETURN_COMPLETE, RENT_UNAVAILABLE, INACTIVE)")
     private VehicleState state;
 
 
     @Builder
-    public AdminVehicleRequest(Long id, String vehicleNo, String company, String model, int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
+    public PostAdminVehicleRequest(Long id, String vehicleNo, String company, String model, int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
         this.id = id;
         this.vehicleNo = vehicleNo;
         this.company = company;
@@ -60,7 +60,7 @@ public class AdminVehicleRequest {
     }
 
     @Builder
-    public AdminVehicleRequest(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, VehicleState state) {
+    public PostAdminVehicleRequest(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, VehicleState state) {
         this.vehicleNo = vehicleNo;
         this.company = company;
         this.model = model;
@@ -70,7 +70,7 @@ public class AdminVehicleRequest {
     }
 
     @Builder
-    public AdminVehicleRequest(Long id, String vehicleNo, String company, String model, int seats, VehicleFuel fuel, VehicleState state) {
+    public PostAdminVehicleRequest(Long id, String vehicleNo, String company, String model, int seats, VehicleFuel fuel, VehicleState state) {
         this.id = id;
         this.vehicleNo = vehicleNo;
         this.company = company;
@@ -80,8 +80,8 @@ public class AdminVehicleRequest {
         this.state = state;
     }
 
-    public static AdminVehicleRequest of(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
-        return AdminVehicleRequest.builder()
+    public static PostAdminVehicleRequest of(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
+        return PostAdminVehicleRequest.builder()
             .vehicleNo(vehicleNo)
             .company(company)
             .model(model)
@@ -92,7 +92,7 @@ public class AdminVehicleRequest {
             .build();
     }
 
-    public CreateVehicleDto toService() {
-        return CreateVehicleDto.of(vehicleNo, company, model, seats, fuel, img, state);
+    public CreateVehicleServiceDto toService() {
+        return CreateVehicleServiceDto.of(vehicleNo, company, model, seats, fuel, img, state);
     }
 }

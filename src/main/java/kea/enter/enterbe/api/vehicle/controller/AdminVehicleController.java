@@ -3,22 +3,23 @@ package kea.enter.enterbe.api.vehicle.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kea.enter.enterbe.api.vehicle.controller.dto.request.AdminVehicleRequest;
-import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleListResponse;
-import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
+import kea.enter.enterbe.api.lottery.service.dto.GetLotteryListServiceDto;
+import kea.enter.enterbe.api.vehicle.controller.dto.request.GetAdminVehicleListRequest;
+import kea.enter.enterbe.api.vehicle.controller.dto.request.PostAdminVehicleRequest;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.VehicleInfo;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
-import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
-import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleDto;
-import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
-import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
+import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleServiceDto;
+import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleServiceDto;
+import kea.enter.enterbe.api.vehicle.service.dto.GetVehicleListServiceDto;
+import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleServiceDto;
 import kea.enter.enterbe.global.common.api.CustomResponseCode;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import kea.enter.enterbe.global.util.FileUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,18 +43,27 @@ public class AdminVehicleController {
 
     @Operation(summary = "법인 차량 목록 조회 API")
     @GetMapping("")
-    public Page<AdminVehicleListResponse> getVehicleList(
-        @PageableDefault(size = 4) Pageable pageable,
-        @RequestParam(required = false) String vehicleNo,
-        @RequestParam(required = false) String model,
-        @RequestParam(required = false) VehicleState state) {
+    public GetAdminVehicleResponse getVehicleList(
+        @Valid @ParameterObject GetAdminVehicleListRequest request,
+        @ParameterObject Pageable pageable) {
 
-        return adminVehicleService.getVehicleList(pageable, vehicleNo, model, state);
+        return adminVehicleService.getVehicleList(
+            GetVehicleListServiceDto.of(
+                request.getWord(),
+                request.getSearchCategory(),
+                pageable));
+/*        @PageableDefault(size = 4) Pageable pageable,
+//        @RequestParam(required = false) String vehicleNo,
+//        @RequestParam(required = false) String model,
+//        @RequestParam(required = false) VehicleState state) {
+//
+//        return adminVehicleService.getVehicleList(pageable, vehicleNo, model, state);
+ */
     }
 
     @Operation(summary = "법인 차량 상세 정보 조회 API")
     @GetMapping("/{vehicleId}")
-    public AdminVehicleResponse getVehicle(
+    public VehicleInfo getVehicle(
         @PathVariable Long vehicleId) {
 
         return adminVehicleService.getVehicle(vehicleId);
@@ -63,7 +72,7 @@ public class AdminVehicleController {
     @Operation(summary = "법인 차량 등록 API")
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CustomResponseCode> createVehicle(
-        @RequestPart(value = "data") @Valid AdminVehicleRequest adminVehicleRequest,
+        @RequestPart(value = "data") @Valid PostAdminVehicleRequest postAdminVehicleRequest,
         @RequestPart(value = "image") MultipartFile img) {
 
         // 이미지 파일 확인
@@ -71,9 +80,9 @@ public class AdminVehicleController {
             throw new CustomException(ResponseCode.NOT_IMAGE_FILE);
 
         adminVehicleService.createVehicle(
-            CreateVehicleDto.of(adminVehicleRequest.getVehicleNo(), adminVehicleRequest.getCompany(),
-                adminVehicleRequest.getModel(),adminVehicleRequest.getSeats(),
-                adminVehicleRequest.getFuel(), img, adminVehicleRequest.getState()));
+            CreateVehicleServiceDto.of(postAdminVehicleRequest.getVehicleNo(), postAdminVehicleRequest.getCompany(),
+                postAdminVehicleRequest.getModel(), postAdminVehicleRequest.getSeats(),
+                postAdminVehicleRequest.getFuel(), img, postAdminVehicleRequest.getState()));
 
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }
@@ -81,7 +90,7 @@ public class AdminVehicleController {
     @Operation(summary = "법인 차량 수정 API")
     @PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CustomResponseCode> modifyVehicle(
-        @RequestPart(value = "data") @Valid AdminVehicleRequest adminVehicleRequest,
+        @RequestPart(value = "data") @Valid PostAdminVehicleRequest postAdminVehicleRequest,
         @RequestPart(value = "image") MultipartFile img) {
 
         // 이미지 파일 확인
@@ -89,9 +98,9 @@ public class AdminVehicleController {
             throw new CustomException(ResponseCode.NOT_IMAGE_FILE);
 
         adminVehicleService.modifyVehicle(
-            ModifyVehicleDto.of(adminVehicleRequest.getId(), adminVehicleRequest.getVehicleNo(), adminVehicleRequest.getCompany(),
-                adminVehicleRequest.getModel(), adminVehicleRequest.getSeats(),
-                adminVehicleRequest.getFuel(), img, adminVehicleRequest.getState()));
+            ModifyVehicleServiceDto.of(postAdminVehicleRequest.getId(), postAdminVehicleRequest.getVehicleNo(), postAdminVehicleRequest.getCompany(),
+                postAdminVehicleRequest.getModel(), postAdminVehicleRequest.getSeats(),
+                postAdminVehicleRequest.getFuel(), img, postAdminVehicleRequest.getState()));
 
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }
@@ -101,7 +110,7 @@ public class AdminVehicleController {
     public ResponseEntity<CustomResponseCode> deleteVehicle(
         @PathVariable Long vehicleId) {
 
-        adminVehicleService.deleteVehicle(DeleteVehicleDto.of(vehicleId));
+        adminVehicleService.deleteVehicle(DeleteVehicleServiceDto.of(vehicleId));
 
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }

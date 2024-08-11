@@ -2,11 +2,13 @@ package kea.enter.enterbe.api.vehicle.service;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
-import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleListResponse;
-import kea.enter.enterbe.api.vehicle.controller.dto.response.AdminVehicleResponse;
-import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
-import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleDto;
-import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleListResponse;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.VehicleInfo;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleResponse;
+import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleServiceDto;
+import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleServiceDto;
+import kea.enter.enterbe.api.vehicle.service.dto.GetVehicleListServiceDto;
+import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleServiceDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
@@ -30,15 +32,15 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     private final ObjectStorageUtil objectStorageUtil;
 
     @Override
-    public Page<AdminVehicleListResponse> getVehicleList(Pageable pageable, String vehicleNo, String model, VehicleState state) {
+    public GetAdminVehicleListResponse getVehicleList(GetVehicleListServiceDto dto) {
         Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(pageable, vehicleNo, model, state);
-        return vehicles.map(v -> AdminVehicleListResponse.of(
+        return vehicles.map(v -> VehicleInfo.of(
             v.getId(), v.getVehicleNo(), v.getCompany(), v.getModel(), v.getSeats(), v.getFuel(), v.getImg(),
             v.getCreatedAt().toLocalDate().toString(), v.getUpdatedAt().toLocalDate().toString(), v.getState()));
     }
 
     @Override
-    public AdminVehicleResponse getVehicle(Long id) {
+    public GetAdminVehicleResponse getVehicle(Long id) {
         if (vehicleRepository.findByIdAndStateNot(id, VehicleState.INACTIVE).isPresent())
             return vehicleRepository.findAdminVehicleResponsebyId(id);
 
@@ -48,7 +50,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
 
     @Override
     @Transactional
-    public void createVehicle(CreateVehicleDto dto) {
+    public void createVehicle(CreateVehicleServiceDto dto) {
         checkVehicle(dto.getVehicleNo());
 
         String img = "";
@@ -67,7 +69,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
 
     @Override
     @Transactional
-    public void modifyVehicle(ModifyVehicleDto dto) {
+    public void modifyVehicle(ModifyVehicleServiceDto dto) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
         if (!vehicle.get().getVehicleNo().equals(dto.getVehicleNo()))
             checkVehicle(dto.getVehicleNo());
@@ -93,7 +95,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
 
     @Override
     @Transactional
-    public void deleteVehicle(DeleteVehicleDto dto) {
+    public void deleteVehicle(DeleteVehicleServiceDto dto) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
         if (vehicle.isPresent()) {
             vehicle.get().deleteVehicle();
