@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,9 +32,9 @@ public class LicenseController {
         description = "만 26살 미만, 신청 기간(월요일 오전9시~화요일 밤12시),면허증 데이터를 체크합니다."
     )
     @GetMapping("/license")
-    public ResponseEntity<CustomResponseCode> getLicenseInformation() {
+    public ResponseEntity<CustomResponseCode> getLicenseInformation(Authentication authentication) {
 
-        Long memberId = 1L;
+        Long memberId = Long.valueOf(authentication.getName());
         licenseService.getLicenseInformation(memberId);
 
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
@@ -42,9 +43,11 @@ public class LicenseController {
     // 면허증 등록 (등록 페이지에서 호출)
     @Operation(summary = "면허증 등록 API", description = "면허증 진위여부를 확인하고 등록합니다.")
     @PostMapping("/license")
-    public ResponseEntity<CustomResponseCode> postLicenseInformation(@Valid @RequestBody LicenseDto licenseDto)
+    public ResponseEntity<CustomResponseCode> postLicenseInformation(
+        Authentication authentication,
+        @Valid @RequestBody LicenseDto licenseDto)
     {
-        Long memberId = 5L;
+        Long memberId = Long.valueOf(authentication.getName());
         licenseService.saveLicenseInformation(
             LicenseDto.toService(
                 memberId,
@@ -60,9 +63,9 @@ public class LicenseController {
     // 면허 진위여부 확인 및 isLicenseValid 데이터 patch
     @Operation(summary = "면허 진위여부 수정 API", description = "DB에 저장된 면허 데이터의 진위여부를 확인하고 저장합니다.")
     @PatchMapping("/valid-license")
-    public ResponseEntity<CustomResponseCode> patchLicenseInformation(){
+    public ResponseEntity<CustomResponseCode> patchLicenseInformation(Authentication authentication){
 
-        Long memberId = 2L; // 또는 @RequestParam Long memberId
+        Long memberId = Long.valueOf(authentication.getName());
         licenseService.patchLicenseInformation(memberId);
 
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
