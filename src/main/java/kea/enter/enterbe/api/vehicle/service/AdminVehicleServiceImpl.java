@@ -2,6 +2,7 @@ package kea.enter.enterbe.api.vehicle.service;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
+import kea.enter.enterbe.api.vehicle.controller.dto.request.VehicleSearchCategory;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleListResponse;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleServiceDto;
@@ -31,8 +32,16 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
 
     @Override
     public GetAdminVehicleListResponse getVehicleList(GetVehicleListServiceDto dto) {
+        VehicleSearchCategory searchCategory;
+        try {
+            searchCategory = VehicleSearchCategory.valueOf(dto.getSearchCategory().toUpperCase());
+
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(ResponseCode.INVALID_VEHICLE_SEARCH_CATEGORY);
+        }
+
         Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(
-            dto.getPageable(), dto.getSearchCategory(), dto.getWord());
+            dto.getPageable(), searchCategory, dto.getWord());
 
         return GetAdminVehicleListResponse.of(
             vehicles.getContent(),

@@ -37,7 +37,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/vehicles")
-@Slf4j
 public class AdminVehicleController {
 
     private final AdminVehicleService adminVehicleService;
@@ -49,8 +48,6 @@ public class AdminVehicleController {
         @PageableDefault(size = 4) Pageable pageable,
         @ModelAttribute GetAdminVehicleListRequest request) {
 
-        log.info(request.getWord());
-        log.info(request.getSearchCategory().toString());
         return adminVehicleService.getVehicleList(
             GetVehicleListServiceDto.of(
                 request.getWord(),

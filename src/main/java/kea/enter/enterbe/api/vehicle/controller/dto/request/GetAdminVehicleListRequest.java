@@ -15,16 +15,16 @@ public class GetAdminVehicleListRequest {
 
     @Schema(description = "검색 카테고리 (ALL, VEHICLENO, MODEL, STATE)", example = "VEHICLENO")
     //@NotNull(message = "검색 카테고리를 입력해야 합니다.")
-    private VehicleSearchCategory searchCategory;
+    private String searchCategory;
 
 
     @Builder
-    public GetAdminVehicleListRequest(String word, VehicleSearchCategory searchCategory) {
+    public GetAdminVehicleListRequest(String word, String searchCategory) {
         this.word = word;
         this.searchCategory = searchCategory;
     }
 
-    public static GetAdminVehicleListRequest of(String word, VehicleSearchCategory searchCategory) {
+    public static GetAdminVehicleListRequest of(String word, String searchCategory) {
         return GetAdminVehicleListRequest.builder()
             .word(word)
             .searchCategory(searchCategory)
