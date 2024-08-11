@@ -138,25 +138,16 @@ public class LotteryServiceImpl implements LotteryService {
             Optional<Waiting> waitingOptional = finWaittingdByApplyId(recentlyApply.getId());
             //waiting 테이블에 없을 경우 -> 탈락
             if (!waitingOptional.isPresent()) {
-                return GetLotteryResponse.builder()
-                    .winning(false)
-                    .waitingNumber(null)
-                    .build();
+                return GetLotteryResponse.of(false, null);
             }
             //waiting 테이블에 있을 경우 -> 대기
             else {
-                return GetLotteryResponse.builder()
-                    .winning(false)
-                    .waitingNumber(waitingOptional.get().getWaitingNo())
-                    .build();
+                return GetLotteryResponse.of(false, waitingOptional.get().getWaitingNo());
             }
         }
         // winning 테이블에 있을 경우 -> 당첨
         else {
-            return GetLotteryResponse.builder()
-                .winning(true)
-                .waitingNumber(null)
-                .build();
+            return GetLotteryResponse.of(true, null);
         }
     }
 
