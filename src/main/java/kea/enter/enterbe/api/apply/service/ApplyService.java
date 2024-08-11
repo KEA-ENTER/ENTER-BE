@@ -9,6 +9,7 @@ import kea.enter.enterbe.api.apply.service.dto.GetApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.ModifyApplyDetailServiceDto;
+import kea.enter.enterbe.api.apply.service.dto.PostApplyServiceDto;
 
 public interface ApplyService {
     List<GetApplyResponse> getApply(GetApplyServiceDto dto);
@@ -16,4 +17,6 @@ public interface ApplyService {
     GetApplyDetailResponse getApplyDetail(GetApplyDetailServiceDto dto);
     void modifyApplyDetail(ModifyApplyDetailServiceDto dto);
     void deleteApplyDetail(DeleteApplyDetailServiceDto dto);
-}
+    void postApply(PostApplyServiceDto dto);
+
+    }
