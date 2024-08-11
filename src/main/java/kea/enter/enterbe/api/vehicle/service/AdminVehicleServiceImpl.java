@@ -3,7 +3,6 @@ package kea.enter.enterbe.api.vehicle.service;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleListResponse;
-import kea.enter.enterbe.api.vehicle.controller.dto.response.VehicleInfo;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleServiceDto;
 import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleServiceDto;
@@ -18,7 +17,6 @@ import kea.enter.enterbe.global.util.ObjectStorageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,16 +31,23 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
 
     @Override
     public GetAdminVehicleListResponse getVehicleList(GetVehicleListServiceDto dto) {
-        Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(pageable, vehicleNo, model, state);
-        return vehicles.map(v -> VehicleInfo.of(
-            v.getId(), v.getVehicleNo(), v.getCompany(), v.getModel(), v.getSeats(), v.getFuel(), v.getImg(),
-            v.getCreatedAt().toLocalDate().toString(), v.getUpdatedAt().toLocalDate().toString(), v.getState()));
+        Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(
+            dto.getPageable(), dto.getSearchCategory(), dto.getWord());
+
+        return GetAdminVehicleListResponse.of(
+            vehicles.getContent(),
+            vehicles.getNumber(),
+            vehicles.getSize(),
+            vehicles.getTotalElements(),
+            vehicles.getTotalPages(),
+            vehicles.hasNext()
+        );
     }
 
     @Override
     public GetAdminVehicleResponse getVehicle(Long id) {
         if (vehicleRepository.findByIdAndStateNot(id, VehicleState.INACTIVE).isPresent())
-            return vehicleRepository.findAdminVehicleResponsebyId(id);
+            return vehicleRepository.findVehicleAndNotebyId(id);
 
         else
             throw new CustomException(ResponseCode.VEHICLE_NOT_VALID);
@@ -79,7 +84,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
             try {
                 img = uploadS3Image(dto.getImg());
 
-                vehicle.get().modifyVehicle(
+                vehicle.get().patchVehicle(
                     dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
                     dto.getFuel(), img, dto.getState());
 

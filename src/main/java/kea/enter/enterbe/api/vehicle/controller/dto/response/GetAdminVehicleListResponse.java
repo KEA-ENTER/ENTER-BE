@@ -2,13 +2,14 @@ package kea.enter.enterbe.api.vehicle.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class GetAdminVehicleListResponse {
 
-    private List<VehicleInfo> vehicleList;
+    private List<Vehicle> vehicleList;
 
     @Schema(description = "현재 페이지", example = "0")
     private int page;
@@ -27,7 +28,7 @@ public class GetAdminVehicleListResponse {
 
 
     @Builder
-    public GetAdminVehicleListResponse(List<VehicleInfo> vehicleList, int page, int size, long totalElements, int totalPages, boolean hasNextPage) {
+    public GetAdminVehicleListResponse(List<Vehicle> vehicleList, int page, int size, long totalElements, int totalPages, boolean hasNextPage) {
         this.vehicleList = vehicleList;
         this.page = page;
         this.size = size;
@@ -36,7 +37,7 @@ public class GetAdminVehicleListResponse {
         this.hasNextPage = hasNextPage;
     }
 
-    public static GetAdminVehicleListResponse of(List<VehicleInfo> vehicleList, int page, int size, long totalElements, int totalPages, boolean hasNextPage) {
+    public static GetAdminVehicleListResponse of(List<Vehicle> vehicleList, int page, int size, long totalElements, int totalPages, boolean hasNextPage) {
         return GetAdminVehicleListResponse.builder()
             .vehicleList(vehicleList)
             .page(page)

@@ -1,7 +1,6 @@
 package kea.enter.enterbe.api.vehicle.service.dto;
 
 import kea.enter.enterbe.api.vehicle.controller.dto.request.VehicleSearchCategory;
-import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.domain.Pageable;

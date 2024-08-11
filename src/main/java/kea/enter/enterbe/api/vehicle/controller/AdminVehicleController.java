@@ -3,10 +3,9 @@ package kea.enter.enterbe.api.vehicle.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kea.enter.enterbe.api.lottery.service.dto.GetLotteryListServiceDto;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.GetAdminVehicleListRequest;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.PostAdminVehicleRequest;
-import kea.enter.enterbe.api.vehicle.controller.dto.response.VehicleInfo;
+import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleListResponse;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleResponse;
 import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleServiceDto;
@@ -18,12 +17,14 @@ import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import kea.enter.enterbe.global.util.FileUtil;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/vehicles")
+@Slf4j
 public class AdminVehicleController {
 
     private final AdminVehicleService adminVehicleService;
@@ -43,27 +45,22 @@ public class AdminVehicleController {
 
     @Operation(summary = "법인 차량 목록 조회 API")
     @GetMapping("")
-    public GetAdminVehicleResponse getVehicleList(
-        @Valid @ParameterObject GetAdminVehicleListRequest request,
-        @ParameterObject Pageable pageable) {
+    public GetAdminVehicleListResponse getVehicleList(
+        @PageableDefault(size = 4) Pageable pageable,
+        @ModelAttribute GetAdminVehicleListRequest request) {
 
+        log.info(request.getWord());
+        log.info(request.getSearchCategory().toString());
         return adminVehicleService.getVehicleList(
             GetVehicleListServiceDto.of(
                 request.getWord(),
                 request.getSearchCategory(),
                 pageable));
-/*        @PageableDefault(size = 4) Pageable pageable,
-//        @RequestParam(required = false) String vehicleNo,
-//        @RequestParam(required = false) String model,
-//        @RequestParam(required = false) VehicleState state) {
-//
-//        return adminVehicleService.getVehicleList(pageable, vehicleNo, model, state);
- */
     }
 
     @Operation(summary = "법인 차량 상세 정보 조회 API")
     @GetMapping("/{vehicleId}")
-    public VehicleInfo getVehicle(
+    public GetAdminVehicleResponse getVehicle(
         @PathVariable Long vehicleId) {
 
         return adminVehicleService.getVehicle(vehicleId);

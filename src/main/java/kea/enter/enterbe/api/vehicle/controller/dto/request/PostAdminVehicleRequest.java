@@ -19,7 +19,7 @@ public class PostAdminVehicleRequest {
     @Positive(message = "양수만 가능합니다.")
     private Long id;
 
-    @Schema(description = "차량 번호", example = "12가 3456")
+    @Schema(description = "차량 번호 (두 자리 또는 세 자리 숫자 + 한글 한 글자 + 네 자리 숫자)", example = "12가 3456")
     @NotBlank(message = "차량 번호를 입력해야 합니다.")
     private String vehicleNo;
 
@@ -42,8 +42,8 @@ public class PostAdminVehicleRequest {
     @Schema(description = "차량 이미지", example = "")
     private MultipartFile img;
 
-    @Schema(description = "차량 상태", example = "AVAILABLE")
-    @NotNull(message = "차량 상태를 입력해야 합니다. (AVAILABLE, WAIT_TAKE, TAKE_COMPLETE, ON_RENT, WAIT_RETURN, RETURN_COMPLETE, RENT_UNAVAILABLE, INACTIVE)")
+    @Schema(description = "차량 상태 (AVAILABLE, WAIT_TAKE, TAKE_COMPLETE, ON_RENT, WAIT_RETURN, RETURN_COMPLETE, RENT_UNAVAILABLE, INACTIVE)", example = "AVAILABLE")
+    @NotNull(message = "차량 상태를 입력해야 합니다.")
     private VehicleState state;
 
 

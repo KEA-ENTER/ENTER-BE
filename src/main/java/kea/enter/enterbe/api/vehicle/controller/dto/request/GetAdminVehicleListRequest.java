@@ -1,20 +1,20 @@
 package kea.enter.enterbe.api.vehicle.controller.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import kea.enter.enterbe.api.lottery.service.dto.GetLotteryListServiceDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class GetAdminVehicleListRequest {
     @Schema(description = "검색어", example = "그랜저")
     private String word;
 
-    @Schema(description = "검색 카테고리", example = "VEHICLENO")
-    @NotBlank(message = "검색 카테고리를 입력해야 합니다. (ALL, VEHICLENO, MODEL, STATE)")
+    @Schema(description = "검색 카테고리 (ALL, VEHICLENO, MODEL, STATE)", example = "VEHICLENO")
+    //@NotNull(message = "검색 카테고리를 입력해야 합니다.")
     private VehicleSearchCategory searchCategory;
 
 

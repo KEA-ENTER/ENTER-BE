@@ -33,10 +33,11 @@ public enum ResponseCode {
     VEHICLE_NOT_VALID("VHC_ERR_001", HttpStatus.NOT_FOUND, "법인 차량 정보를 찾을 수 없습니다."),
     VEHICLE_NO_NOT_ALLOWED("VHC_ERR_002", HttpStatus.METHOD_NOT_ALLOWED, "유효하지 않은 차량번호 형식입니다."),
     VEHICLE_DUPLICATED("VHC_ERR_003", HttpStatus.BAD_REQUEST, "이미 존재하는 차량입니다."),
-    NEED_PARKING_LOC_FOR_RETURN_REPORT("VHC-ERR-004",HttpStatus.BAD_REQUEST , "주차 위치를 입력해주세요."),
+    VEHICLE_STATE_NOT_ALLOWED("VHC_ERR_004", HttpStatus.METHOD_NOT_ALLOWED, "유효하지 않은 차량 상태입니다. AVAILABLE, WAIT_TAKE, TAKE_COMPLETE, ON_RENT, WAIT_RETURN, RETURN_COMPLETE, RENT_UNAVAILABLE, INACTIVE 중에 입력해주세요."),
 
     // VEHICLE REPORT
     VEHICLE_REPORT_NOT_FOUND("VHR-ERR-001", HttpStatus.NOT_FOUND, "차량 보고서를 찾을 수 없습니다."),
+    NEED_PARKING_LOC_FOR_RETURN_REPORT("VHR-ERR-002",HttpStatus.BAD_REQUEST , "주차 위치를 입력해주세요."),
 
     // PENALTY
     PENALTY_NOT_FOUND("PEN-ERR-001", HttpStatus.NOT_FOUND, "페널티를 찾을 수 없습니다."),
