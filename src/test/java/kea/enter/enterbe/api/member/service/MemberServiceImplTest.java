@@ -23,7 +23,7 @@ import java.time.ZoneId;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-class MemberSerRviceImplTest extends IntegrationTestSupport {
+class MemberServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("신청 기간에 신청자인지 아직 사원 상태인지 확인한다. (성공 : 신청자)")
     @Test
