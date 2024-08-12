@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -35,6 +36,7 @@ public class Vehicle extends BaseEntity {
     @Column(name = "img")
     private String img;
 
+    @Setter
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
     private VehicleState state;
@@ -78,4 +80,5 @@ public class Vehicle extends BaseEntity {
     public void deleteVehicle() {
         this.state = VehicleState.INACTIVE;
     }
+
 }
