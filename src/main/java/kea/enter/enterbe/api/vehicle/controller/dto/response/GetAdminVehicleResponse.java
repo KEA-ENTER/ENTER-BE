@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class AdminVehicleResponse {
+public class GetAdminVehicleResponse {
     // vehicle table
     @Schema(description = "차량 아이디", example = "1")
     private Long vehicleId;
@@ -40,7 +40,6 @@ public class AdminVehicleResponse {
     @Schema(description = "차량 상태", example = "AVAILABLE")
     private VehicleState state;
 
-
     // member table
     @Schema(description = "작성자 이름 목록", example = "[\"김가천\", \"이나천\"]", required = false)
     private List<String> names;
@@ -54,7 +53,7 @@ public class AdminVehicleResponse {
 
 
     @Builder
-    public AdminVehicleResponse(Long vehicleId, String vehicleNo, String company, String model,
+    public GetAdminVehicleResponse(Long vehicleId, String vehicleNo, String company, String model,
         int seats, VehicleFuel fuel, String img, String createdAt, String updatedAt,
         VehicleState state, List<String> names, List<String> reportCreatedAts, List<String> contents) {
 
@@ -73,11 +72,11 @@ public class AdminVehicleResponse {
         this.contents = contents;
     }
 
-    public static AdminVehicleResponse of(Long vehicleId, String vehicleNo, String company,
+    public static GetAdminVehicleResponse of(Long vehicleId, String vehicleNo, String company,
         String model, int seats, VehicleFuel fuel, String img, String createdAt, String updatedAt,
         VehicleState state, List<String> names, List<String> reportCreatedAts, List<String> contents) {
 
-        return AdminVehicleResponse.builder()
+        return GetAdminVehicleResponse.builder()
             .vehicleId(vehicleId)
             .vehicleNo(vehicleNo)
             .company(company)

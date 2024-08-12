@@ -64,7 +64,7 @@ public class Vehicle extends BaseEntity {
             .build();
     }
 
-    public void modifyVehicle(String vehicleNo, String company, String model, int seats, VehicleFuel fuel,
+    public void patchVehicle(String vehicleNo, String company, String model, int seats, VehicleFuel fuel,
         String img, VehicleState state) {
         this.vehicleNo = vehicleNo;
         this.company = company;
