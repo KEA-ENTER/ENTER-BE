@@ -29,10 +29,10 @@ class AdminVehicleControllerTest extends ControllerTestSupport {
         String company = "현대";
         String model = "그랜저";
         int seats = 5;
-        String fuel = "GASOLINE";
+        VehicleFuel fuel = VehicleFuel.GASOLINE;
         MockMultipartFile image = new MockMultipartFile("image", "test.jpg",
             ContentType.IMAGE_JPEG.getMimeType(), "test file".getBytes(StandardCharsets.UTF_8));
-        String state = "AVAILABLE";
+        VehicleState state = VehicleState.AVAILABLE;
 
         PostAdminVehicleRequest request = new PostAdminVehicleRequest(vehicleNo, company, model, seats, fuel, state);
 
@@ -60,11 +60,11 @@ class AdminVehicleControllerTest extends ControllerTestSupport {
         String company = "현대";
         String model = "그랜저";
         int seats = 4;
-        String fuel = "GASOLINE";
+        VehicleFuel fuel = VehicleFuel.GASOLINE;
 
         MockMultipartFile image = new MockMultipartFile("image", "test.jpg",
             ContentType.IMAGE_JPEG.getMimeType(), "test file".getBytes(StandardCharsets.UTF_8));
-        String state = "AVAILABLE";
+        VehicleState state = VehicleState.AVAILABLE;
 
         PostAdminVehicleRequest request = new PostAdminVehicleRequest(id, vehicleNo, company, model, seats, fuel, state);
 
