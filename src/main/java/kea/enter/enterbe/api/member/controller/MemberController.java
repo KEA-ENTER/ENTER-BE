@@ -23,7 +23,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @Operation(summary = "가중치 조회")
-    @PostMapping(value = "/score")
+    @GetMapping(value = "/score")
     public ResponseEntity<GetMemberScoreResponse> getMemberScorePercent(
         Authentication authentication) {
         Long memberId = Long.valueOf(authentication.getName());
