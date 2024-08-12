@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "법인 차량 관리", description = "법인 차량 관리 API 명세서")
+@Tag(name = "차량 관련 API", description = "[관리자] Vehicle")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/vehicles")

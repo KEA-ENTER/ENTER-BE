@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "당첨", description = "[관리자] Lottery")
+@Tag(name = "추첨 관련 API", description = "[관리자] Lottery")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/lotteries")
@@ -30,7 +30,6 @@ public class AdminLotteryController {
     public ResponseEntity<GetLotteryListResponse> getLotteryList(
         @Valid @ParameterObject GetLotteryListRequest request,
         @ParameterObject Pageable pageable) {
-        // TODO: 어드민 권한 검사
         GetLotteryListResponse response = adminLotteryService.getLotteryList(request.toService(pageable));
         return ResponseEntity.ok(response);
     }
@@ -42,7 +41,6 @@ public class AdminLotteryController {
         @PathVariable Long applyRoundId,
         @Valid @ParameterObject GetApplicantListRequest request,
         @ParameterObject Pageable pageable) {
-        // TODO: 어드민 권한 검사
         GetApplicantListResponse response = adminLotteryService.getApplicantList(request.toService(applyRoundId, pageable));
         return ResponseEntity.ok(response);
     }

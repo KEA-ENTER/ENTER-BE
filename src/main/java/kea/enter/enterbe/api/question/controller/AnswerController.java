@@ -30,9 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/questions")
 @RequiredArgsConstructor
-@Tag(name = "문의사항 작성 및 조회 (관리자)", description = "문의사항 작성 및 조회 API")
+@Tag(name = "문의사항 관련 API", description = "[관리자] Question")
 public class AnswerController {
 
     private final AnswerService answerService;
@@ -70,7 +70,7 @@ public class AnswerController {
         @ApiResponse(responseCode = "QST-ERR-001", description = "문의사항이 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "QST-ERR-004", description = "삭제된 문의사항입니다.", content = @Content(mediaType = "application/json")),
     })
-    @GetMapping("/questions/{questionId}")
+    @GetMapping("/{questionId}")
     public ResponseEntity<GetAnswerResponseDto> getDetail(@PathVariable Long questionId) {
 
         GetAnswerResponseDto response = answerService.getDetail(
@@ -83,7 +83,7 @@ public class AnswerController {
         @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = GetQuestionListResponseDto.class))),
     })
-    @GetMapping("/questions/list/{pages}")
+    @GetMapping("/list/{pages}")
     public ResponseEntity<GetQuestionListResponseDto> getQuestionList(
         @Valid @RequestBody GetQuestionSearchDto dto, @PathVariable int pages) {
 

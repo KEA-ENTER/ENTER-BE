@@ -15,7 +15,6 @@ import kea.enter.enterbe.api.apply.service.dto.GetApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.ModifyApplyDetailServiceDto;
-import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 
-@Tag(name = "신청", description = "사용자 신청 API")
+@Tag(name = "신청 관련 API", description = "[사용자] Apply")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/applies")

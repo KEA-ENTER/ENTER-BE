@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
-@Tag(name = "인수", description = "[관리자] Take")
+@Tag(name = "인수 관련 API", description = "[사용자] Take")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/takes")
@@ -33,7 +33,6 @@ public class AdminTakeController {
     @Operation(summary = "인수 현황 조회 API", description = "이전 회차 인수 현황을 조회합니다.")
     @GetMapping("")
     public ResponseEntity<GetTakeSituationResponse> getTakeSituation() {
-        // TODO: 어드민 권한 검사
         GetTakeSituationServiceDto dto = GetTakeSituationServiceDto.of(LocalDate.now());
         GetTakeSituationResponse response = adminTakeService.getTakeSituation(dto);
         return ResponseEntity.ok(response);
@@ -44,8 +43,7 @@ public class AdminTakeController {
     @GetMapping("/reports")
     public ResponseEntity<GetReportListResponse> getTakeReport(
         @Valid @ParameterObject GetReportListRequest request,
-        @ParameterObject Pageable pageable
-    ) {
+        @ParameterObject Pageable pageable) {
         GetReportListResponse response = adminTakeService.getReportList(request.toService(pageable));
         return ResponseEntity.ok(response);
     }

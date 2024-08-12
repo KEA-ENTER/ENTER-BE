@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "추첨", description = "추첨 API 명세서")
+@Tag(name = "추첨 관련 API", description = "[사용자] Lottery")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/lotteries")

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "차량", description = "차량 API 명세서")
+@Tag(name = "차량 관련 API", description = "[사용자] Vehicle")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/vehicles")
@@ -49,7 +49,6 @@ public class VehicleController {
         @Schema(description = "보고서 종류 TAKE, RETURN", example = "TAKE")
         VehicleReportType type
     ) {
-        //todo: spring security 구현 완료 시 token에서 memberId 값 가져오기
         Long memberId = 1L;
         if (!fileUtil.isImageFileList(
             List.of(front_img, right_img, back_img, left_img, dashboardImg))) {

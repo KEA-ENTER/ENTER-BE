@@ -22,7 +22,7 @@ import java.util.List;
 
 import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 
-@Tag(name = "페널티", description = "[관리자] Penalty")
+@Tag(name = "페널티 관련 API", description = "[관리자] Penalty")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/penalties")
@@ -35,7 +35,6 @@ public class AdminPenaltyController {
     public ResponseEntity<String> createPenalty(
         @PathVariable Long memberId,
         @Valid @RequestBody PostAdminPenaltyRequest postAdminPenaltyRequest) {
-        // TODO: 어드민 권한 검사
         adminPenaltyService.createPenalty(postAdminPenaltyRequest.toService(memberId));
         return ResponseEntity.ok(SUCCESS.getMessage());
     }
@@ -44,7 +43,6 @@ public class AdminPenaltyController {
     @Operation(summary = "사용자 페널티 목록 조회 API", description = "사용자의 페널티 목록을 조회합니다.")
     @GetMapping("/members/{memberId}")
     public ResponseEntity<List<GetAdminPenaltyListResponse>> getPenaltyList(@PathVariable Long memberId) {
-        // TODO: 어드민 권한 검사
         List<GetAdminPenaltyListResponse> response =  adminPenaltyService.getPenaltyList(GetAdminPenaltyListServiceDto.of(memberId));
         return ResponseEntity.ok(response);
     }
@@ -53,7 +51,6 @@ public class AdminPenaltyController {
     @Operation(summary = "사용자 페널티 삭제 API", description = "사용자의 페널티를 삭제합니다.")
     @DeleteMapping("/members/{memberId}/{penaltyId}")
     public ResponseEntity<String> getPenaltyList(@PathVariable Long memberId, @PathVariable Long penaltyId) {
-        // TODO: 어드민 권한 검사
         adminPenaltyService.deletePenalty(DeleteAdminPenaltyServiceDto.of(memberId, penaltyId));
         return ResponseEntity.ok(SUCCESS.getMessage());
     }
