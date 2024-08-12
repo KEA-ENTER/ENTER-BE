@@ -73,19 +73,25 @@ public class WinningCustomRepositoryImpl implements WinningCustomRepository {
     // 사용자 이름 검색
     private BooleanExpression nameContains(ReportSearchType searchType, String keyword) {
         if (searchType != ReportSearchType.MEMBER && searchType != ReportSearchType.ALL) return null;
-        return keyword != null ? apply.member.name.contains(keyword) : null;
+        return keyword != null ?
+            apply.member.name.toUpperCase().contains(keyword)
+                .or(apply.member.name.toLowerCase().contains(keyword)): null;
     }
 
     // 차량 모델 검색
     private BooleanExpression vehicleModelContains(ReportSearchType searchType, String keyword) {
         if (searchType != ReportSearchType.VEHICLE && searchType != ReportSearchType.ALL) return null;
-        return keyword != null ? vehicle.model.contains(keyword) : null;
+        return keyword != null ?
+            vehicle.model.toUpperCase().contains(keyword)
+                .or(vehicle.model.toLowerCase().contains(keyword)) : null;
     }
 
     // 차량 번호 검색
     private BooleanExpression vehicleNoContains(ReportSearchType searchType, String keyword) {
         if (searchType != ReportSearchType.VEHICLE && searchType != ReportSearchType.ALL) return null;
-        return keyword != null ? vehicle.vehicleNo.contains(keyword) : null;
+        return keyword != null ?
+            vehicle.vehicleNo.toUpperCase().contains(keyword)
+                .or(vehicle.vehicleNo.toLowerCase().contains(keyword)): null;
     }
 
 }

@@ -81,11 +81,15 @@ public class ApplyRoundCustomRepositoryImpl implements ApplyRoundCustomRepositor
     // 차량 검색
     private BooleanExpression vehicleModelContains(LotterySearchType searchType, String keyword) {
         if(searchType == LotterySearchType.ROUND) return null;
-        return keyword != null ? applyRound.vehicle.model.contains(keyword) : null;
+        return keyword != null ?
+            applyRound.vehicle.model.toUpperCase().contains(keyword)
+                .or(applyRound.vehicle.model.toLowerCase().contains(keyword)): null;
     }
 
     private BooleanExpression vehicleNoContains(LotterySearchType searchType, String keyword) {
         if(searchType == LotterySearchType.ROUND) return null;
-        return keyword != null ? applyRound.vehicle.vehicleNo.contains(keyword) : null;
+        return keyword != null ?
+            applyRound.vehicle.vehicleNo.toUpperCase().contains(keyword)
+                .or(applyRound.vehicle.vehicleNo.toLowerCase().contains(keyword)): null;
     }
 }
