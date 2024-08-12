@@ -15,6 +15,8 @@ import kea.enter.enterbe.global.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "차량", description = "차량 API 명세서")
+@Tag(name = "차량 관련 API", description = "[사용자] Vehicle")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/vehicles")
@@ -49,8 +51,9 @@ public class VehicleController {
         @Schema(description = "보고서 종류 TAKE, RETURN", example = "TAKE")
         VehicleReportType type
     ) {
-        //todo: spring security 구현 완료 시 token에서 memberId 값 가져오기
-        Long memberId = 1L;
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        Long memberId = Long.valueOf(loggedInUser.getName());
+
         if (!fileUtil.isImageFileList(
             List.of(front_img, right_img, back_img, left_img, dashboardImg))) {
             throw new CustomException(ResponseCode.NOT_IMAGE_FILE);

@@ -7,7 +7,7 @@ import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-public class ModifyVehicleDto {
+public class ModifyVehicleServiceDto {
     private Long id;
     private String vehicleNo;
     private String company;
@@ -18,7 +18,7 @@ public class ModifyVehicleDto {
     private VehicleState state;
 
     @Builder
-    public ModifyVehicleDto(Long id, String vehicleNo, String company, String model,
+    public ModifyVehicleServiceDto(Long id, String vehicleNo, String company, String model,
         int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
 
         this.id = id;
@@ -31,10 +31,10 @@ public class ModifyVehicleDto {
         this.state = state;
     }
 
-    public static ModifyVehicleDto of(Long id, String vehicleNo, String company, String model,
+    public static ModifyVehicleServiceDto of(Long id, String vehicleNo, String company, String model,
         int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
 
-        return ModifyVehicleDto.builder()
+        return ModifyVehicleServiceDto.builder()
             .id(id)
             .vehicleNo(vehicleNo)
             .company(company)

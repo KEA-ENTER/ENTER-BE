@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 
-@Tag(name = "신청", description = "사용자 신청 API")
+@Tag(name = "신청 관련 API", description = "[사용자] Apply")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/applies")

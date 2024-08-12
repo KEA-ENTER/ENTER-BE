@@ -25,13 +25,4 @@ public interface ApplyRoundRepository extends JpaRepository<ApplyRound, Long>, A
     @Query("SELECT MAX(ar.round) FROM ApplyRound ar WHERE ar.state = :state")
     Integer findMaxRoundByState(@Param("state") ApplyRoundState state);
 
-    @Query("SELECT ar FROM ApplyRound ar " +
-        "JOIN Apply a ON a.applyRound.id = ar.id " +
-        "WHERE a.member.id = :memberId " +
-        "AND a.state = :state " +
-        "AND ar.createdAt BETWEEN :startOfRound AND :endOfRound")
-    Optional<ApplyRound> findApplyRoundsForMemberInAndStateCurrentWeek(@Param("memberId") Long memberId,
-        @Param("startOfRound") LocalDateTime startOfRound,
-        @Param("endOfRound") LocalDateTime endOfRound,
-        @Param("state") ApplyState state);
 }

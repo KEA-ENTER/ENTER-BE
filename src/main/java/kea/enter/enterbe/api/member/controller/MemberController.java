@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "유저", description = "유저 API 명세서")
+@Tag(name = "사용자 관련 API", description = "[사용자] Member")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -23,7 +23,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @Operation(summary = "가중치 조회")
-    @PostMapping(value = "/score")
+    @GetMapping(value = "/score")
     public ResponseEntity<GetMemberScoreResponse> getMemberScorePercent(
         Authentication authentication) {
         Long memberId = Long.valueOf(authentication.getName());
