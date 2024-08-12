@@ -10,7 +10,6 @@ import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleServiceDto;
 import kea.enter.enterbe.api.vehicle.service.dto.GetVehicleListServiceDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleServiceDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
-import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
@@ -38,7 +37,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
             searchCategory = VehicleSearchCategory.valueOf(dto.getSearchCategory().toUpperCase());
 
         } catch (IllegalArgumentException e) {
-            throw new CustomException(ResponseCode.VEHICLE_SEARCH_CATEGORY_NOT_FOUND);
+            throw new CustomException(ResponseCode.INVALID_VEHICLE_SEARCH_CATEGORY);
         }
 
         Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(
@@ -74,7 +73,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
 
             vehicleRepository.save(Vehicle.of(
                 dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
-                toVehicleFuel(dto.getFuel()), img, toVehicleState(dto.getState())));
+                dto.getFuel(), img, dto.getState()));
 
         } catch (Exception e) {
             deleteS3Image(img);
@@ -86,18 +85,17 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     @Transactional
     public void modifyVehicle(ModifyVehicleServiceDto dto) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
+        if (!vehicle.get().getVehicleNo().equals(dto.getVehicleNo()))
+            checkVehicle(dto.getVehicleNo());
 
         if (vehicle.isPresent()) {
-            if (!vehicle.get().getVehicleNo().equals(dto.getVehicleNo()))
-                checkVehicle(dto.getVehicleNo());
-
             String img = "";
             try {
                 img = uploadS3Image(dto.getImg());
 
                 vehicle.get().patchVehicle(
                     dto.getVehicleNo(), dto.getCompany(), dto.getModel(), dto.getSeats(),
-                    toVehicleFuel(dto.getFuel()), img, toVehicleState(dto.getState()));
+                    dto.getFuel(), img, dto.getState());
 
             } catch (Exception e) {
                 deleteS3Image(img);
@@ -134,22 +132,6 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
         // 중복 확인
         if (vehicleRepository.findByVehicleNoAndStateNot(vehicleNo, VehicleState.INACTIVE).isPresent()) {
             throw new CustomException(ResponseCode.VEHICLE_DUPLICATED);
-        }
-    }
-
-    private VehicleFuel toVehicleFuel(String string) {
-        try {
-            return VehicleFuel.valueOf(string.toUpperCase());
-        } catch (Exception e) {
-            throw new CustomException(ResponseCode.VEHICLE_FUEL_NOT_FOUND);
-        }
-    }
-
-    private VehicleState toVehicleState(String string) {
-        try {
-            return VehicleState.valueOf(string.toUpperCase());
-        } catch (Exception e) {
-            throw new CustomException(ResponseCode.VEHICLE_STATE_NOT_FOUND);
         }
     }
 
