@@ -5,6 +5,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import kea.enter.enterbe.api.member.controller.dto.request.LicenseDto;
+import kea.enter.enterbe.api.member.controller.dto.response.GetLicenseInformationResponse;
 import kea.enter.enterbe.api.member.service.dto.request.LicenseValidationRequestDto;
 import kea.enter.enterbe.api.member.service.dto.response.LicenseValidationResponseDto;
 import kea.enter.enterbe.domain.member.entity.Member;
@@ -28,17 +29,18 @@ public class LicenseServiceImpl implements LicenseService {
     private final LicenseValidationUtil licenseValidationUtil;
     private final Clock clock;
 
+
     // 면허증 정보 저장 메서드
     @Override
     @Transactional
-    public void saveLicenseInformation(LicenseDto licenseDto) {
+    public void saveLicenseInformation(Long memberId, LicenseDto licenseDto) {
 
         // 개인정보 활용 동의를 하지 않았다면 서비스를 사용할 수 없음.
         if(licenseDto.getIsAgreeTerms().equals(Boolean.FALSE)) {
             throw new CustomException(ResponseCode.BAD_REQUEST);
         }
 
-        Member member = findMemberByMemberId(licenseDto.getMemberId());
+        Member member = findMemberByMemberId(memberId);
         String licenseId = licenseDto.getLicenseId();
         // 면허 진위여부 api 호출
         LicenseValidationResponseDto dto = licenseValidationUtil.checkValidationLicense(
@@ -71,29 +73,26 @@ public class LicenseServiceImpl implements LicenseService {
 
     // 면허증 정보가 유효한지 확인하는 메서드
     @Override
-    public void getLicenseInformation(Long memberId) {
+    public GetLicenseInformationResponse getLicenseInformation(Long memberId) {
         Member member = findMemberByMemberId(memberId);
         String licenseId = member.getLicenseId();
         String licensePassword = member.getLicensePassword();
         Boolean isLicenseValid = member.getIsLicenseValid();
-        Integer age = member.getAge();
-        // 만 26살 미만이라면 Exception
-        if(age<26){
-            throw new CustomException(ResponseCode.AGE_NOT_ALLOWED);
-        }
+
         // 신청 기간 아니면 확인 및 진위여부 api를 호출하지 않도록 함.
-        else if(!isWithinAllowedTime()){
-            throw new CustomException(ResponseCode.NOT_APPLY_PERIOD);
+        if(!isWithinAllowedTime()){
+            return GetLicenseInformationResponse.of("MEM-001", "신청 기간이 아닙니다.");
         }
         // license 데이터가 없으면 Exception
-        else if(licenseId.length()!=12 || licensePassword.isEmpty()){
-            throw new CustomException(ResponseCode.LICENSE_NOT_FOUND);
+        else if(licenseId.isEmpty() && licensePassword.isEmpty() && isLicenseValid.equals(Boolean.FALSE)){
+            return GetLicenseInformationResponse.of("MEM-002", "면허증 데이터가 없습니다.");
         }
         // isLicneseValid == false 면 Exception
         else if (isLicenseValid.equals(Boolean.FALSE)) {
-            // license data는 있으나, 유효성 검사가 필요합니다. 뭐 그런 얘기
-            throw new CustomException(ResponseCode.LICENSE_VALIDATION_FALSE);
+            // license data는 있으나, 유효성 검사가 필요합니다.
+            return GetLicenseInformationResponse.of("MEM-003", "면허증 진위여부 확인이 필요합니다.");
         }
+        return GetLicenseInformationResponse.of("MEM-004", "신청 자격이 확인되었습니다.");
     }
 
     // 면허 데이터가 이미 존재하고 isLicenseValid = false 인 사용자들의 데이터 진위여부 확인 메서드
@@ -106,7 +105,7 @@ public class LicenseServiceImpl implements LicenseService {
         Boolean isAgreeTerms = member.getIsAgreeTerms();
 
         // 데이터 검사
-        if(licenseId.length()==12 && !licensePassword.isEmpty() && isAgreeTerms.equals(Boolean.TRUE)){
+        if(!licenseId.isEmpty() && licenseId.length() == 12 && !licensePassword.isEmpty() && isAgreeTerms.equals(Boolean.TRUE)){
             // 면허 진위여부 api 호출
             LicenseValidationResponseDto dto = licenseValidationUtil.checkValidationLicense(
                 LicenseValidationRequestDto.of(
@@ -142,9 +141,9 @@ public class LicenseServiceImpl implements LicenseService {
         LocalTime time = now.toLocalTime();
 
         if (dayOfWeek == DayOfWeek.MONDAY) {
-            return !time.isBefore(LocalTime.of(9, 0));
+            return !time.isBefore(LocalTime.of(9, 0, 0));
         } else if (dayOfWeek == DayOfWeek.TUESDAY) {
-            return !time.isAfter(LocalTime.of(12, 0));
+            return !time.isAfter(LocalTime.of(23, 59, 59, 59));
         }
         return false;
     }

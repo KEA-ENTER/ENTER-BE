@@ -1,7 +1,6 @@
 package kea.enter.enterbe.api.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -12,6 +11,7 @@ import java.time.ZoneId;
 import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.member.controller.dto.request.LicenseDto;
+import kea.enter.enterbe.api.member.controller.dto.response.GetLicenseInformationResponse;
 import kea.enter.enterbe.api.member.service.dto.request.LicenseValidationRequestDto;
 import kea.enter.enterbe.api.member.service.dto.response.LicenseValidationResponseDto;
 import kea.enter.enterbe.domain.member.entity.Member;
@@ -40,7 +40,7 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createNoDataMember());
         Long memberId = member.getId();
         LicenseDto dto = LicenseDto.toService(
-            memberId, licenseId, liccensePw, isAgreeTerm
+            licenseId, liccensePw, isAgreeTerm
         );
         // 외부 api는 실패하지 않는다는 가정하에 진행
         given(licenseValidationUtil.checkValidationLicense(
@@ -48,7 +48,7 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         )).willReturn(LicenseValidationResponseDto.of(member.getName(), member.getBirthDate(), licenseId, "1", "ok", "ok", "11"));
 
         //when
-        licenseService.saveLicenseInformation(dto);
+        licenseService.saveLicenseInformation(memberId, dto);
 
         //then
         Optional<Member> result = memberRepository.findByIdAndState(memberId, MemberState.ACTIVE);
@@ -72,7 +72,7 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createNoDataMember());
         Long memberId = member.getId();
         LicenseDto dto = LicenseDto.toService(
-            memberId, licenseId, liccensePw, isAgreeTerm
+            licenseId, liccensePw, isAgreeTerm
         );
         //면허 일련번호는 전산정보와 일치하고 암호 일련번호가 틀린 경우 resAuthenticity 는 "2"를 반환
         given(licenseValidationUtil.checkValidationLicense(
@@ -81,7 +81,7 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
 
 
         //when & then
-        assertThatThrownBy(() -> licenseService.saveLicenseInformation(dto))
+        assertThatThrownBy(() -> licenseService.saveLicenseInformation(memberId, dto))
             .isInstanceOf(CustomException.class)
             .extracting("responseCode")
             .isEqualTo(ResponseCode.LICENSE_AUTHENTICITY_INCORRECT);
@@ -98,11 +98,11 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createNoDataMember());
         Long memberId = member.getId();
         LicenseDto dto = LicenseDto.toService(
-            memberId, licenseId, liccensePw, isAgreeTerm
+            licenseId, liccensePw, isAgreeTerm
         );
 
         //when & then
-        assertThatThrownBy(() -> licenseService.saveLicenseInformation(dto))
+        assertThatThrownBy(() -> licenseService.saveLicenseInformation(memberId, dto))
             .isInstanceOf(CustomException.class)
             .extracting("responseCode")
             .isEqualTo(ResponseCode.BAD_REQUEST);
@@ -122,27 +122,16 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         // 월요일 11시로 고정
         given(clock.instant()).willReturn(Instant.parse("2024-08-05T11:00:00Z"));
         given(clock.getZone()).willReturn(ZoneId.systemDefault());
+        //when
+        GetLicenseInformationResponse dto = licenseService.getLicenseInformation(memberId);
 
-        //when & then
-        assertThatCode(() -> licenseService.getLicenseInformation(memberId))
-            .doesNotThrowAnyException();
+        //then
+        assertThat(dto)
+            .extracting("code")
+            .isEqualTo("MEM-004");
     }
 
-    @DisplayName("사용자의 면허 정보가 유효한지 확인합니다. (실패 : 만 26살 미만)")
-    @Test
-    void throwExceptionWhenAgeIsLessThan26() {
-        //given
-        Member member = memberRepository.save(createNoDataMember());
-        Long memberId = member.getId();
-
-        // when & then
-        assertThatThrownBy(() -> licenseService.getLicenseInformation(memberId))
-            .isInstanceOf(CustomException.class)
-            .extracting("responseCode")
-            .isEqualTo(ResponseCode.AGE_NOT_ALLOWED);
-    }
-
-    @DisplayName("사용자의 면허 정보가 유효한지 확인합니다. (실패 : 신청 기간이 아닙니다.")
+    @DisplayName("사용자의 면허 정보가 유효한지 확인합니다. (성공 : 신청 기간이 아닙니다.")
     @Test
     void throwExceptionWhenNotApplyTime() {
         //given
@@ -153,14 +142,16 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         given(clock.instant()).willReturn(Instant.parse("2024-08-07T10:00:00Z"));
         given(clock.getZone()).willReturn(ZoneId.systemDefault());
 
-        //when & then
-        assertThatThrownBy(() -> licenseService.getLicenseInformation(memberId))
-            .isInstanceOf(CustomException.class)
-            .extracting("responseCode")
-            .isEqualTo(ResponseCode.NOT_APPLY_PERIOD);
+        //when
+        GetLicenseInformationResponse dto = licenseService.getLicenseInformation(memberId);
+
+        //then
+        assertThat(dto)
+            .extracting("code")
+            .isEqualTo("MEM-001");
     }
 
-    @DisplayName("사용자의 면허 정보가 유효한지 확인합니다. (실패 : 면허 정보가 없음)")
+    @DisplayName("사용자의 면허 정보가 유효한지 확인합니다. (성공 : 면허 정보가 없음)")
     @Test
     void throwExceptionWhenNoLicenseInformation() {
         //given
@@ -171,14 +162,16 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         given(clock.instant()).willReturn(Instant.parse("2024-08-05T11:00:00Z"));
         given(clock.getZone()).willReturn(ZoneId.systemDefault());
 
-        //when & then
-        assertThatThrownBy(() -> licenseService.getLicenseInformation(memberId))
-            .isInstanceOf(CustomException.class)
-            .extracting("responseCode")
-            .isEqualTo(ResponseCode.LICENSE_NOT_FOUND);
+        //when
+        GetLicenseInformationResponse dto = licenseService.getLicenseInformation(memberId);
+
+        //then
+        assertThat(dto)
+            .extracting("code")
+            .isEqualTo("MEM-002");
     }
 
-    @DisplayName("사용자의 면허 정보가 유효한지 확인합니다. (실패 : 면허 진위여부 검사가 되지 않았음.)")
+    @DisplayName("사용자의 면허 정보가 유효한지 확인합니다. (성공 : 면허 진위여부 검사가 되지 않았음.)")
     @Test
     void throwExceptionWhenIsNotLicenseValid() {
         //given
@@ -189,11 +182,13 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         given(clock.instant()).willReturn(Instant.parse("2024-08-05T11:00:00Z"));
         given(clock.getZone()).willReturn(ZoneId.systemDefault());
 
-        //when & then
-        assertThatThrownBy(() -> licenseService.getLicenseInformation(memberId))
-            .isInstanceOf(CustomException.class)
-            .extracting("responseCode")
-            .isEqualTo(ResponseCode.LICENSE_VALIDATION_FALSE);
+        //when
+        GetLicenseInformationResponse dto = licenseService.getLicenseInformation(memberId);
+
+        //then
+        assertThat(dto)
+            .extracting("code")
+            .isEqualTo("MEM-003");
     }
 
     /**

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kea.enter.enterbe.api.member.controller.dto.request.LicenseDto;
+import kea.enter.enterbe.api.member.controller.dto.response.GetLicenseInformationResponse;
 import kea.enter.enterbe.api.member.service.LicenseService;
 import kea.enter.enterbe.global.common.api.CustomResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -29,15 +30,14 @@ public class LicenseController {
     // 면허 여부 조회
     @Operation(
         summary = "면허를 포함한 신청 자격 확인 API",
-        description = "만 26살 미만, 신청 기간(월요일 오전9시~화요일 밤12시),면허증 데이터를 체크합니다."
+        description = "신청 기간(월요일 오전9시~화요일 밤12시),면허증 데이터를 체크합니다."
     )
     @GetMapping("/license")
-    public ResponseEntity<CustomResponseCode> getLicenseInformation(Authentication authentication) {
+    public ResponseEntity<GetLicenseInformationResponse> getLicenseInformation(Authentication authentication) {
 
         Long memberId = Long.valueOf(authentication.getName());
-        licenseService.getLicenseInformation(memberId);
 
-        return ResponseEntity.ok(CustomResponseCode.SUCCESS);
+        return ResponseEntity.ok(licenseService.getLicenseInformation(memberId));
     }
 
     // 면허증 등록 (등록 페이지에서 호출)
@@ -48,14 +48,7 @@ public class LicenseController {
         @Valid @RequestBody LicenseDto licenseDto)
     {
         Long memberId = Long.valueOf(authentication.getName());
-        licenseService.saveLicenseInformation(
-            LicenseDto.toService(
-                memberId,
-                licenseDto.getLicenseId(),
-                licenseDto.getLicensePassword(),
-                licenseDto.getIsAgreeTerms()
-            )
-        );
+        licenseService.saveLicenseInformation(memberId, licenseDto);
 
         return ResponseEntity.ok(CustomResponseCode.SUCCESS);
     }
