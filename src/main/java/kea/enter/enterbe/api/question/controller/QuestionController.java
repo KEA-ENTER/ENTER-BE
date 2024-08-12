@@ -23,6 +23,7 @@ import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetQuestionListServiceDto;
 import kea.enter.enterbe.api.question.service.dto.ModifyQuestionServiceDto;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -133,7 +134,7 @@ public class QuestionController {
     })
     @GetMapping("/list/{pages}")
     public ResponseEntity<GetQuestionListResponseDto> getQuestionList(
-        @Valid @RequestBody GetQuestionSearchDto dto, @PathVariable int pages) {
+        @Valid @ParameterObject GetQuestionSearchDto dto, @PathVariable int pages) {
 
         GetQuestionListResponseDto response = questionService.getQuestionList(
             GetQuestionListServiceDto.of(pages, dto.getKeyword(), dto.getSearchType()));
