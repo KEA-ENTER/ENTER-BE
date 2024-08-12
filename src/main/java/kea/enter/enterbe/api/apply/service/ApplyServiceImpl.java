@@ -8,12 +8,21 @@ import kea.enter.enterbe.api.apply.service.dto.GetApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.ModifyApplyDetailServiceDto;
+import kea.enter.enterbe.api.apply.service.dto.PostApplyServiceDto;
+import kea.enter.enterbe.api.question.service.dto.AnswerServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
+import kea.enter.enterbe.domain.member.entity.Member;
+import kea.enter.enterbe.domain.member.entity.MemberState;
+import kea.enter.enterbe.domain.member.repository.MemberRepository;
+import kea.enter.enterbe.domain.question.entity.Answer;
+import kea.enter.enterbe.domain.question.entity.AnswerState;
+import kea.enter.enterbe.domain.question.entity.Question;
+import kea.enter.enterbe.domain.question.entity.QuestionState;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
@@ -34,6 +43,7 @@ import java.time.*;
 
 import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_NOT_FOUND;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_ROUND_NOT_FOUND;
+import static kea.enter.enterbe.global.common.exception.ResponseCode.MEMBER_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -42,6 +52,7 @@ import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_ROUND
 public class ApplyServiceImpl implements ApplyService{
     private final ApplyRepository applyRepository;
     private final ApplyRoundRepository applyRoundRepository;
+    private final MemberRepository memberRepository;
 
     // 신청 가능 날짜 조회 API
     @Transactional(readOnly = true)
@@ -176,8 +187,27 @@ public class ApplyServiceImpl implements ApplyService{
         apply.modifyApplyRound(applyRound, dto.getPurpose());
 
     }
+    @Transactional
+    public void postApply(PostApplyServiceDto dto) {
+        Optional<Member> memberOptional = findById(dto.getMemberId());
+        if(!memberOptional.isPresent()){
+            throw new CustomException(MEMBER_NOT_FOUND);
+        }
+        Member member = memberOptional.get();
 
-    @Override
+        Optional<ApplyRound> applyOptional = findByApplyRoundId(dto.getApplyRoundId());
+        if(!applyOptional.isPresent()){
+            throw new CustomException(APPLY_ROUND_NOT_FOUND);
+        }
+        ApplyRound applyRound = applyOptional.get();
+
+        Apply apply = Apply.of(member, applyRound,
+            dto.getPurpose(), ApplyState.ACTIVE);
+
+        applyRepository.save(apply);
+    }
+
+    @Transactional
     public void deleteApplyDetail(DeleteApplyDetailServiceDto dto) {
         //수정 가능 시간 확인
         timeCheck(LocalDateTime.now());
@@ -206,6 +236,10 @@ public class ApplyServiceImpl implements ApplyService{
         if (isInRange)
             throw new CustomException(ResponseCode.INVALID_QUESTION_STATE);
     }
+    public Optional<Member> findById(Long memberId){
+        return memberRepository.findByIdAndState(memberId, MemberState.ACTIVE);
+    }
+
     public Optional<Apply> findByMemberIdAndRound(Long memberId, int maxRound) {
         return applyRepository.findByMemberIdAndRoundAndState(memberId, maxRound, ApplyState.ACTIVE);
     }
@@ -233,4 +267,5 @@ public class ApplyServiceImpl implements ApplyService{
     public Integer countByApplyRound(ApplyRound applyRound){
         return applyRepository.countByApplyRoundAndState(applyRound, ApplyState.ACTIVE);
     }
+
 }
