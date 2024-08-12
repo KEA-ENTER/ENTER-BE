@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
-@Tag(name = "신청 관련 API", description = "[관리자] Apply")
+@Tag(name = "[관리자] 신청 관련 API", description = "Apply")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/applies")

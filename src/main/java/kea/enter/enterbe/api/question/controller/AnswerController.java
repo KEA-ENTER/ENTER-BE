@@ -33,7 +33,7 @@ import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 @RestController
 @RequestMapping("/admin/questions")
 @RequiredArgsConstructor
-@Tag(name = "문의사항 관련 API", description = "[관리자] Question")
+@Tag(name = "[관리자] 문의사항 관련 API", description = "Question")
 public class AnswerController {
 
     private final AnswerService answerService;

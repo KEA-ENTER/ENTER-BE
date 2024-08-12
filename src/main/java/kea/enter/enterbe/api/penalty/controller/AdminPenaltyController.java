@@ -22,7 +22,7 @@ import java.util.List;
 
 import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 
-@Tag(name = "페널티 관련 API", description = "[관리자] Penalty")
+@Tag(name = "[관리자] 페널티 관련 API", description = "Penalty")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/penalties")

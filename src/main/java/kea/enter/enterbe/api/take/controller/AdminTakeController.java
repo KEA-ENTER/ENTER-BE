@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
-@Tag(name = "인수 관련 API", description = "[사용자] Take")
+@Tag(name = "[관리자] 인수 관련 API", description = "Take")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/takes")

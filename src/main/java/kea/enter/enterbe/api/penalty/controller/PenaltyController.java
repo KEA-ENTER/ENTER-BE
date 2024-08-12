@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "페널티 관련 API", description = "[사용자] Penalty")
+@Tag(name = "[사용자] 페널티 관련 API", description = "Penalty")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/penalties")
