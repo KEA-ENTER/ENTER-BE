@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "추첨 관련 API", description = "[관리자] Lottery")
+@Tag(name = "[관리자] 추첨 관련 API", description = "Lottery")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/lotteries")
