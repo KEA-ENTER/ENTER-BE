@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LicenseDto {
 
-    private Long memberId;
-
     @NotBlank
     @Pattern(regexp = "\\d{12}", message = "12자리의 숫자만 작성되어야 합니다.")
     private String licenseId;
@@ -29,18 +27,16 @@ public class LicenseDto {
     private Boolean isAgreeTerms;
 
     @Builder
-    public LicenseDto(Long memberId, String licenseId, String licensePassword, Boolean isAgreeTerms) {
-        this.memberId = memberId;
+    public LicenseDto(String licenseId, String licensePassword, Boolean isAgreeTerms) {
         this.licenseId = licenseId;
         this.licensePassword = licensePassword;
         this.isAgreeTerms = isAgreeTerms;
     }
 
     public static LicenseDto toService(
-        Long memberId, String licenseId, String licensePassword, Boolean isAgreeTerm
+        String licenseId, String licensePassword, Boolean isAgreeTerm
     ){
         return LicenseDto.builder()
-            .memberId(memberId)
             .licenseId(licenseId)
             .licensePassword(licensePassword)
             .isAgreeTerms(isAgreeTerm)

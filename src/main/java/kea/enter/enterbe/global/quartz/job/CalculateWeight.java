@@ -28,6 +28,17 @@ public class CalculateWeight implements Job {
     public void execute(JobExecutionContext context) {
         calculateYearsScore();
         calculateHistoryScore();
+        licenseValidCheck();
+    }
+
+    public void licenseValidCheck() {
+        List<Member> memberList = memberRepository.findByIsLicenseValidAndState(Boolean.TRUE, MemberState.ACTIVE);
+        List<Member> newMemberList = new ArrayList<>();
+        for (Member member : memberList) {
+            member.setIsLicenseValid(Boolean.FALSE);
+            newMemberList.add(member);
+        }
+        memberRepository.saveAll(newMemberList);
     }
 
     public List<WeightDto> getApplyMemberList() { // 반기 별 당첨자를 조회한다.
