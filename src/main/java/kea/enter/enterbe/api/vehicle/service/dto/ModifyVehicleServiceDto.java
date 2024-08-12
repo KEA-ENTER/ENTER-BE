@@ -1,7 +1,5 @@
 package kea.enter.enterbe.api.vehicle.service.dto;
 
-import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
-import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,13 +11,13 @@ public class ModifyVehicleServiceDto {
     private String company;
     private String model;
     private int seats;
-    private VehicleFuel fuel;
+    private String fuel;
     private MultipartFile img;
-    private VehicleState state;
+    private String state;
 
     @Builder
     public ModifyVehicleServiceDto(Long id, String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
+        int seats, String fuel, MultipartFile img, String state) {
 
         this.id = id;
         this.vehicleNo = vehicleNo;
@@ -32,7 +30,7 @@ public class ModifyVehicleServiceDto {
     }
 
     public static ModifyVehicleServiceDto of(Long id, String vehicleNo, String company, String model,
-        int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
+        int seats, String fuel, MultipartFile img, String state) {
 
         return ModifyVehicleServiceDto.builder()
             .id(id)

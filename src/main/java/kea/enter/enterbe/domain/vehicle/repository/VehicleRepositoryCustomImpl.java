@@ -145,7 +145,7 @@ public class VehicleRepositoryCustomImpl extends QuerydslRepositorySupport imple
         try {
             return VehicleState.valueOf(word.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new CustomException(ResponseCode.VEHICLE_STATE_NOT_ALLOWED);
+            throw new CustomException(ResponseCode.VEHICLE_STATE_NOT_FOUND);
         }
     }
 }
