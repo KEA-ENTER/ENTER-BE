@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "차량", description = "차량 API 명세서")
+@Tag(name = "차량 관련 API", description = "[사용자] Vehicle")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/vehicles")
@@ -53,6 +53,7 @@ public class VehicleController {
     ) {
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
         Long memberId = Long.valueOf(loggedInUser.getName());
+
         if (!fileUtil.isImageFileList(
             List.of(front_img, right_img, back_img, left_img, dashboardImg))) {
             throw new CustomException(ResponseCode.NOT_IMAGE_FILE);
