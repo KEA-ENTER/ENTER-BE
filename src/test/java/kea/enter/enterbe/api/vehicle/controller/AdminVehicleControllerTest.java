@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.nio.charset.StandardCharsets;
 import kea.enter.enterbe.ControllerTestSupport;
-import kea.enter.enterbe.api.vehicle.controller.dto.request.AdminVehicleRequest;
+import kea.enter.enterbe.api.vehicle.controller.dto.request.PostAdminVehicleRequest;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import org.apache.hc.core5.http.ContentType;
@@ -34,7 +34,7 @@ class AdminVehicleControllerTest extends ControllerTestSupport {
             ContentType.IMAGE_JPEG.getMimeType(), "test file".getBytes(StandardCharsets.UTF_8));
         VehicleState state = VehicleState.AVAILABLE;
 
-        AdminVehicleRequest request = new AdminVehicleRequest(vehicleNo, company, model, seats, fuel, state);
+        PostAdminVehicleRequest request = new PostAdminVehicleRequest(vehicleNo, company, model, seats, fuel, state);
 
         MockMultipartFile data = new MockMultipartFile("data", "data.json",
             MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
@@ -66,7 +66,7 @@ class AdminVehicleControllerTest extends ControllerTestSupport {
             ContentType.IMAGE_JPEG.getMimeType(), "test file".getBytes(StandardCharsets.UTF_8));
         VehicleState state = VehicleState.AVAILABLE;
 
-        AdminVehicleRequest request = new AdminVehicleRequest(id, vehicleNo, company, model, seats, fuel, state);
+        PostAdminVehicleRequest request = new PostAdminVehicleRequest(id, vehicleNo, company, model, seats, fuel, state);
 
         MockMultipartFile data = new MockMultipartFile("data", "data.json",
             MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));

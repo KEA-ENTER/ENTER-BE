@@ -22,7 +22,9 @@ public class OpenApiConfig {
         SecurityScheme securityScheme = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
                 .in(SecurityScheme.In.HEADER).name("Authorization");
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList("Bearer Token");
+      
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
+
         Info info = new Info()
                 .title(serviceTitle)
                 .version(serviceVersion);

@@ -6,8 +6,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 import kea.enter.enterbe.IntegrationTestSupport;
-import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleDto;
-import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleDto;
+import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleServiceDto;
+import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleServiceDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
@@ -27,7 +27,7 @@ class AdminVehicleServiceImplTest extends IntegrationTestSupport {
     @Test
     public void createVehicleSuccess() {
         // given
-        CreateVehicleDto dto = CreateVehicleDto.of("12가3456", "현대", "그랜저",
+        CreateVehicleServiceDto dto = CreateVehicleServiceDto.of("12가3456", "현대", "그랜저",
             5, VehicleFuel.GASOLINE, mock(MultipartFile.class), VehicleState.AVAILABLE);
             given(objectStorageUtil.uploadFileToS3(mock(MultipartFile.class))).willReturn("test.jpg");
 
@@ -45,7 +45,7 @@ class AdminVehicleServiceImplTest extends IntegrationTestSupport {
     @Test
     public void createVehicleWithInvalidVehicleNo() {
         // given
-        CreateVehicleDto dto = CreateVehicleDto.of("12가34567", "현대", "그랜저",
+        CreateVehicleServiceDto dto = CreateVehicleServiceDto.of("12가34567", "현대", "그랜저",
             5, VehicleFuel.GASOLINE, mock(MultipartFile.class), VehicleState.AVAILABLE);
 
         // when & then
@@ -66,7 +66,7 @@ class AdminVehicleServiceImplTest extends IntegrationTestSupport {
 
         MultipartFile image = mock(MultipartFile.class);
 
-        ModifyVehicleDto dto = ModifyVehicleDto.of(vehicle.getId(), "12가3455",
+        ModifyVehicleServiceDto dto = ModifyVehicleServiceDto.of(vehicle.getId(), "12가3455",
             "현대", "그랜저", 4, VehicleFuel.GASOLINE, image,
             VehicleState.AVAILABLE);
 
@@ -97,7 +97,7 @@ class AdminVehicleServiceImplTest extends IntegrationTestSupport {
 
         MultipartFile image = mock(MultipartFile.class);
 
-        ModifyVehicleDto dto = ModifyVehicleDto.of(vehicle.getId(), "12가34567",
+        ModifyVehicleServiceDto dto = ModifyVehicleServiceDto.of(vehicle.getId(), "12가34567",
             "현대", "그랜저", 4, VehicleFuel.GASOLINE, image,
             VehicleState.AVAILABLE);
 

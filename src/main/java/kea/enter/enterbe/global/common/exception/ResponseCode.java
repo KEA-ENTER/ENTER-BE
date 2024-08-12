@@ -17,6 +17,7 @@ public enum ResponseCode {
     LICENSE_AUTHENTICITY_INCORRECT("MEM-ERR-004", HttpStatus.BAD_REQUEST, "면허 정보가 유효하지 않습니다."),
     NOT_APPLY_PERIOD("MEM-ERR-005", HttpStatus.NOT_FOUND, "신청 기간이 아닙니다."),
     AGE_NOT_ALLOWED("MEM-ERR-006", HttpStatus.NOT_FOUND, "만 나이가 26살 미만입니다."),
+    ROUTING_NOT_FOUND("MEM-ERR-007", HttpStatus.NOT_FOUND, "라우팅 정보를 찾을 수 없습니다."),
     //APPLY
     APPLY_NOT_FOUND("APL-ERR-001", HttpStatus.NOT_FOUND ,"지원 정보를 찾을 수 없습니다."),
     //WINNING
@@ -33,10 +34,12 @@ public enum ResponseCode {
     VEHICLE_NOT_VALID("VHC_ERR_001", HttpStatus.NOT_FOUND, "법인 차량 정보를 찾을 수 없습니다."),
     VEHICLE_NO_NOT_ALLOWED("VHC_ERR_002", HttpStatus.METHOD_NOT_ALLOWED, "유효하지 않은 차량번호 형식입니다."),
     VEHICLE_DUPLICATED("VHC_ERR_003", HttpStatus.BAD_REQUEST, "이미 존재하는 차량입니다."),
-    NEED_PARKING_LOC_FOR_RETURN_REPORT("VHC-ERR-004",HttpStatus.BAD_REQUEST , "주차 위치를 입력해주세요."),
+    VEHICLE_STATE_NOT_ALLOWED("VHC_ERR_004", HttpStatus.BAD_REQUEST, "유효하지 않은 차량 상태입니다. AVAILABLE, WAIT_TAKE, TAKE_COMPLETE, ON_RENT, WAIT_RETURN, RETURN_COMPLETE, RENT_UNAVAILABLE, INACTIVE 중에 입력해주세요."),
+    INVALID_VEHICLE_SEARCH_CATEGORY("VHC-ERR-005", HttpStatus.BAD_REQUEST, "유효하지 않은 차량 검색 카테고리입니다."),
 
     // VEHICLE REPORT
     VEHICLE_REPORT_NOT_FOUND("VHR-ERR-001", HttpStatus.NOT_FOUND, "차량 보고서를 찾을 수 없습니다."),
+    NEED_PARKING_LOC_FOR_RETURN_REPORT("VHR-ERR-002",HttpStatus.BAD_REQUEST , "주차 위치를 입력해주세요."),
 
     // PENALTY
     PENALTY_NOT_FOUND("PEN-ERR-001", HttpStatus.NOT_FOUND, "페널티를 찾을 수 없습니다."),

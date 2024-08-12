@@ -7,9 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResultResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentCompetitionRateResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAverageNumbersResponse;
 import kea.enter.enterbe.api.lottery.service.LotteryService;
+import kea.enter.enterbe.api.lottery.service.dto.GetLotteryResultServiceDto;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,12 @@ public class LotteryController {
     public ResponseEntity<List<GetRecentWaitingAverageNumbersResponse>> getAverageWaitingNumbers() {
         return ResponseEntity.ok(lotteryService.getAverageWaitingNumbers());
     }
-
+    @Operation(summary = "당첨 여부 조회")
+    @GetMapping("result")
+    public ResponseEntity<GetLotteryResultResponse> getLottery(Authentication authentication) {
+        Long memberId = Long.valueOf(authentication.getName());
+        return ResponseEntity.ok(lotteryService.getLottery(GetLotteryResultServiceDto.of(memberId)));
+    }
     @Operation(summary = "사용자의 추첨 참여 내역 조회 API",
         parameters = {
         @Parameter(name = "Authorization", description = "Bearer Token", required = true,
