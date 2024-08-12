@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter { // OncePerRequestFilter -> 한 번 실행 보장
@@ -21,6 +22,8 @@ public class JwtFilter extends OncePerRequestFilter { // OncePerRequestFilter ->
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
+        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
+        if(authorizationHeader == null) authorizationHeader = wrappedRequest.getHeader("Authorization");
 
         //JWT가 헤더에 있는 경우
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

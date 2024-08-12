@@ -9,6 +9,8 @@ openapi:
         version: 1.0.0
         url: http://localhost:8090
 springdoc:
+    bearer:
+        enabled: on
     api-docs:
         path: /api/v3/api-docs
     swagger-ui:
