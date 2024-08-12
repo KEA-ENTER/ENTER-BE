@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import kea.enter.enterbe.api.vehicle.service.dto.CreateVehicleServiceDto;
-import kea.enter.enterbe.domain.vehicle.entity.VehicleFuel;
-import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,18 +35,18 @@ public class PostAdminVehicleRequest {
 
     @Schema(description = "차량 연료 (DIESEL, GASOLINE, ELECTRICITY)", example = "GASOLINE")
     @NotNull(message = "차량 연료 (DIESEL, GASOLINE, ELECTRICITY)를 입력해야 합니다.")
-    private VehicleFuel fuel;
+    private String fuel;
 
     @Schema(description = "차량 이미지", example = "")
     private MultipartFile img;
 
     @Schema(description = "차량 상태 (AVAILABLE, WAIT_TAKE, TAKE_COMPLETE, ON_RENT, WAIT_RETURN, RETURN_COMPLETE, RENT_UNAVAILABLE, INACTIVE)", example = "AVAILABLE")
     @NotNull(message = "차량 상태를 입력해야 합니다.")
-    private VehicleState state;
+    private String state;
 
 
     @Builder
-    public PostAdminVehicleRequest(Long id, String vehicleNo, String company, String model, int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
+    public PostAdminVehicleRequest(Long id, String vehicleNo, String company, String model, int seats, String fuel, MultipartFile img, String state) {
         this.id = id;
         this.vehicleNo = vehicleNo;
         this.company = company;
@@ -60,7 +58,7 @@ public class PostAdminVehicleRequest {
     }
 
     @Builder
-    public PostAdminVehicleRequest(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, VehicleState state) {
+    public PostAdminVehicleRequest(String vehicleNo, String company, String model, int seats, String fuel, String state) {
         this.vehicleNo = vehicleNo;
         this.company = company;
         this.model = model;
@@ -70,7 +68,7 @@ public class PostAdminVehicleRequest {
     }
 
     @Builder
-    public PostAdminVehicleRequest(Long id, String vehicleNo, String company, String model, int seats, VehicleFuel fuel, VehicleState state) {
+    public PostAdminVehicleRequest(Long id, String vehicleNo, String company, String model, int seats, String fuel, String state) {
         this.id = id;
         this.vehicleNo = vehicleNo;
         this.company = company;
@@ -80,7 +78,7 @@ public class PostAdminVehicleRequest {
         this.state = state;
     }
 
-    public static PostAdminVehicleRequest of(String vehicleNo, String company, String model, int seats, VehicleFuel fuel, MultipartFile img, VehicleState state) {
+    public static PostAdminVehicleRequest of(String vehicleNo, String company, String model, int seats, String fuel, MultipartFile img, String state) {
         return PostAdminVehicleRequest.builder()
             .vehicleNo(vehicleNo)
             .company(company)
