@@ -22,7 +22,7 @@ public class OpenApiConfig {
         SecurityScheme securityScheme = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
                 .in(SecurityScheme.In.HEADER).name("Authorization");
-      
+
         SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
 
         Info info = new Info()
@@ -30,7 +30,7 @@ public class OpenApiConfig {
                 .version(serviceVersion);
         return new OpenAPI()
                 .addServersItem(new Server().url(url))
-                .components(new Components().addSecuritySchemes("Bearer Token", securityScheme))
+                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
                 .security(Collections.singletonList(securityRequirement))
                 .info(info);
     }

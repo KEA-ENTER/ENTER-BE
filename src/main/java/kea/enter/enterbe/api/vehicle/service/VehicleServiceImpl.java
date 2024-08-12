@@ -22,6 +22,7 @@ import kea.enter.enterbe.domain.take.entity.VehicleReportState;
 import kea.enter.enterbe.domain.take.entity.VehicleReportType;
 import kea.enter.enterbe.domain.take.repository.VehicleReportRepository;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleNote;
+import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleNoteRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
@@ -90,24 +91,30 @@ public class VehicleServiceImpl implements VehicleService {
         List<VehicleReport> vehicleReports;
         int returnReport, takeReport;
         LocalDate now = LocalDate.now(clock);
-        List<Winning> winning = winningRepository.findAllByStateAndApplyApplyRoundReturnDate(WinningState.ACTIVE,now.minusDays(1));
+        List<Winning> winning = winningRepository.findAllByStateAndApplyApplyRoundReturnDate(
+            WinningState.ACTIVE, now.minusDays(1));
         for (Winning w : winning) {
             takeReport = 0;
             returnReport = 0;
             vehicleReports = vehicleReportRepository.findAllByWinningIdAndState(w.getId(),
                 VehicleReportState.ACTIVE);
             for (VehicleReport vr : vehicleReports) {
-                if(vr.getType().equals(VehicleReportType.TAKE))
+                if (vr.getType().equals(VehicleReportType.TAKE)) {
                     takeReport++;
-                else if(vr.getType().equals(VehicleReportType.RETURN))
+                } else if (vr.getType().equals(VehicleReportType.RETURN)) {
                     returnReport++;
+                }
             }
-            if(takeReport==0)
-                penaltyRepository.save(Penalty.create(w.getApply().getMember(),PenaltyReason.TAKE,
-                    PenaltyLevel.MEDIUM,null));
-            else if(returnReport==0)
-                penaltyRepository.save(Penalty.create(w.getApply().getMember(),PenaltyReason.RETURN,
-                    PenaltyLevel.MEDIUM,null));
+            if (takeReport == 0) {
+                w.getApply().getApplyRound().getVehicle().setState(VehicleState.ON_RENT);
+                penaltyRepository.save(Penalty.create(w.getApply().getMember(), PenaltyReason.TAKE,
+                    PenaltyLevel.MEDIUM, null));
+            } else if (returnReport == 0) {
+                w.getApply().getApplyRound().getVehicle().setState(VehicleState.AVAILABLE);
+                penaltyRepository.save(
+                    Penalty.create(w.getApply().getMember(), PenaltyReason.RETURN,
+                        PenaltyLevel.MEDIUM, null));
+            }
         }
     }
 
@@ -120,8 +127,9 @@ public class VehicleServiceImpl implements VehicleService {
         return now.isAfter(takeDate) && now.isBefore(returnDate);
     }
 
-    private Winning getWinningByMemberIdThisWeek(Long memberId,LocalDate now) {
-        return winningRepository.findByApplyMemberIdAndApplyApplyRoundTakeDateBetweenAndState(memberId,now.with(DayOfWeek.MONDAY),now.with(DayOfWeek.SUNDAY),WinningState.ACTIVE)
+    private Winning getWinningByMemberIdThisWeek(Long memberId, LocalDate now) {
+        return winningRepository.findByApplyMemberIdAndApplyApplyRoundTakeDateBetweenAndState(
+                memberId, now.with(DayOfWeek.MONDAY), now.with(DayOfWeek.SUNDAY), WinningState.ACTIVE)
             .orElseThrow(() -> new CustomException(ResponseCode.WINNING_NOT_FOUND));
     }
 

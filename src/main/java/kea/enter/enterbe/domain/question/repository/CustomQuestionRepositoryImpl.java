@@ -67,7 +67,7 @@ public class CustomQuestionRepositoryImpl implements CustomQuestionRepository {
             .where(builder.and(question.state.ne(QuestionState.INACTIVE)))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
-            .orderBy(question.createdAt.desc())
+            .orderBy(question.id.desc())
             .fetch();
 
         long size = queryFactory.select(question.count())

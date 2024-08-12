@@ -95,7 +95,6 @@ public class AnswerService {
         /* 문의사항 List 조회 */
         // 삭제된 질문사항 제외
         List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createdAt"));
         Pageable pageable = PageRequest.of(dto.getPageNumber() - 1, 8, Sort.by(sorts));
         Page<Question> questions = questionRepository.searchQuestions(dto.getKeyword(),
             dto.getSearchType(), pageable);

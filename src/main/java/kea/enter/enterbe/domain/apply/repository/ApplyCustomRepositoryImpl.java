@@ -121,12 +121,16 @@ public class ApplyCustomRepositoryImpl implements ApplyCustomRepository {
     // 사용자 아이디(이메일) 검색
     private BooleanExpression idContains(ApplicantSearchType searchType, String keyword) {
         if(searchType == ApplicantSearchType.NAME) return null;
-        return keyword != null ? apply.member.email.contains(keyword) : null;
+        return keyword != null ?
+            apply.member.email.toUpperCase().contains(keyword)
+                .or(apply.member.email.toLowerCase().contains(keyword)) : null;
     }
 
     // 사용자 이름 검색
     private BooleanExpression nameContains(ApplicantSearchType searchType, String keyword) {
         if(searchType == ApplicantSearchType.ID) return null;
-        return keyword != null ? apply.member.name.contains(keyword) : null;
+        return keyword != null ?
+            apply.member.name.toUpperCase().contains(keyword)
+                .or(apply.member.name.toLowerCase().contains(keyword)): null;
     }
 }

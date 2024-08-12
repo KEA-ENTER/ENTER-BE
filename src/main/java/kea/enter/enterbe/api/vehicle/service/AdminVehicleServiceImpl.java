@@ -37,7 +37,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
             searchCategory = VehicleSearchCategory.valueOf(dto.getSearchCategory().toUpperCase());
 
         } catch (IllegalArgumentException e) {
-            throw new CustomException(ResponseCode.INVALID_VEHICLE_SEARCH_CATEGORY);
+            throw new CustomException(ResponseCode.VEHICLE_SEARCH_CATEGORY_NOT_FOUND);
         }
 
         Page<Vehicle> vehicles = vehicleRepository.findBySearchOption(
@@ -85,10 +85,11 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     @Transactional
     public void modifyVehicle(ModifyVehicleServiceDto dto) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
-        if (!vehicle.get().getVehicleNo().equals(dto.getVehicleNo()))
-            checkVehicle(dto.getVehicleNo());
 
         if (vehicle.isPresent()) {
+            if (!vehicle.get().getVehicleNo().equals(dto.getVehicleNo()))
+                checkVehicle(dto.getVehicleNo());
+
             String img = "";
             try {
                 img = uploadS3Image(dto.getImg());

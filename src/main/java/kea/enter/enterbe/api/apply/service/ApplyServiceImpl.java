@@ -195,6 +195,12 @@ public class ApplyServiceImpl implements ApplyService{
         }
         Member member = memberOptional.get();
 
+        Integer age = member.getAge();
+        // 만 26살 미만이라면 Exception
+        if(age<26){
+            throw new CustomException(ResponseCode.AGE_NOT_ALLOWED);
+        }
+
         Optional<ApplyRound> applyOptional = findByApplyRoundId(dto.getApplyRoundId());
         if(!applyOptional.isPresent()){
             throw new CustomException(APPLY_ROUND_NOT_FOUND);
