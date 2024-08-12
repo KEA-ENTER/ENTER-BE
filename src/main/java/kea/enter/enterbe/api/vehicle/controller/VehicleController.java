@@ -15,6 +15,8 @@ import kea.enter.enterbe.global.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,7 +51,9 @@ public class VehicleController {
         @Schema(description = "보고서 종류 TAKE, RETURN", example = "TAKE")
         VehicleReportType type
     ) {
-        Long memberId = 1L;
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        Long memberId = Long.valueOf(loggedInUser.getName());
+
         if (!fileUtil.isImageFileList(
             List.of(front_img, right_img, back_img, left_img, dashboardImg))) {
             throw new CustomException(ResponseCode.NOT_IMAGE_FILE);

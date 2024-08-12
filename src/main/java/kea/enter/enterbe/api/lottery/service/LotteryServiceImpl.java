@@ -5,24 +5,32 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResultResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentCompetitionRateResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAverageNumbersResponse;
+import kea.enter.enterbe.api.lottery.service.dto.GetLotteryResultServiceDto;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
+import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
+import kea.enter.enterbe.domain.lottery.entity.Waiting;
 import kea.enter.enterbe.domain.lottery.entity.WaitingState;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import kea.enter.enterbe.domain.lottery.repository.WaitingRepository;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
+import kea.enter.enterbe.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -100,6 +108,33 @@ public class LotteryServiceImpl implements LotteryService {
         return list;
     }
 
+    @Override
+    public GetLotteryResultResponse getLottery(GetLotteryResultServiceDto dto) {
+        Long memberId = dto.getMemeberId();
+        int maxRound = getMaxRoundByState();
+
+        Optional<Apply> applyOptional = findByMemberIdAndRound(memberId, maxRound);
+        Apply recentlyApply = applyOptional.orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
+
+        Optional<Winning> winningOptional = findWinningByApplyId(recentlyApply.getId());
+        //winning 테이블에 없을 경우 -> 대기 or 탈락
+        if (!winningOptional.isPresent()) {
+            Optional<Waiting> waitingOptional = finWaittingdByApplyId(recentlyApply.getId());
+            //waiting 테이블에 없을 경우 -> 탈락
+            if (!waitingOptional.isPresent()) {
+                return GetLotteryResultResponse.of(false, null);
+            }
+            //waiting 테이블에 있을 경우 -> 대기
+            else {
+                return GetLotteryResultResponse.of(false, waitingOptional.get().getWaitingNo());
+            }
+        }
+        // winning 테이블에 있을 경우 -> 당첨
+        else {
+            return GetLotteryResultResponse.of(true, null);
+        }
+    }
+
     public List<GetLotteryResponse> getLotteryList(GetLotteryServiceDto dto) {
         return applyRepository.findAllLotteryResponsebyId(dto.getMemberId());
     }
@@ -112,5 +147,18 @@ public class LotteryServiceImpl implements LotteryService {
         LocalDate thisSunday = today.with(DayOfWeek.SUNDAY);  // 이번주 일요일
         return applyRoundRepository.findAllApplyRoundsByTakeDateBetweenAndState(
             thisMonday, thisSunday, ApplyRoundState.ACTIVE);
+    }
+
+    public Integer getMaxRoundByState() {
+        return applyRoundRepository.findMaxRoundByState(ApplyRoundState.ACTIVE);
+    }
+    public Optional<Apply> findByMemberIdAndRound(Long memberId, int maxRound) {
+        return applyRepository.findByMemberIdAndRoundAndState(memberId, maxRound, ApplyState.ACTIVE);
+    }
+    public Optional<Winning> findWinningByApplyId(Long applyId){
+        return winningRepository.findByApplyIdAndState(applyId, WinningState.ACTIVE);
+    }
+    public Optional<Waiting> finWaittingdByApplyId(Long applyId){
+        return waitingRepository.findByApplyIdAndState(applyId, WaitingState.ACTIVE);
     }
 }

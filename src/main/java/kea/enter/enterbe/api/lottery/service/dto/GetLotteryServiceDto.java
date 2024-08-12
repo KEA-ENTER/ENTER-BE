@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class GetLotteryServiceDto {
+    public class GetLotteryServiceDto {
     private Long memberId;
 
     @Builder

@@ -1,5 +1,6 @@
 package kea.enter.enterbe.domain.apply.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import kea.enter.enterbe.domain.apply.entity.Apply;
@@ -31,5 +32,4 @@ public interface ApplyRepository extends JpaRepository<Apply, Long>, ApplyCustom
 
     // 위의 Refactoring으로 대체됨
     //Optional<Apply> findByMemberAndApplyRoundAndState(Member member, ApplyRound applyRound, ApplyState state);
-
 }
