@@ -31,7 +31,7 @@ class MemberServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember());
         Vehicle vehicle = vehicleRepository.save(createVehicle());
-        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024,8,11)));
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024,8,5)));
         Apply apply = applyRepository.save(createApply(member, applyRound));
         // 월요일 11시로 고정
         given(clock.instant()).willReturn(Instant.parse("2024-08-05T11:00:00Z"));
@@ -53,9 +53,9 @@ class MemberServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember());
         Vehicle vehicle = vehicleRepository.save(createVehicle());
-        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024,8,11)));
+        ApplyRound applyRound = applyRoundRepository.save(createApplyRound(vehicle, LocalDate.of(2024,8,5)));
         // 월요일 11시로 고정
-        given(clock.instant()).willReturn(Instant.parse("2024-08-05T11:00:00Z"));
+        given(clock.instant()).willReturn(Instant.parse("2024-08-12T11:00:00Z"));
         given(clock.getZone()).willReturn(ZoneId.systemDefault());
 
         Long memberId = member.getId();
