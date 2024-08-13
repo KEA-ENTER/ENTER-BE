@@ -33,12 +33,13 @@ public class Waiting extends BaseEntity {
     private WaitingState state;
 
     @Builder
-    public Waiting(Apply apply, int waitingNo) {
+    public Waiting(Apply apply, int waitingNo, WaitingState state) {
         this.apply = apply;
         this.waitingNo = waitingNo;
+        this.state = state;
     }
 
-    public static Waiting of(Apply apply, int waitingNo) {
-        return Waiting.builder().apply(apply).waitingNo(waitingNo).build();
+    public static Waiting of(Apply apply, int waitingNo, WaitingState state) {
+        return Waiting.builder().apply(apply).waitingNo(waitingNo).state(state).build();
     }
 }

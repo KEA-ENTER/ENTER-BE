@@ -4,10 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willReturn;
 
-import java.time.Instant;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.member.controller.dto.request.LicenseDto;
@@ -119,9 +122,11 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createAllowedConditionMember());
         Long memberId = member.getId();
-        // 월요일 11시로 고정
-        given(clock.instant()).willReturn(Instant.parse("2024-08-05T11:00:00Z"));
-        given(clock.getZone()).willReturn(ZoneId.systemDefault());
+        // 월요일 오전 9시로 고정(신청 가능 시간 경계값)
+        LocalDateTime now = LocalDateTime.of(2024,8,12,9,0,0);
+        Clock fixedClock = Clock.fixed(now.toInstant(ZoneOffset.of("+9")), ZoneId.systemDefault());
+        willReturn(fixedClock.instant()).given(clock).instant();
+        willReturn(fixedClock.getZone()).given(clock).getZone();
         //when
         GetLicenseInformationResponse dto = licenseService.getLicenseInformation(memberId);
 
@@ -138,9 +143,11 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createAllowedConditionMember());
         Long memberId = member.getId();
         // 신청기간 : 월요일 오전 9시~화요일 밤 12시
-        // 수요일 오전 10시로 고정
-        given(clock.instant()).willReturn(Instant.parse("2024-08-07T10:00:00Z"));
-        given(clock.getZone()).willReturn(ZoneId.systemDefault());
+        // 수요일 오전 0시 0분 0초로 고정
+        LocalDateTime now = LocalDateTime.of(2024,8,14,0,0,0);
+        Clock fixedClock = Clock.fixed(now.toInstant(ZoneOffset.of("+9")), ZoneId.systemDefault());
+        willReturn(fixedClock.instant()).given(clock).instant();
+        willReturn(fixedClock.getZone()).given(clock).getZone();
 
         //when
         GetLicenseInformationResponse dto = licenseService.getLicenseInformation(memberId);
@@ -158,9 +165,11 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         //license data가 없는 사용자
         Member member = memberRepository.save(createNotHaveLicenseMember());
         Long memberId = member.getId();
-        // 월요일 11시로 고정
-        given(clock.instant()).willReturn(Instant.parse("2024-08-05T11:00:00Z"));
-        given(clock.getZone()).willReturn(ZoneId.systemDefault());
+        // 월요일 오전 9시 1초로 고정
+        LocalDateTime now = LocalDateTime.of(2024,8,12,9,0,1);
+        Clock fixedClock = Clock.fixed(now.toInstant(ZoneOffset.of("+9")), ZoneId.systemDefault());
+        willReturn(fixedClock.instant()).given(clock).instant();
+        willReturn(fixedClock.getZone()).given(clock).getZone();
 
         //when
         GetLicenseInformationResponse dto = licenseService.getLicenseInformation(memberId);
@@ -178,9 +187,11 @@ class LicenseServiceImplTest extends IntegrationTestSupport {
         //isLicenseValid == false
         Member member = memberRepository.save(createValidationCheckNeededMember());
         Long memberId = member.getId();
-        // 월요일 11시로 고정
-        given(clock.instant()).willReturn(Instant.parse("2024-08-05T11:00:00Z"));
-        given(clock.getZone()).willReturn(ZoneId.systemDefault());
+        // 월요일 오전 9시 1초로 고정
+        LocalDateTime now = LocalDateTime.of(2024,8,12,9,0,1);
+        Clock fixedClock = Clock.fixed(now.toInstant(ZoneOffset.of("+9")), ZoneId.systemDefault());
+        willReturn(fixedClock.instant()).given(clock).instant();
+        willReturn(fixedClock.getZone()).given(clock).getZone();
 
         //when
         GetLicenseInformationResponse dto = licenseService.getLicenseInformation(memberId);
