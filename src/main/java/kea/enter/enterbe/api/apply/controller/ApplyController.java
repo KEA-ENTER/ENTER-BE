@@ -93,7 +93,7 @@ public class ApplyController {
     }
     @Operation(summary = "차량 신청 API", description = "차량 대여를 신청합니다.")
     @PostMapping("/vehicles")
-    public ResponseEntity<PostApplyResponse> postApply(
+    public ResponseEntity<PostApplyResponse > postApply(
         Authentication authentication,
         @Valid @RequestBody PostApplyRequest dto
     ) {
