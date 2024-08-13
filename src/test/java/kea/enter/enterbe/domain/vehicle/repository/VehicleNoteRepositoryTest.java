@@ -42,7 +42,7 @@ class VehicleNoteRepositoryTest extends IntegrationTestSupport {
         vehicleNoteRepository.save(createVehicleNote(vehicle, vehicleReport));
 
         // when
-        Optional<VehicleNote> response = vehicleNoteRepository.findByVehicleReportIdAndState(vehicle.getId(), VehicleNoteState.ACTIVE);
+        Optional<VehicleNote> response = vehicleNoteRepository.findByVehicleReportIdAndState(vehicleReport.getId(), VehicleNoteState.ACTIVE);
 
         // then
         assertThat(response).isPresent();
