@@ -43,7 +43,4 @@ public class Winning extends BaseEntity {
     public static Winning of(Apply apply, WinningState state) {
         return Winning.builder().apply(apply).state(state).build();
     }
-    public void cancelWinning() {
-        this.state = WinningState.INACTIVE;
-    }
 }

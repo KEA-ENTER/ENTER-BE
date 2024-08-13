@@ -17,7 +17,7 @@ public interface ApplyService {
     List<GetApplyVehicleResponse> getApplyVehicles(GetApplyVehicleServiceDto dto);
     GetApplyDetailResponse getApplyDetail(GetApplyDetailServiceDto dto);
     void modifyApplyDetail(ModifyApplyDetailServiceDto dto);
-    void deleteApplyDetail(DeleteApplyDetailServiceDto dto);
+    int deleteApplyDetail(DeleteApplyDetailServiceDto dto);
     PostApplyResponse postApply(PostApplyServiceDto dto);
 
     }

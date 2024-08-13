@@ -36,6 +36,7 @@ import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
@@ -49,6 +50,7 @@ import java.util.stream.Collectors;
 import java.time.*;
 
 
+import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_NOT_FOUND;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_ROUND_NOT_FOUND;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.MEMBER_NOT_FOUND;
@@ -227,60 +229,51 @@ public class ApplyServiceImpl implements ApplyService{
     }
 
     @Transactional
-    public void deleteApplyDetail(DeleteApplyDetailServiceDto dto) {
-        //수정 가능 시간 확인
+    public int deleteApplyDetail(DeleteApplyDetailServiceDto dto) {
+        // 수정 가능 시간 확인
         timeCheck(LocalDateTime.now());
 
         // Apply 존재 여부 확인
-        Optional<Apply> applyOptional = findByIdAndMemberId(dto.getApplyId(), dto.getMemberId());
-        if (!applyOptional.isPresent()) {
-            throw new CustomException(APPLY_NOT_FOUND);
-        }
+        Apply apply = findByIdAndMemberId(dto.getApplyId(), dto.getMemberId())
+            .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
 
-        // 신청 취소는 winning waiting 모두 INACTIVE로 변경하고
-        // waiting에서 winning으로 올라갈 경우는 ACTIVE 그대로
-        // 다음 당첨자를 찾을 때는 waiting number + 1 and state는 ACTIVE
-        // winning을 취소할 경우에는 waiting에 존재하는 해당 유저도 INACTIVE
-        Apply apply = applyOptional.get();
-        Long applyId = apply.getId();
+        Long applyId = dto.getApplyId();
 
-        Optional<Winning> winningOptional = findWinningByApplyId(applyId);
-        if (!winningOptional.isPresent()) {
-            // waiting table에서 해당 인원을 가져옴
-            Optional<Waiting> waitingOptional = findWaitingByApplyId(applyId);
+        // 기존 당첨자 혹은 기존 대기자 조회
+        Winning firstWinning = findWinningByApplyId(applyId).orElse(null);
+        Waiting firstWaiting = findWaitingByApplyId(applyId)
+            .orElseThrow(() -> new CustomException(WAITING_NOT_FOUND));
 
-            //waiting 테이블에 없을 경우 -> 탈락
-            if (!waitingOptional.isPresent()) {
-                throw new CustomException(WAITING_NOT_FOUND);
+        if (firstWinning == null) {
+            // waiting 테이블에 있을 경우 -> 대기 취소
+            firstWaiting.deleteWaiting();
+            apply.deleteApply();
+            return 1;
+        } else {
+            // 당첨자와 대기자 모두 취소
+            firstWinning.deleteWinning();
+            firstWaiting.deleteWaiting();
+
+            // 다음 대기자를 찾음
+            Integer waitingNo = firstWaiting.getWaitingNo();
+            // 해당 대기 인원들의 ID를 대기번호를 기준으로 오름차순으로 정렬
+            List<Long> idList = waitingFindIds(apply.getApplyRound().getId(), waitingNo);
+
+            if (idList.isEmpty()) {
+                // 대기자가 없을 경우 -> Apply 삭제
+                apply.deleteApply();
+                return 0;
+            } else {
+                // 대기자가 존재할 경우 -> 다음 대기자를 당첨으로
+                Long newWinnerId = idList.get(0);
+                Apply newWinnerApply = findByApplyId(newWinnerId)
+                    .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
+                winningRepository.save(Winning.of(newWinnerApply, WinningState.ACTIVE));
+
+                apply.deleteApply();
+                return 1;
             }
-            //waiting 테이블에 있을 경우 -> 대기
-            else {
-                Waiting waiting = waitingOptional.get();
-                waiting.cancelWaiting();
-            }
         }
-        // winning 테이블에 있을 경우 -> 당첨
-        else {
-            Winning winning = winningOptional.get();
-            winning.cancelWinning();
-
-            Optional<Waiting> waitingOptional = findWaitingByApplyId(applyId);
-            if (!waitingOptional.isPresent()) {
-                throw new CustomException(WAITING_NOT_FOUND);
-            }
-            Waiting waiting = waitingOptional.get();
-            Integer waitingNo = waiting.getWaitingNo();
-            Long applyRoundId = apply.getApplyRound().getId();
-
-
-
-            waiting.cancelWaiting();
-
-
-        }
-
-
-
     }
     public void timeCheck(LocalDateTime now){
         // 이번주 수요일 0:00:00
@@ -296,8 +289,11 @@ public class ApplyServiceImpl implements ApplyService{
         if (isInRange)
             throw new CustomException(ResponseCode.INVALID_QUESTION_STATE);
     }
-    public Integer findMaxWaitingNo(){
-        return waitingRepository.findMaxWaitingNoByState(WaitingState.ACTIVE);
+    public List<Long> waitingFindIds(Long applyRoundId, Integer waitingNo){
+        return waitingRepository.findApplyIdsByWaitingNoGreaterThanAndStateAndApplyRoundIdOrderByWaitingNoAsc(applyRoundId, waitingNo, WaitingState.ACTIVE);
+    }
+    public Integer findMaxWaitingNo(Long applyId){
+        return waitingRepository.findMaxWaitingNoByStateAndApplyId(WaitingState.ACTIVE, applyId);
     }
     public Optional<Member> findById(Long memberId){
         return memberRepository.findByIdAndState(memberId, MemberState.ACTIVE);
