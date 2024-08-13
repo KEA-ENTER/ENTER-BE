@@ -41,4 +41,7 @@ public class Waiting extends BaseEntity {
     public static Waiting of(Apply apply, int waitingNo) {
         return Waiting.builder().apply(apply).waitingNo(waitingNo).build();
     }
+    public void cancelWaiting() {
+        this.state = WaitingState.INACTIVE;
+    }
 }

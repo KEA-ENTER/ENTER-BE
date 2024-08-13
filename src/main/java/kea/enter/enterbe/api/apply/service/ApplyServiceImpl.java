@@ -10,6 +10,7 @@ import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.ModifyApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.PostApplyServiceDto;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResultResponse;
 import kea.enter.enterbe.api.question.service.dto.AnswerServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
@@ -17,6 +18,12 @@ import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
+import kea.enter.enterbe.domain.lottery.entity.Waiting;
+import kea.enter.enterbe.domain.lottery.entity.WaitingState;
+import kea.enter.enterbe.domain.lottery.entity.Winning;
+import kea.enter.enterbe.domain.lottery.entity.WinningState;
+import kea.enter.enterbe.domain.lottery.repository.WaitingRepository;
+import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
@@ -45,6 +52,8 @@ import java.time.*;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_NOT_FOUND;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_ROUND_NOT_FOUND;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.MEMBER_NOT_FOUND;
+import static kea.enter.enterbe.global.common.exception.ResponseCode.WAITING_NOT_FOUND;
+import static kea.enter.enterbe.global.common.exception.ResponseCode.WINNING_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -54,6 +63,8 @@ public class ApplyServiceImpl implements ApplyService{
     private final ApplyRepository applyRepository;
     private final ApplyRoundRepository applyRoundRepository;
     private final MemberRepository memberRepository;
+    private final WinningRepository winningRepository;
+    private final WaitingRepository waitingRepository;
 
     // 신청 가능 날짜 조회 API
     @Transactional(readOnly = true)
@@ -226,8 +237,49 @@ public class ApplyServiceImpl implements ApplyService{
             throw new CustomException(APPLY_NOT_FOUND);
         }
 
+        // 신청 취소는 winning waiting 모두 INACTIVE로 변경하고
+        // waiting에서 winning으로 올라갈 경우는 ACTIVE 그대로
+        // 다음 당첨자를 찾을 때는 waiting number + 1 and state는 ACTIVE
+        // winning을 취소할 경우에는 waiting에 존재하는 해당 유저도 INACTIVE
         Apply apply = applyOptional.get();
-        apply.deleteApply();
+        Long applyId = apply.getId();
+
+        Optional<Winning> winningOptional = findWinningByApplyId(applyId);
+        if (!winningOptional.isPresent()) {
+            // waiting table에서 해당 인원을 가져옴
+            Optional<Waiting> waitingOptional = findWaitingByApplyId(applyId);
+
+            //waiting 테이블에 없을 경우 -> 탈락
+            if (!waitingOptional.isPresent()) {
+                throw new CustomException(WAITING_NOT_FOUND);
+            }
+            //waiting 테이블에 있을 경우 -> 대기
+            else {
+                Waiting waiting = waitingOptional.get();
+                waiting.cancelWaiting();
+            }
+        }
+        // winning 테이블에 있을 경우 -> 당첨
+        else {
+            Winning winning = winningOptional.get();
+            winning.cancelWinning();
+
+            Optional<Waiting> waitingOptional = findWaitingByApplyId(applyId);
+            if (!waitingOptional.isPresent()) {
+                throw new CustomException(WAITING_NOT_FOUND);
+            }
+            Waiting waiting = waitingOptional.get();
+            Integer waitingNo = waiting.getWaitingNo();
+            Long applyRoundId = apply.getApplyRound().getId();
+
+
+
+            waiting.cancelWaiting();
+
+
+        }
+
+
 
     }
     public void timeCheck(LocalDateTime now){
@@ -243,6 +295,9 @@ public class ApplyServiceImpl implements ApplyService{
         // 수정 기간이 아닐경우
         if (isInRange)
             throw new CustomException(ResponseCode.INVALID_QUESTION_STATE);
+    }
+    public Integer findMaxWaitingNo(){
+        return waitingRepository.findMaxWaitingNoByState(WaitingState.ACTIVE);
     }
     public Optional<Member> findById(Long memberId){
         return memberRepository.findByIdAndState(memberId, MemberState.ACTIVE);
@@ -274,6 +329,12 @@ public class ApplyServiceImpl implements ApplyService{
     }
     public Integer countByApplyRound(ApplyRound applyRound){
         return applyRepository.countByApplyRoundAndState(applyRound, ApplyState.ACTIVE);
+    }
+    public Optional<Winning> findWinningByApplyId(Long applyId){
+        return winningRepository.findByApplyIdAndState(applyId, WinningState.ACTIVE);
+    }
+    public Optional<Waiting> findWaitingByApplyId(Long applyId){
+        return waitingRepository.findByApplyIdAndState(applyId, WaitingState.ACTIVE);
     }
 
 }

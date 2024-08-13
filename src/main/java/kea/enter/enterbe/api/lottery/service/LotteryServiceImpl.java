@@ -119,7 +119,7 @@ public class LotteryServiceImpl implements LotteryService {
         Optional<Winning> winningOptional = findWinningByApplyId(recentlyApply.getId());
         //winning 테이블에 없을 경우 -> 대기 or 탈락
         if (!winningOptional.isPresent()) {
-            Optional<Waiting> waitingOptional = finWaittingdByApplyId(recentlyApply.getId());
+            Optional<Waiting> waitingOptional = findWaittingByApplyId(recentlyApply.getId());
             //waiting 테이블에 없을 경우 -> 탈락
             if (!waitingOptional.isPresent()) {
                 return GetLotteryResultResponse.of(false, null);
@@ -158,7 +158,7 @@ public class LotteryServiceImpl implements LotteryService {
     public Optional<Winning> findWinningByApplyId(Long applyId){
         return winningRepository.findByApplyIdAndState(applyId, WinningState.ACTIVE);
     }
-    public Optional<Waiting> finWaittingdByApplyId(Long applyId){
+    public Optional<Waiting> findWaittingByApplyId(Long applyId){
         return waitingRepository.findByApplyIdAndState(applyId, WaitingState.ACTIVE);
     }
 }

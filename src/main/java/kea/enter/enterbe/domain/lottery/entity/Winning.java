@@ -9,6 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kea.enter.enterbe.domain.apply.entity.Apply;
+import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
+import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -40,5 +42,8 @@ public class Winning extends BaseEntity {
 
     public static Winning of(Apply apply, WinningState state) {
         return Winning.builder().apply(apply).state(state).build();
+    }
+    public void cancelWinning() {
+        this.state = WinningState.INACTIVE;
     }
 }
