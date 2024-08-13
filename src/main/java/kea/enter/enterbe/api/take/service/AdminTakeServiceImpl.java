@@ -134,7 +134,7 @@ public class AdminTakeServiceImpl implements AdminTakeService {
     public GetTakeReportResponse getTakeReport(GetTakeReportServiceDto dto) {
         // 해당 보고서가 존재하는지 확인한다
         VehicleReport report = findVehicleReportByWinningIdAndType(dto.getWinningId(), VehicleReportType.TAKE);
-        VehicleNote note = findVehicleNoteByVehicleId(report.getVehicle().getId());
+        VehicleNote note = findVehicleNoteByVehicleReportIdAndState(report.getId());
         String noteContent = note == null ? "" : note.getContent();
 
         ApplyRound applyRound = report.getWinning().getApply().getApplyRound();
@@ -151,7 +151,7 @@ public class AdminTakeServiceImpl implements AdminTakeService {
     public GetReturnReportResponse getReturnReport(GetReturnReportServiceDto dto) {
         // 해당 보고서가 존재하는지 확인한다
         VehicleReport report = findVehicleReportByWinningIdAndType(dto.getWinningId(), VehicleReportType.RETURN);
-        VehicleNote note = findVehicleNoteByVehicleId(report.getVehicle().getId());
+        VehicleNote note = findVehicleNoteByVehicleReportIdAndState(report.getId());
         String noteContent = note == null ? "" : note.getContent();
 
         ApplyRound applyRound = report.getWinning().getApply().getApplyRound();
@@ -176,8 +176,8 @@ public class AdminTakeServiceImpl implements AdminTakeService {
     }
 
     // 차량 특이사항을 조회한다
-    private VehicleNote findVehicleNoteByVehicleId(Long vehicleId) {
-        return vehicleNoteRepository.findByVehicleIdAndState(vehicleId, VehicleNoteState.ACTIVE)
+    private VehicleNote findVehicleNoteByVehicleReportIdAndState(Long vehicleReportId) {
+        return vehicleNoteRepository.findByVehicleReportIdAndState(vehicleReportId, VehicleNoteState.ACTIVE)
             .orElse(null);
     }
 
