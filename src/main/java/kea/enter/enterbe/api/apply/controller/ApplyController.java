@@ -10,6 +10,7 @@ import kea.enter.enterbe.api.apply.controller.dto.request.PostApplyRequest;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyDetailResponse;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyResponse;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyVehicleResponse;
+import kea.enter.enterbe.api.apply.controller.dto.response.PostApplyResponse;
 import kea.enter.enterbe.api.apply.service.ApplyService;
 import kea.enter.enterbe.api.apply.service.dto.DeleteApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyDetailServiceDto;
@@ -92,13 +93,13 @@ public class ApplyController {
     }
     @Operation(summary = "차량 신청 API", description = "차량 대여를 신청합니다.")
     @PostMapping("/vehicles")
-    public ResponseEntity<String> postApply(
+    public ResponseEntity<PostApplyResponse> postApply(
         Authentication authentication,
         @Valid @RequestBody PostApplyRequest dto
     ) {
         Long memberId = Long.valueOf(authentication.getName());
 
-        applyService.postApply(PostApplyServiceDto.of(memberId, dto.getApplyRoundId(), dto.getPurpose()));
-        return ResponseEntity.ok(SUCCESS.getMessage());
+
+        return ResponseEntity.ok(applyService.postApply(PostApplyServiceDto.of(memberId, dto.getApplyRoundId(), dto.getPurpose())));
     }
 }
