@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
-import kea.enter.enterbe.api.take.controller.dto.response.GetTakeReportResponse;
-import kea.enter.enterbe.api.take.service.dto.GetTakeReportServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
@@ -29,7 +27,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class VehicleReportRepositoryTest extends IntegrationTestSupport {
-    @DisplayName(value = "해당 신청 회차의 당첨 목록을 조회한다.")
+    @DisplayName(value = "해당 신청 회차의 당첨 목록을 조회한다. (성공)")
     @Test
     public void findAllByWinningApplyApplyRoundIdAndTypeAndState() {
         // given
@@ -59,7 +57,7 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName(value = "해당 신청 회차의 당첨 목록을 조회할 때 신청 회차가 다른 경우 조회되지 않는다.")
+    @DisplayName(value = "해당 신청 회차의 당첨 목록을 조회한다. (실패: 다른 신청 회차)")
     @Test
     public void findAllByWinningApplyApplyRoundIdAndTypeAndStateWithOtherApplyRound() {
         // given
@@ -85,7 +83,7 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
         assertThat(winningList).isEmpty();
     }
 
-    @DisplayName("해당 당첨에 해당하는 차량 인수 보고서를 조회한다.")
+    @DisplayName("해당 당첨에 해당하는 차량 인수 보고서를 조회한다. (성공)")
     @Test
     void findByWinningIdAndTypeAndState() {
         // given
@@ -105,7 +103,7 @@ class VehicleReportRepositoryTest extends IntegrationTestSupport {
         assertThat(response).isPresent();
     }
 
-    @DisplayName("당첨 아이디가 다른 경우 인수보고서가 조회되지 않는다.")
+    @DisplayName("해당 당첨에 해당하는 차량 인수 보고서를 조회한다. (실패: 다른 당첨 아이디)")
     @Test
     void findByWinningIdAndTypeAndStateWithOtherWinningId() {
         // given

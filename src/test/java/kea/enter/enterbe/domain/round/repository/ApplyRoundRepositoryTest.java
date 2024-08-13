@@ -51,7 +51,7 @@ class ApplyRoundRepositoryTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName(value = "해당 주에 진행하는 신청 회차 목록이 아니라면 조회되지 않는다.")
+    @DisplayName(value = "해당 주에 진행하는 신청 회차 목록을 조회한다. (실패: 다른 주)")
     @Test
     public void findAllByTakeDateBetweenAndStateWithDifferentRangeOfTakeDate() {
         // given
@@ -77,7 +77,7 @@ class ApplyRoundRepositoryTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName("추첨 관리 목록을 최근 회차 순으로 조회한다. (검색, 페이징)")
+    @DisplayName("추첨 관리 목록을 최근 회차 순으로 조회한다. (검색, 페이징) (성공)")
     @Test
     void findAllApplyRoundByCondition() {
         // given
@@ -113,7 +113,7 @@ class ApplyRoundRepositoryTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName("추첨 관리 목록 차량 검색 시 키워드에 맞는 추첨 회차만 조회한다.")
+    @DisplayName("추첨 관리 목록 차량 검색 시 키워드에 맞는 추첨 회차만 조회한다. (성공)")
     @Test
     void findAllApplyRoundByConditionWithVehicleKeyword() {
         // given
@@ -144,7 +144,7 @@ class ApplyRoundRepositoryTest extends IntegrationTestSupport {
             .contains("G80", "G80");
     }
 
-    @DisplayName("추첨 관리 목록 회차 검색 시 키워드에 맞는 추첨 회차만 조회한다.")
+    @DisplayName("추첨 관리 목록 회차 검색 시 키워드에 맞는 추첨 회차만 조회한다. (성공)")
     @Test
     void findAllApplyRoundByConditionWithApplyRoundKeyword() {
         // given
@@ -175,7 +175,7 @@ class ApplyRoundRepositoryTest extends IntegrationTestSupport {
             .contains(2, 2);
     }
 
-    @DisplayName(value = "신청 회차 아이디를 통해 ACTIVE 상태인 신청 회차를 조회한다.")
+    @DisplayName(value = "신청 회차 아이디를 통해 ACTIVE 상태인 신청 회차를 조회한다. (성공)")
     @Test
     public void findByIdAndState() {
         // given
@@ -189,7 +189,7 @@ class ApplyRoundRepositoryTest extends IntegrationTestSupport {
         assertThat(applyRoundResult).isPresent();
     }
 
-    @DisplayName(value = "해당 신청 회차가 INACTIVE인 경우 조회되지 않는다.")
+    @DisplayName(value = "신청 회차 조회를 조회한다.(실패: 비활성화 상태)")
     @Test
     public void findByIdAndStateWithInactive() {
         // given

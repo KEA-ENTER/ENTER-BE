@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 class WinningRepositoryTest extends IntegrationTestSupport {
 
-    @DisplayName(value = "멤버아이디로 이번회차의 당첨 데이터를 조회한다.")
+    @DisplayName(value = "멤버아이디로 이번회차의 당첨 데이터를 조회한다. (성공)")
     @Test
     public void findByMemberIdAndTakeDateAndState() throws Exception {
         //given
@@ -45,7 +45,7 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         assertThat(savedWinning).isNotNull();
     }
 
-    @DisplayName(value = "멤버아이디로 이번회차의 당첨 데이터를 조회할 때 멤버가 없으면 조회되지 않는다.")
+    @DisplayName(value = "이번 회차 당첨 내역 조회 (실패: 멤버 없음)")
     @Test
     public void findByWinningMemberIdAndTakeDateAndStateWithoutMember() throws Exception {
         //given
@@ -65,7 +65,7 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         assertThat(savedWinning).isEmpty();
     }
 
-    @DisplayName(value = "멤버아이디로 이번회차의 당첨 데이터를 조회할 때 인수 날짜와 오늘이 다른 경우 조회되지 않는다.")
+    @DisplayName(value = "이번 회차 당첨 내역 조회 (실패: 인수 날짜와 다른 날짜)")
     @Test
     public void findWinningByMemberIdAndTakeDateAndStateWithoutMember() throws Exception {
         //given
@@ -85,7 +85,7 @@ class WinningRepositoryTest extends IntegrationTestSupport {
         assertThat(savedWinning).isEmpty();
     }
 
-    @DisplayName(value = "해당 신청 회차의 당첨자 목록을 조회한다.")
+    @DisplayName(value = "해당 신청 회차의 당첨자 목록을 조회한다. (성공)")
     @Test
     public void findAllByApplyApplyRoundIdAndState() {
         // given
@@ -114,7 +114,7 @@ class WinningRepositoryTest extends IntegrationTestSupport {
     }
 
     @Transactional
-    @DisplayName(value = "해당 신청 회차의 당첨 취소자 목록을 조회한다.")
+    @DisplayName(value = "해당 신청 회차의 당첨 취소자 목록을 조회한다. (성공)")
     @Test
     public void findAllByApplyApplyRoundIdAndStateWithInactive() {
         // given
@@ -143,7 +143,7 @@ class WinningRepositoryTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName(value = "해당 신청 회차의 당첨자 목록을 조회할 때 신청 회차가 다른 경우 조회되지 않는다.")
+    @DisplayName(value = "신청 회차의 당첨자 목록 조회 (실패: 다른 신청 회차)")
     @Test
     public void findAllByApplyRoundIdAndStateWithOtherApplyRound() {
         // given

@@ -16,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CalculateWeight implements Job {
 
     private final MemberRepository memberRepository;
@@ -58,7 +60,7 @@ public class CalculateWeight implements Job {
     }
 
 
-    private void calculateHistoryScore() {
+    public void calculateHistoryScore() {
         // 당첨 내역이 있는 멤버를 당첨 횟수와 함께 가져온다.
         List<Member> members = new ArrayList<>();
         List<WeightDto> weightDtoList = getApplyMemberList();
@@ -71,7 +73,7 @@ public class CalculateWeight implements Job {
         memberRepository.saveAll(members);
     }
 
-    private void calculateYearsScore() { // 근속일수로 가중치를 계산한다.
+    public void calculateYearsScore() { // 근속일수로 가중치를 계산한다.
         List<Member> members = memberRepository.findAllByState(MemberState.ACTIVE).orElseThrow(
             () -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
 
@@ -81,7 +83,7 @@ public class CalculateWeight implements Job {
         memberRepository.saveAll(members);
     }
 
-    private int calculateYearsWeight(Member member) {
+    public int calculateYearsWeight(Member member) {
         LocalDateTime now = LocalDateTime.now();
         Period period = Period.between(member.getCreatedAt().toLocalDate(), now.toLocalDate());
         return switch (period.getYears()) {
@@ -93,7 +95,7 @@ public class CalculateWeight implements Job {
         };
     }
 
-    private int calculateHistoryWeight(Long score) {
+    public int calculateHistoryWeight(Long score) {
         if (score >= 1 && score <= 2) {
             return -1;
         } else if (score >= 3 && score <= 5) {

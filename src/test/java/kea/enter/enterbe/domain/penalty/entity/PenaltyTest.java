@@ -1,5 +1,8 @@
 package kea.enter.enterbe.domain.penalty.entity;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
@@ -7,12 +10,8 @@ import kea.enter.enterbe.domain.member.entity.MemberState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 class PenaltyTest extends IntegrationTestSupport {
-    @DisplayName("사용자 페널티를 생성한다.")
+    @DisplayName("사용자 페널티를 생성한다. (성공)")
     @Test
     void create() {
         //given

@@ -1,5 +1,13 @@
 package kea.enter.enterbe.api.penalty.service;
 
+import static kea.enter.enterbe.domain.penalty.entity.PenaltyLevel.BLACKLIST;
+import static kea.enter.enterbe.domain.penalty.entity.PenaltyReason.BROKEN;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.penalty.controller.dto.response.GetAdminPenaltyListResponse;
 import kea.enter.enterbe.api.penalty.service.dto.DeleteAdminPenaltyServiceDto;
@@ -14,17 +22,9 @@ import kea.enter.enterbe.domain.penalty.entity.PenaltyReason;
 import kea.enter.enterbe.domain.penalty.entity.PenaltyState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import static kea.enter.enterbe.domain.penalty.entity.PenaltyLevel.BLACKLIST;
-import static kea.enter.enterbe.domain.penalty.entity.PenaltyReason.BROKEN;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 class AdminPenaltyServiceTest extends IntegrationTestSupport {
-    @DisplayName(value = "사용자 페널티를 생성한다")
+    @DisplayName(value = "사용자 페널티를 생성한다. (성공)")
     @Test
     public void postPenalty() {
         //given
@@ -43,7 +43,7 @@ class AdminPenaltyServiceTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName(value = "사용자의 페널티 목록을 조회한다.")
+    @DisplayName(value = "사용자의 페널티 목록을 조회한다. (성공)")
     @Test
     public void getPenaltyList() {
         //given
@@ -70,7 +70,7 @@ class AdminPenaltyServiceTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName(value = "사용자의 페널티를 삭제한다.")
+    @DisplayName(value = "사용자의 페널티를 삭제한다. (성공)")
     @Test
     public void deletePenalty() {
         //given

@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 
 class AdminLotteryServiceTest extends IntegrationTestSupport {
-    @DisplayName("추첨 관리 목록을 조회한다. (검색, 페이징)")
+    @DisplayName("추첨 관리 목록을 조회한다. (검색, 페이징) (성공)")
     @Test
     void getLotteryList() {
         // given
@@ -66,7 +66,7 @@ class AdminLotteryServiceTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName("해당 신청 회차의 신청자 목록을 조회한다. (검색, 페이징)")
+    @DisplayName("해당 신청 회차의 신청자 목록을 조회한다. (검색, 페이징) (성공)")
     @Test
     void getApplicantList() {
         // given

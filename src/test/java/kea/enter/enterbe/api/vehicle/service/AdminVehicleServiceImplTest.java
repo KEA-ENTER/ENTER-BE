@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @WithMockUser(roles = "ADMIN")
 class AdminVehicleServiceImplTest extends IntegrationTestSupport {
 
-    @DisplayName(value = "법인 차량 추가 Serv (성공)")
+    @DisplayName(value = "법인 차량 추가 서비스 (성공)")
     @Test
     public void createVehicleSuccess() {
         // given
@@ -41,7 +41,7 @@ class AdminVehicleServiceImplTest extends IntegrationTestSupport {
         assertThat(vehicle.getState()).isEqualTo(dto.getState());
     }
 
-    @DisplayName(value = "법인 차량 추가 Serv (차량번호 형식 오류)")
+    @DisplayName(value = "법인 차량 추가 서비스 (실패: 차량번호 형식 오류)")
     @Test
     public void createVehicleWithInvalidVehicleNo() {
         // given
@@ -56,7 +56,7 @@ class AdminVehicleServiceImplTest extends IntegrationTestSupport {
     }
 
 
-    @DisplayName(value = "법인 차량 수정 Serv (성공)")
+    @DisplayName(value = "법인 차량 수정 서비스 (성공)")
     @Test
     public void modifyVehicleSuccess() {
         // given
@@ -87,7 +87,7 @@ class AdminVehicleServiceImplTest extends IntegrationTestSupport {
         assertThat(vehicle.getState()).isEqualTo(dto.getState());
     }
 
-    @DisplayName(value = "법인 차량 수정 Serv (차량번호 형식 오류)")
+    @DisplayName(value = "법인 차량 수정 서비스 (실패: 차량번호 형식 오류)")
     @Test
     public void modifyVehicleSuccessWithInvalidVehicleNo() {
         // given

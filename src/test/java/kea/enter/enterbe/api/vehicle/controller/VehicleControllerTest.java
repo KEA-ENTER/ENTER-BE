@@ -18,7 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 @WithMockUser(roles = "USER")
 class VehicleControllerTest extends ControllerTestSupport {
 
-    @DisplayName(value = "보고서를 작성한다.")
+    @DisplayName(value = "보고서를 작성한다. (성공)")
     @WithMockUser(roles = "MEMBER", username = "1")
     @Test
     public void postVehicleReport() throws Exception {

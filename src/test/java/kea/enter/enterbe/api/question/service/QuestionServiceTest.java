@@ -1,7 +1,13 @@
 package kea.enter.enterbe.api.question.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
-import kea.enter.enterbe.api.question.controller.dto.request.QuestionRequestDto;
 import kea.enter.enterbe.api.question.service.dto.CreateQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.ModifyQuestionServiceDto;
@@ -15,17 +21,10 @@ import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 public class QuestionServiceTest extends IntegrationTestSupport {
 
-    @DisplayName(value = "문의사항을 저장한다")
+    @DisplayName(value = "문의사항을 저장한다 (성공)")
     @Test
     public void testCreateQuestion_Success() {
         String questionContentTest = "문의사항 테스트 문장";
@@ -48,7 +47,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName(value = "존재하는 멤버 ID인지 검사한다")
+    @DisplayName(value = "존재하는 멤버 ID인지 검사한다 (성공)")
     @Test
     public void testCreateQuestion_MemberNotFound() {
         Long memberIdTest = 1L;
@@ -68,7 +67,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
         assertThat(exception.getResponseCode()).isEqualTo(ResponseCode.NOT_FOUND_MEMBER);
     }
 
-    @DisplayName(value = "문의사항을 삭제한다.")
+    @DisplayName(value = "문의사항을 삭제한다. (성공)")
     @Test
     public void deleteQuestion() {
         //given
@@ -112,7 +111,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
         assertThat(exception.getResponseCode()).isEqualTo(ResponseCode.NOT_FOUND_QUESTION);
     }
 
-    @DisplayName(value = "문의사항 내용을 수정한다.")
+    @DisplayName(value = "문의사항 내용을 수정한다. (성공)")
     @Test
     public void modifyQuestionContent() {
         //given
@@ -139,7 +138,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
             .isEqualTo(modifyContentText);
     }
 
-    @DisplayName(value = "문의사항 카테고리를 수정한다.")
+    @DisplayName(value = "문의사항 카테고리를 수정한다. (성공)")
     @Test
     public void modifyQuestionCategory() {
         //given
@@ -166,7 +165,7 @@ public class QuestionServiceTest extends IntegrationTestSupport {
             .isEqualTo(modifyCategory);
     }
 
-    @DisplayName(value = "수정 가능한 문의사항인지 검사한다.")
+    @DisplayName(value = "수정 가능한 문의사항인지 검사한다. (성공)")
     @Test
     public void isModifyQuestion() {
 

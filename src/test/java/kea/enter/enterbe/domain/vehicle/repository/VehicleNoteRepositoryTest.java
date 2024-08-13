@@ -1,5 +1,9 @@
 package kea.enter.enterbe.domain.vehicle.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyPurpose;
@@ -21,13 +25,9 @@ import kea.enter.enterbe.domain.vehicle.entity.VehicleNoteState;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.time.LocalDate;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class VehicleNoteRepositoryTest extends IntegrationTestSupport {
-    @DisplayName("해당 차량의 차량 특이사항을 조회한다.")
+    @DisplayName("해당 차량의 차량 특이사항을 조회한다. (성공)")
     @Test
     void findByVehicleIdAndState() {
         // given

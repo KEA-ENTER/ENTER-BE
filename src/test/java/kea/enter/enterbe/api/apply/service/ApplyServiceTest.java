@@ -26,7 +26,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ApplyServiceTest extends IntegrationTestSupport {
-    @DisplayName("신청 가능한 날짜를 조회한다.")
+    @DisplayName("신청 가능한 날짜를 조회한다. (성공)")
     @Test
     void getApply() {
         // given
@@ -61,7 +61,7 @@ public class ApplyServiceTest extends IntegrationTestSupport {
             );
 
     }
-    @DisplayName("신청 가능한 차량의 목록과 경쟁률을 조회한다.")
+    @DisplayName("신청 가능한 차량의 목록과 경쟁률을 조회한다. (성공)")
     @Test
     void getApplyVehicles() {
         // given
