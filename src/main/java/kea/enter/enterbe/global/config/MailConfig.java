@@ -13,7 +13,7 @@ import java.util.Properties;
 public class MailConfig {
     private static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
     private static final String MAIL_DEBUG = "mail.smtp.debug";
-    private static final String MAIL_CONNECTION_TIMEOUT = "mail.smtp.connectiontimeout";
+    private static final String MAIL_CONNECTION_TIMEOUT = "mail.smtp.timeout";
     private static final String MAIL_SMTP_STARTTLS_ENABLE = "mail.smtp.starttls.enable";
 
     // SMTP 서버
@@ -38,7 +38,7 @@ public class MailConfig {
     @Value("${spring.mail.properties.mail.smtp.debug}")
     private boolean debug;
 
-    @Value("${spring.mail.properties.mail.smtp.connectiontimeout}")
+    @Value("${spring.mail.properties.mail.smtp.timeout}")
     private int connectionTimeout;
 
     @Value("${spring.mail.properties.mail.starttls.enable}")
