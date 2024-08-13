@@ -9,7 +9,8 @@ spring:
         password: ${mail.password}
         properties:
             mail.smtp.debug: true
-            mail.smtp.connectiontimeout: 1000 #1초
+            mail.smtp.connectiontimeout: 10000 #10초
+            mail.smtp.timeout: 10000
             mail.starttls.enable: true
             mail.smtp.auth: true
 
@@ -26,7 +27,8 @@ spring:
         password: test
         properties:
             mail.smtp.debug: true
-            mail.smtp.connectiontimeout: 1000 #1초
+            mail.smtp.connectiontimeout: 10000 #1초
+            mail.smtp.timeout: 10000
             mail.starttls.enable: true
             mail.smtp.auth: true
 
@@ -43,6 +45,7 @@ spring:
         password: ${mail.password}
         properties:
             mail.smtp.debug: true
-            mail.smtp.connectiontimeout: 1000 #1초
+            mail.smtp.connectiontimeout: 10000 #1초
+            mail.smtp.timeout: 10000
             mail.starttls.enable: true
             mail.smtp.auth: true
