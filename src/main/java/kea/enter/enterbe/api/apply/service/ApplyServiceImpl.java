@@ -3,6 +3,7 @@ package kea.enter.enterbe.api.apply.service;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyDetailResponse;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyResponse;
 import kea.enter.enterbe.api.apply.controller.dto.response.GetApplyVehicleResponse;
+import kea.enter.enterbe.api.apply.controller.dto.response.PostApplyResponse;
 import kea.enter.enterbe.api.apply.service.dto.DeleteApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
@@ -188,7 +189,7 @@ public class ApplyServiceImpl implements ApplyService{
 
     }
     @Transactional
-    public void postApply(PostApplyServiceDto dto) {
+    public PostApplyResponse postApply(PostApplyServiceDto dto) {
         Optional<Member> memberOptional = findById(dto.getMemberId());
         if(!memberOptional.isPresent()){
             throw new CustomException(MEMBER_NOT_FOUND);
@@ -198,7 +199,7 @@ public class ApplyServiceImpl implements ApplyService{
         Integer age = member.getAge();
         // 만 26살 미만이라면 Exception
         if(age<26){
-            throw new CustomException(ResponseCode.AGE_NOT_ALLOWED);
+            return PostApplyResponse.of("APPLY-001", "만 26세 미만입니다.");
         }
 
         Optional<ApplyRound> applyOptional = findByApplyRoundId(dto.getApplyRoundId());
@@ -211,6 +212,7 @@ public class ApplyServiceImpl implements ApplyService{
             dto.getPurpose(), ApplyState.ACTIVE);
 
         applyRepository.save(apply);
+        return PostApplyResponse.of("APPLY-002", "성공적으로 신청이 완료되었습니다.");
     }
 
     @Transactional
