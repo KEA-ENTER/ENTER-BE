@@ -85,7 +85,7 @@ public class AnswerService {
         LocalDateTime answerCreatedAt = optionalAnswer.map(Answer::getCreatedAt).orElse(null);
 
         return GetAnswerResponseDto.of(questionMemberName, questionContent, questionCategory,
-            questionCreatedAt, answerContent, answerCreatedAt);
+            localDateTimeToString(questionCreatedAt), answerContent, localDateTimeToString(answerCreatedAt));
     }
 
     /* 문의사항 List 조회 API (관리자) */
@@ -153,6 +153,9 @@ public class AnswerService {
     }
 
     public String localDateTimeToString(LocalDateTime localDateTime) {
+        if (localDateTime == null) {
+            return null; 
+        }
         Date date = java.sql.Timestamp.valueOf(localDateTime);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         return format.format(date);

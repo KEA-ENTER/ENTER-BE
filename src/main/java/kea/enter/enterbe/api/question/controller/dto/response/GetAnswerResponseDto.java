@@ -18,14 +18,14 @@ public class GetAnswerResponseDto {
     @Schema(description = "문의사항 카테고리", example = "SERVICE")
     private QuestionCategory category;
     @Schema(description = "문의사항 작성 날짜", example = "2023-01-01 00:00:00")
-    private LocalDateTime questionCreatedAt;
+    private String questionCreatedAt;
     @Schema(description = "답변 내용", example = "안녕하세요. 답변 드립니다.")
     private String answerContent;
     @Schema(description = "답변 작성 날짜", example = "2023-01-01 00:00:00")
-    private LocalDateTime answerCreatedAt;
+    private String answerCreatedAt;
 
     @Builder
-    public GetAnswerResponseDto(String name, String questionContent, QuestionCategory category, LocalDateTime questionCreatedAt, String answerContent, LocalDateTime answerCreatedAt) {
+    public GetAnswerResponseDto(String name, String questionContent, QuestionCategory category, String questionCreatedAt, String answerContent, String answerCreatedAt) {
         this.name = name;
         this.questionContent = questionContent;
         this.category = category;
@@ -34,7 +34,7 @@ public class GetAnswerResponseDto {
         this.answerCreatedAt = answerCreatedAt;
     }
 
-    public static GetAnswerResponseDto of(String name, String questionContent, QuestionCategory category, LocalDateTime questionCreatedAt, String answerContent, LocalDateTime answerCreatedAt) {
+    public static GetAnswerResponseDto of(String name, String questionContent, QuestionCategory category, String questionCreatedAt, String answerContent, String answerCreatedAt) {
         return GetAnswerResponseDto.builder()
             .name(name)
             .questionContent(questionContent)
