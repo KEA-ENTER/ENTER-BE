@@ -1,5 +1,13 @@
 package kea.enter.enterbe.domain.penalty.repository;
 
+import static kea.enter.enterbe.domain.penalty.entity.PenaltyLevel.BLACKLIST;
+import static kea.enter.enterbe.domain.penalty.entity.PenaltyReason.BROKEN;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberRole;
@@ -9,17 +17,9 @@ import kea.enter.enterbe.domain.penalty.entity.PenaltyState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import static kea.enter.enterbe.domain.penalty.entity.PenaltyLevel.BLACKLIST;
-import static kea.enter.enterbe.domain.penalty.entity.PenaltyReason.BROKEN;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 class PenaltyRepositoryTest extends IntegrationTestSupport {
-    @DisplayName(value = "멤버 아이디로 사용자의 페널티 목록을 조회한다.")
+    @DisplayName(value = "멤버 아이디로 사용자의 페널티 목록을 조회한다. (성공)")
     @Test
     public void findAllByMemberIdAndStateOrderByCreatedAt() {
         // given
@@ -45,7 +45,7 @@ class PenaltyRepositoryTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName(value = "멤버 아이디로 사용자의 페널티 목록을 조회할 때 생성시간 순서대로 오는지 확인한다.")
+    @DisplayName(value = "멤버 아이디로 사용자의 페널티 목록을 조회할 때 생성시간 순서대로 오는지 확인한다. (성공)")
     @Test
     public void findAllByMemberIdAndStateOrderByCreatedAtCheckTrue() {
         // given
@@ -71,7 +71,7 @@ class PenaltyRepositoryTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName(value = "다른 사용자의 멤버 아이디로 사용자의 페널티 목록을 조회하면 조회되지 않는다.")
+    @DisplayName(value = "멤버 아이디로 사용자의 페널티 목록을 조회 (실패: 본인이 아닌 타인의 ID 사용)")
     @Test
     public void findAllByMemberIdAndStateOrderByCreatedAtWithOtherMemberId() {
         // given
@@ -94,7 +94,7 @@ class PenaltyRepositoryTest extends IntegrationTestSupport {
     }
 
     @Transactional
-    @DisplayName(value = "멤버 아이디로 사용자의 페널티 목록을 조회할 때 삭제된 페널티는 조회되지 않는다.")
+    @DisplayName(value = "멤버 아이디로 사용자의 페널티 목록을 조회 (실패: 비활성화 된 페널티 조회)")
     @Test
     public void findAllByMemberIdAndStateOrderByCreatedAtWithInactive() {
         // given
@@ -135,7 +135,7 @@ class PenaltyRepositoryTest extends IntegrationTestSupport {
         assertThat(penalty).isPresent();
     }
 
-    @DisplayName(value = "페널티 아이디가 다를 경우 페널티가 조회되지 않는다.")
+    @DisplayName(value = "페널티 아이디와 멤버 아이디로 페널티를 조회한다. (실패: 다른 페널티 아이디)")
     @Test
     public void findByIdAndMemberIdAndStateWithOtherPenaltyId() {
         // given
@@ -152,7 +152,7 @@ class PenaltyRepositoryTest extends IntegrationTestSupport {
         assertThat(penalty).isEmpty();
     }
 
-    @DisplayName(value = "멤버 아이디가 다를 경우 페널티가 조회되지 않는다.")
+    @DisplayName(value = "페널티 아이디와 멤버 아이디로 페널티를 조회한다. (실패: 다른 멤버 아이디)")
     @Test
     public void findByIdAndMemberIdAndStateWithOtherMemberId() {
         // given

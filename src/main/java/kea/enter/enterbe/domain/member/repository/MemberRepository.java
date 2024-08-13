@@ -27,7 +27,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT COUNT(m) FROM Member m WHERE m.state = :state")
     Long countTotalMembers(@Param("state") MemberState state);
-
     List<Member> findByIsLicenseValidAndState(Boolean isLicenseValid, MemberState state);
 }
 

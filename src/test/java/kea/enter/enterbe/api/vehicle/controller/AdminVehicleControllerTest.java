@@ -20,7 +20,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 @WebMvcTest(controllers = AdminVehicleController.class)
 class AdminVehicleControllerTest extends ControllerTestSupport {
 
-    @DisplayName(value = "법인 차량 추가 Ctrl")
+    @DisplayName(value = "법인 차량 추가 컨트롤러 테스트 (성공)")
     @Test
     @WithMockUser(roles = "ADMIN")
     void createVehicle() throws Exception {
@@ -51,7 +51,7 @@ class AdminVehicleControllerTest extends ControllerTestSupport {
         // then
     }
 
-    @DisplayName(value = "법인 차량 수정 Ctrl")
+    @DisplayName(value = "법인 차량 수정 컨트롤러 (성공)")
     @Test
     public void modifyVehicle() throws Exception {
         // given

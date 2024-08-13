@@ -24,7 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 class ApplyRepositoryTest extends IntegrationTestSupport {
-    @DisplayName(value = "해당 신청 회차의 신청 목록을 조회한다.")
+    @DisplayName(value = "해당 신청 회차의 신청 목록을 조회한다. (성공)")
     @Test
     public void findAllByApplyRoundIdAndState() {
         // given
@@ -51,7 +51,7 @@ class ApplyRepositoryTest extends IntegrationTestSupport {
             );
     }
 
-    @DisplayName(value = "해당 신청 회차의 신청 목록을 조회할 때 신청 회차가 다른 경우 조회되지 않는다.")
+    @DisplayName(value = "해당 신청 회차의 신청 목록을 조회 (실패: 다른 신청 회차)")
     @Test
     public void findAllByApplyRoundIdAndStateWithOtherApplyRound() {
         // given
@@ -75,7 +75,7 @@ class ApplyRepositoryTest extends IntegrationTestSupport {
         assertThat(applyList).isEmpty();
     }
 
-    @DisplayName("신청 내역 목록을 생성 시간 순으로 조회한다. (검색, 페이징)")
+    @DisplayName("신청 내역 목록을 생성 시간 순으로 조회한다. (검색, 페이징) (성공)")
     @Test
     void findAllApplyByCondition() {
         // given
@@ -99,7 +99,7 @@ class ApplyRepositoryTest extends IntegrationTestSupport {
             .contains(apply3.getId(), apply2.getId(), apply1.getId());
     }
 
-    @DisplayName("신청 내역 아이디 검색 시 키워드에 맞는 신청 내역만 조회한다.")
+    @DisplayName("아이디 기준 신청 내역 검색 (성공)")
     @Test
     void findAllApplyByConditionWithIdKeyword() {
         // given
@@ -123,7 +123,7 @@ class ApplyRepositoryTest extends IntegrationTestSupport {
             .contains(member2.getEmail(), member1.getEmail());
     }
 
-    @DisplayName("신청 내역 이름 검색 시 키워드에 맞는 신청 내역만 조회한다.")
+    @DisplayName("이름 기준 신청 내역 검색 (성공)")
     @Test
     void findAllApplyByConditionWithNameKeyword() {
         // given

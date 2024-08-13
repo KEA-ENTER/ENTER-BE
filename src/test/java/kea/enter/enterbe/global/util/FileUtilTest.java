@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 class FileUtilTest extends IntegrationTestSupport {
 
-    @DisplayName(value="파일이 이미지면 true를 반환한다.")
+    @DisplayName(value="파일이 이미지면 true를 반환한다. (성공)")
     @Test
     public void isImageFile() throws Exception {
         //given
@@ -25,7 +25,7 @@ class FileUtilTest extends IntegrationTestSupport {
         //then
         assertThat(isImage).isTrue();
     }
-    @DisplayName(value="파일 리스트가 전부 이미지 파일이면 true를 반환한다.")
+    @DisplayName(value="파일 리스트가 전부 이미지 파일이면 true를 반환한다. (성공)")
     @Test
     public void isImageFileList() throws Exception {
         //given

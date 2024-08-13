@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 class VehicleReportTest extends IntegrationTestSupport {
 
-    @DisplayName(value = "인수보고서를 생성한다.")
+    @DisplayName(value = "인수보고서를 생성한다. (성공)")
     @Test
     public void takeCreate() throws Exception {
         //given

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 class VehicleNoteTest extends IntegrationTestSupport {
 
-    @DisplayName("차량 특이사항을 생성한다.")
+    @DisplayName("차량 특이사항을 생성한다. (성공)")
     @Test
     void create() {
         //given

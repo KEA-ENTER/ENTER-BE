@@ -38,7 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 class VehicleServiceTest extends IntegrationTestSupport {
 
-    @DisplayName(value = "인수 보고서를 제출한다. ")
+    @DisplayName(value = "인수 보고서를 제출한다. (성공)")
     @Test
     public void postTakeVehicleReport() {
         //given
@@ -74,7 +74,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
             .isEqualTo(VehicleReportType.TAKE);
     }
 
-    @DisplayName(value = "반납 보고서를 제출한다. ")
+    @DisplayName(value = "반납 보고서를 제출한다. (성공)")
     @Test
     public void postReturnVehicleReport() {
         //given
@@ -110,7 +110,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
             .isEqualTo(VehicleReportType.RETURN);
     }
 
-    @DisplayName(value = "인수 보고서를 제출할때 인수 수령일과 맞는 당첨 내역이 없으면 예외가 발생한다.")
+    @DisplayName(value = "인수 보고서를 제출 (실패: 인수 수령일과 맞는 당첨 내역이 없음)")
     @Test
     public void postTakeVehicleReportExceptionWithDifferentTakeDate() {
         //given
@@ -140,7 +140,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
             .isEqualTo(ResponseCode.WINNING_NOT_FOUND);
     }
 
-    @DisplayName(value = "반납 보고서를 제출할때 반납일과 맞는 당첨 내역이 없으면 예외가 발생한다.")
+    @DisplayName(value = "반납 보고서를 제출 (실패: 반납일과 맞는 당첨 내역이 없음)")
     @Test
     public void postReturnVehicleReportExceptionWithDifferentReturnDate() {
         //given
@@ -171,7 +171,7 @@ class VehicleServiceTest extends IntegrationTestSupport {
             .isEqualTo(ResponseCode.WINNING_NOT_FOUND);
     }
 
-    @DisplayName(value = "보고서를 제출할때 예외가 발생하면 업로드한 이미지를 삭제한다.")
+    @DisplayName(value = "보고서 제출 실패 (성공: 제출한 이미지 삭제)")
     @Test
     public void postVehicleReportHasExceptionThenDeleteImage() {
         //given

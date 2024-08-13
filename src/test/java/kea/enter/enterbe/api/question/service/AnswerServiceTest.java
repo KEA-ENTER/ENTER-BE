@@ -1,5 +1,9 @@
 package kea.enter.enterbe.api.question.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+import java.util.Optional;
 import kea.enter.enterbe.IntegrationTestSupport;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
 import kea.enter.enterbe.api.question.service.dto.AnswerServiceDto;
@@ -15,13 +19,10 @@ import kea.enter.enterbe.domain.question.entity.QuestionState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDate;
-import java.util.Optional;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnswerServiceTest extends IntegrationTestSupport {
 
-    @DisplayName(value = "문의사항 답변을 저장한다")
+    @DisplayName(value = "문의사항 답변을 저장한다 (성공)")
     @Test
     @Transactional
     public void testCreateAnswer_Success() {
@@ -49,7 +50,7 @@ public class AnswerServiceTest extends IntegrationTestSupport {
         assertThat(answer.getQuestion().getState()).isEqualTo(QuestionState.COMPLETE);
     }
 
-    @DisplayName(value = "문의사항 세부 내용을 조회한다")
+    @DisplayName(value = "문의사항 세부 내용을 조회한다 (성공)")
     @Test
     @Transactional
     public void testGetAnswer_Success() {

@@ -31,7 +31,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class AdminTakeServiceTest extends IntegrationTestSupport {
-    @DisplayName("저번주의 인수 현황을 조회한다.")
+    @DisplayName("저번주의 인수 현황을 조회한다. (성공)")
     @Test
     void getTakeSituation() {
         // given
@@ -70,7 +70,7 @@ class AdminTakeServiceTest extends IntegrationTestSupport {
             .contains(1, 2, 1, 1);
     }
   
-    @DisplayName("해당 당첨자의 차량 인수 보고서를 조회한다.")
+    @DisplayName("해당 당첨자의 차량 인수 보고서를 조회한다. (성공)")
     @Test
     void getTakeReport() {
         // given
@@ -93,7 +93,7 @@ class AdminTakeServiceTest extends IntegrationTestSupport {
             .isEqualTo(vehicleReport.getId());
     }
 
-    @DisplayName("해당 당첨자의 차량 반납 보고서를 조회한다.")
+    @DisplayName("해당 당첨자의 차량 반납 보고서를 조회한다. (성공)")
     @Test
     void getReturnReport() {
         // given
