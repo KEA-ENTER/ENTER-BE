@@ -12,6 +12,8 @@ import kea.enter.enterbe.api.penalty.service.PenaltyService;
 import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
 import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyServiceDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +32,14 @@ public class PenaltyController {
             @Parameter(name = "Authorization", description = "Bearer Token", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
         })
     @GetMapping("")
-    public List<GetPenaltyListResponse> getPenaltyList(Authentication authentication) {
-        return penaltyService.getPenaltyList(GetPenaltyListServiceDto.of(Long.valueOf(authentication.getName())));
+    public GetPenaltyListResponse getPenaltyList(
+        @PageableDefault(size = 10) Pageable pageable,
+        Authentication authentication) {
+
+        return penaltyService.getPenaltyList(
+            GetPenaltyListServiceDto.of(
+                Long.valueOf(authentication.getName()),
+                pageable));
     }
 
     @Operation(summary = "패널티 상세 정보 조회 API",

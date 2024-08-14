@@ -7,6 +7,6 @@ import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyServiceDto;
 import java.util.List;
 
 public interface PenaltyService {
-    List<GetPenaltyListResponse> getPenaltyList(GetPenaltyListServiceDto dto);
+    GetPenaltyListResponse getPenaltyList(GetPenaltyListServiceDto dto);
     GetPenaltyResponse getPenalty(GetPenaltyServiceDto dto);
 }
