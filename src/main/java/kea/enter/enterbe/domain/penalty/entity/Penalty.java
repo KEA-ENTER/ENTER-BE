@@ -77,4 +77,14 @@ public class Penalty extends BaseEntity {
             .etc(etc)
             .build();
     }
+
+    public String map(PenaltyReason reason) {
+        return switch (reason) {
+            case TAKE -> "미인수";
+            case RETURN -> "기간 내 미반납";
+            case BROKEN -> "차량 훼손";
+            case FUEL -> "유류 미달";
+            case ETC -> "기타";
+        };
+    }
 }

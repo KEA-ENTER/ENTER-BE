@@ -11,7 +11,7 @@ public class GetPenaltyListResponse {
     private Long penaltyId;
 
     @Schema(description = "페널티 사유 (TAKE, RETURN, BROKEN, FUEL, ETC)", example = "FUEL")
-    private PenaltyReason reason;
+    private String reason;
 
     @Schema(description = "페널티 수준 (MINIMUM, LOW, MEDIUM, HIGH, BLACKLIST)", example = "LOW")
     private String level;
@@ -21,14 +21,14 @@ public class GetPenaltyListResponse {
 
 
     @Builder
-    public GetPenaltyListResponse(Long penaltyId, PenaltyReason reason, String level, String createdAt) {
+    public GetPenaltyListResponse(Long penaltyId, String reason, String level, String createdAt) {
         this.penaltyId = penaltyId;
         this.reason = reason;
         this.level = level;
         this.createdAt = createdAt;
     }
 
-    public static GetPenaltyListResponse of(Long penaltyId, PenaltyReason reason, String level, String createdAt) {
+    public static GetPenaltyListResponse of(Long penaltyId, String reason, String level, String createdAt) {
         return GetPenaltyListResponse.builder()
             .penaltyId(penaltyId)
             .reason(reason)
