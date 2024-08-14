@@ -12,7 +12,7 @@ public class GetPenaltyResponse {
     @Schema(description = "페널티 아이디", example = "1")
     private Long penaltyId;
 
-    @Schema(description = "페널티 사유 (TAKE, RETURN, BROKEN, FUEL, ETC)", example = "FUEL")
+    @Schema(description = "페널티 사유 (미인수, 기간 내 미반납, 차량 훼손, 유류 미달, 기타)", example = "유류 미달")
     private String reason;
 
     @Schema(description = "페널티 수준 (MINIMUM, LOW, MEDIUM, HIGH, BLACKLIST)", example = "LOW")
