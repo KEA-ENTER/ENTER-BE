@@ -18,6 +18,8 @@ import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.ModifyApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.PostApplyServiceDto;
+import kea.enter.enterbe.global.common.exception.CustomException;
+import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -87,9 +89,13 @@ public class ApplyController {
         Authentication authentication
     ) {
         Long memberId = Long.valueOf(authentication.getName());
-        applyService.deleteApplyDetail(DeleteApplyDetailServiceDto.of(memberId, applyId));
-
-        return ResponseEntity.ok(SUCCESS.getMessage());
+        int result = applyService.deleteApplyDetail(DeleteApplyDetailServiceDto.of(memberId, applyId));
+        if (result==0)
+            return ResponseEntity.ok("성공적으로 삭제되었지만, 이후 대기인원이 존재하지 않습니다.");
+        else if(result==1)
+            return ResponseEntity.ok(SUCCESS.getMessage());
+        else
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
     }
     @Operation(summary = "차량 신청 API", description = "차량 대여를 신청합니다.")
     @PostMapping("/vehicles")
