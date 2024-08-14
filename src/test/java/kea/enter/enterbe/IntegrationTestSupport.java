@@ -16,6 +16,7 @@ import kea.enter.enterbe.api.vehicle.service.AdminVehicleService;
 import kea.enter.enterbe.api.vehicle.service.VehicleService;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
+import kea.enter.enterbe.domain.lottery.repository.WaitingRepository;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
 import kea.enter.enterbe.domain.penalty.repository.PenaltyRepository;
@@ -78,6 +79,8 @@ public abstract class IntegrationTestSupport {
     @Autowired
     protected VehicleReportRepository vehicleReportRepository;
     @Autowired
+    protected WaitingRepository waitingRepository;
+    @Autowired
     protected ApplyRepository applyRepository;
     @Autowired
     protected ApplyRoundRepository applyRoundRepository;
@@ -113,6 +116,7 @@ public abstract class IntegrationTestSupport {
         questionRepository.deleteAllInBatch();
         vehicleNoteRepository.deleteAllInBatch();
         vehicleReportRepository.deleteAllInBatch();
+        waitingRepository.deleteAllInBatch();
         winningRepository.deleteAllInBatch();
         applyRepository.deleteAllInBatch();
         applyRoundRepository.deleteAllInBatch();

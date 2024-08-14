@@ -11,6 +11,7 @@ import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
 import kea.enter.enterbe.domain.lottery.entity.Waiting;
+import kea.enter.enterbe.domain.lottery.entity.WaitingState;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import kea.enter.enterbe.domain.lottery.repository.WaitingRepository;
@@ -97,7 +98,7 @@ public class ProcessingLottery implements Job {
             if (winnerDto.getRank() == 0) { // 최초 당첨자
                 winningList.add(Winning.of(applier, WinningState.ACTIVE));
             } else { // 대기자
-                waitingList.add(Waiting.of(applier, winnerDto.getRank()));
+                waitingList.add(Waiting.of(applier, winnerDto.getRank(), WaitingState.ACTIVE));
             }
         }
 

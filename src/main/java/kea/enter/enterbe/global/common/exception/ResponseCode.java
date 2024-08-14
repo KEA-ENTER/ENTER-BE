@@ -14,7 +14,6 @@ public enum ResponseCode {
     MEMBER_NOT_FOUND("MEM-ERR-001", HttpStatus.NOT_FOUND, "멤버를 찾을 수 없습니다."),
     LICENSE_NOT_FOUND("MEM-ERR-002", HttpStatus.NOT_FOUND, "면허 정보를 찾을 수 없습니다."),
     LICENSE_AUTHENTICITY_INCORRECT("MEM-ERR-004", HttpStatus.BAD_REQUEST, "면허 정보가 유효하지 않습니다."),
-    AGE_NOT_ALLOWED("MEM-ERR-006", HttpStatus.NOT_FOUND, "만 나이가 26살 미만입니다."),
     ROUTING_NOT_FOUND("MEM-ERR-007", HttpStatus.NOT_FOUND, "라우팅 정보를 찾을 수 없습니다."),
     //APPLY
     APPLY_NOT_FOUND("APL-ERR-001", HttpStatus.NOT_FOUND ,"지원 정보를 찾을 수 없습니다."),
