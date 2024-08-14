@@ -1,12 +1,9 @@
 package kea.enter.enterbe.api.penalty.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleListResponse;
-import kea.enter.enterbe.domain.penalty.entity.PenaltyReason;
-import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-import java.util.List;
 
 @Getter
 public class GetPenaltyListResponse {

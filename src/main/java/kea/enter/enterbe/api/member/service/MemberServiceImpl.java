@@ -125,10 +125,13 @@ public class MemberServiceImpl implements MemberService {
         // 이번주에 작성한 신청서 가져오기
         Integer round = applyRoundRepository.findMaxRoundByState(ApplyRoundState.ACTIVE);
         // 가장 최신 회차의 신청서 조회
-        Apply apply = findByMemberIdAndRound(memberId, round).orElseThrow(() -> new CustomException(ResponseCode.APPLY_NOT_FOUND));
+        Optional<Apply> apply = findByMemberIdAndRound(memberId, round);
+        if(!apply.isPresent()){
+            return UserStateForApplyMenu.EMPLOYEE;
+        }
 
-        Optional<Winning> isWinner = winningRepository.findByApplyAndState(apply, WinningState.ACTIVE);
-        Optional<Waiting> isCandidate = waitingRepository.findByApplyAndState(apply, WaitingState.ACTIVE);
+        Optional<Winning> isWinner = winningRepository.findByApplyAndState(apply.get(), WinningState.ACTIVE);
+        Optional<Waiting> isCandidate = waitingRepository.findByApplyAndState(apply.get(), WaitingState.ACTIVE);
         if(isWinner.isPresent()){
             return UserStateForApplyMenu.WINNER;
         }

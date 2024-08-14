@@ -1,6 +1,5 @@
 package kea.enter.enterbe.api.penalty.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import kea.enter.enterbe.api.penalty.controller.dto.response.GetPenaltyListResponse;
 import kea.enter.enterbe.api.penalty.controller.dto.response.GetPenaltyResponse;
