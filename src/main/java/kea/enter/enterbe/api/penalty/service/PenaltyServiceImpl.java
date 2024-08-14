@@ -42,7 +42,7 @@ public class PenaltyServiceImpl implements PenaltyService {
 
             responses.add(GetPenaltyListResponse.builder()
                     .penaltyId(penalty.getId())
-                    .reason(penalty.getReason())
+                    .reason(penalty.map(penalty.getReason()))
                     .level(PenaltyLevel.getDuration(penalty.getLevel()))
                     .createdAt(penalty.getCreatedAt().toLocalDate().toString())
                 .build());
@@ -60,7 +60,7 @@ public class PenaltyServiceImpl implements PenaltyService {
 
         return GetPenaltyResponse.builder()
             .penaltyId(penalty.getId())
-            .reason(penalty.getReason())
+            .reason(penalty.map(penalty.getReason()))
             .level(PenaltyLevel.getDuration(penalty.getLevel()))
             .etc(penalty.getEtc())
             .createdAt(penalty.getCreatedAt().toLocalDate().toString())

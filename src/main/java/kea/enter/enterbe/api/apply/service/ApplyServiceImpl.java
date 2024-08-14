@@ -10,6 +10,7 @@ import kea.enter.enterbe.api.apply.service.dto.GetApplyServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.GetApplyVehicleServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.ModifyApplyDetailServiceDto;
 import kea.enter.enterbe.api.apply.service.dto.PostApplyServiceDto;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResultResponse;
 import kea.enter.enterbe.api.question.service.dto.AnswerServiceDto;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
@@ -17,6 +18,12 @@ import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
 import kea.enter.enterbe.domain.apply.entity.ApplyState;
 import kea.enter.enterbe.domain.apply.repository.ApplyRepository;
 import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
+import kea.enter.enterbe.domain.lottery.entity.Waiting;
+import kea.enter.enterbe.domain.lottery.entity.WaitingState;
+import kea.enter.enterbe.domain.lottery.entity.Winning;
+import kea.enter.enterbe.domain.lottery.entity.WinningState;
+import kea.enter.enterbe.domain.lottery.repository.WaitingRepository;
+import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
@@ -29,6 +36,7 @@ import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
@@ -42,9 +50,12 @@ import java.util.stream.Collectors;
 import java.time.*;
 
 
+import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_NOT_FOUND;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.APPLY_ROUND_NOT_FOUND;
 import static kea.enter.enterbe.global.common.exception.ResponseCode.MEMBER_NOT_FOUND;
+import static kea.enter.enterbe.global.common.exception.ResponseCode.WAITING_NOT_FOUND;
+import static kea.enter.enterbe.global.common.exception.ResponseCode.WINNING_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -54,6 +65,8 @@ public class ApplyServiceImpl implements ApplyService{
     private final ApplyRepository applyRepository;
     private final ApplyRoundRepository applyRoundRepository;
     private final MemberRepository memberRepository;
+    private final WinningRepository winningRepository;
+    private final WaitingRepository waitingRepository;
 
     // 신청 가능 날짜 조회 API
     @Transactional(readOnly = true)
@@ -216,19 +229,51 @@ public class ApplyServiceImpl implements ApplyService{
     }
 
     @Transactional
-    public void deleteApplyDetail(DeleteApplyDetailServiceDto dto) {
-        //수정 가능 시간 확인
+    public int deleteApplyDetail(DeleteApplyDetailServiceDto dto) {
+        // 수정 가능 시간 확인
         timeCheck(LocalDateTime.now());
 
         // Apply 존재 여부 확인
-        Optional<Apply> applyOptional = findByIdAndMemberId(dto.getApplyId(), dto.getMemberId());
-        if (!applyOptional.isPresent()) {
-            throw new CustomException(APPLY_NOT_FOUND);
+        Apply apply = findByIdAndMemberId(dto.getApplyId(), dto.getMemberId())
+            .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
+
+        Long applyId = dto.getApplyId();
+
+        // 기존 당첨자 혹은 기존 대기자 조회
+        Winning firstWinning = findWinningByApplyId(applyId).orElse(null);
+        Waiting firstWaiting = findWaitingByApplyId(applyId)
+            .orElseThrow(() -> new CustomException(WAITING_NOT_FOUND));
+
+        if (firstWinning == null) {
+            // waiting 테이블에 있을 경우 -> 대기 취소
+            firstWaiting.deleteWaiting();
+            apply.deleteApply();
+            return 1;
+        } else {
+            // 당첨자와 대기자 모두 취소
+            firstWinning.deleteWinning();
+            firstWaiting.deleteWaiting();
+
+            // 다음 대기자를 찾음
+            Integer waitingNo = firstWaiting.getWaitingNo();
+            // 해당 대기 인원들의 ID를 대기번호를 기준으로 오름차순으로 정렬
+            List<Long> idList = waitingFindIds(apply.getApplyRound().getId(), waitingNo);
+
+            if (idList.isEmpty()) {
+                // 대기자가 없을 경우 -> Apply 삭제
+                apply.deleteApply();
+                return 0;
+            } else {
+                // 대기자가 존재할 경우 -> 다음 대기자를 당첨으로
+                Long newWinnerId = idList.get(0);
+                Apply newWinnerApply = findByApplyId(newWinnerId)
+                    .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
+                winningRepository.save(Winning.of(newWinnerApply, WinningState.ACTIVE));
+
+                apply.deleteApply();
+                return 1;
+            }
         }
-
-        Apply apply = applyOptional.get();
-        apply.deleteApply();
-
     }
     public void timeCheck(LocalDateTime now){
         // 이번주 수요일 0:00:00
@@ -243,6 +288,12 @@ public class ApplyServiceImpl implements ApplyService{
         // 수정 기간이 아닐경우
         if (isInRange)
             throw new CustomException(ResponseCode.INVALID_QUESTION_STATE);
+    }
+    public List<Long> waitingFindIds(Long applyRoundId, Integer waitingNo){
+        return waitingRepository.findApplyIdsByWaitingNoGreaterThanAndStateAndApplyRoundIdOrderByWaitingNoAsc(applyRoundId, waitingNo, WaitingState.ACTIVE);
+    }
+    public Integer findMaxWaitingNo(Long applyId){
+        return waitingRepository.findMaxWaitingNoByStateAndApplyId(WaitingState.ACTIVE, applyId);
     }
     public Optional<Member> findById(Long memberId){
         return memberRepository.findByIdAndState(memberId, MemberState.ACTIVE);
@@ -274,6 +325,12 @@ public class ApplyServiceImpl implements ApplyService{
     }
     public Integer countByApplyRound(ApplyRound applyRound){
         return applyRepository.countByApplyRoundAndState(applyRound, ApplyState.ACTIVE);
+    }
+    public Optional<Winning> findWinningByApplyId(Long applyId){
+        return winningRepository.findByApplyIdAndState(applyId, WinningState.ACTIVE);
+    }
+    public Optional<Waiting> findWaitingByApplyId(Long applyId){
+        return waitingRepository.findByApplyIdAndState(applyId, WaitingState.ACTIVE);
     }
 
 }

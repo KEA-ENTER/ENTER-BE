@@ -19,6 +19,8 @@ public enum ResponseCode {
     APPLY_NOT_FOUND("APL-ERR-001", HttpStatus.NOT_FOUND ,"지원 정보를 찾을 수 없습니다."),
     //WINNING
     WINNING_NOT_FOUND("WIN-ERR-001", HttpStatus.NOT_FOUND,"당첨 정보를 찾을 수 없습니다."),
+    //WAITING
+    WAITING_NOT_FOUND("WAIT-ERR-001", HttpStatus.NOT_FOUND, "대기 정보를 찾을 수 없습니다."),
     //REPORT
     NOT_REPORT_POST_TIME("REP-ERR-001",HttpStatus.BAD_REQUEST , "레포트 제출 시간이 아닙니다."),
     // APPLY_ROUND
@@ -78,8 +80,6 @@ public enum ResponseCode {
 
     NOT_IMAGE_FILE("GLB-ERR-004", HttpStatus.BAD_REQUEST, "이미지 파일이 아닙니다."),
     INVALID_QUARTZ_EXPRESSION_TRIGGER("GLB-ERR-005",HttpStatus.INTERNAL_SERVER_ERROR , "잘못된Quartz expression trigger입니다.");
-
-
     private final String code;
     private final HttpStatus status;
     private final String message;
