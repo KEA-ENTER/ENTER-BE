@@ -1,39 +1,48 @@
 package kea.enter.enterbe.api.penalty.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kea.enter.enterbe.domain.penalty.entity.PenaltyReason;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class GetPenaltyListResponse {
-    @Schema(description = "페널티 아이디", example = "1")
-    private Long penaltyId;
+    private List<PenaltyInfo> penaltyList;
 
-    @Schema(description = "페널티 사유 (미인수, 기간 내 미반납, 차량 훼손, 유류 미달, 기타)", example = "유류 미달")
-    private String reason;
+    @Schema(description = "현재 페이지", example = "0")
+    private int page;
 
-    @Schema(description = "페널티 수준 (MINIMUM, LOW, MEDIUM, HIGH, BLACKLIST)", example = "LOW")
-    private String level;
+    @Schema(description = "현재 페이지 사이즈", example = "8")
+    private int size;
 
-    @Schema(description = "생성일", example = "2024-08-08")
-    private String createdAt;
+    @Schema(description = "전체 개수", example = "20")
+    private long totalElements;
+
+    @Schema(description = "전체 페이지", example = "3")
+    private int totalPages;
+
+    @Schema(description = "다음 페이지 존재 여부", example = "true")
+    private boolean hasNextPage;
 
 
     @Builder
-    public GetPenaltyListResponse(Long penaltyId, String reason, String level, String createdAt) {
-        this.penaltyId = penaltyId;
-        this.reason = reason;
-        this.level = level;
-        this.createdAt = createdAt;
+    public GetPenaltyListResponse(List<PenaltyInfo> penaltyList, int page, int size, long totalElements, int totalPages, boolean hasNextPage) {
+        this.penaltyList = penaltyList;
+        this.page = page;
+        this.size = size;
+        this.totalElements = totalElements;
+        this.totalPages = totalPages;
+        this.hasNextPage = hasNextPage;
     }
 
-    public static GetPenaltyListResponse of(Long penaltyId, String reason, String level, String createdAt) {
+    public static GetPenaltyListResponse of(List<PenaltyInfo> penaltyList, int page, int size, long totalElements, int totalPages, boolean hasNextPage) {
         return GetPenaltyListResponse.builder()
-            .penaltyId(penaltyId)
-            .reason(reason)
-            .level(level)
-            .createdAt(createdAt)
+            .penaltyList(penaltyList)
+            .page(page)
+            .size(size)
+            .totalElements(totalElements)
+            .totalPages(totalPages)
+            .hasNextPage(hasNextPage)
             .build();
     }
 }
