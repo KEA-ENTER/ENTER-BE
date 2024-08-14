@@ -38,10 +38,7 @@ public class AnswerController {
 
     private final AnswerService answerService;
 
-    @Operation(summary = "문의사항 답변 작성 API",
-        parameters = {
-            @Parameter(name = "Authorization", description = "Bearer Token", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
-        })
+    @Operation(summary = "문의사항 답변 작성 API")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "MEM-ERR-001", description = "멤버가 존재하지 않습니다.", content = @Content(mediaType = "application/json")),
