@@ -3,8 +3,6 @@ package kea.enter.enterbe.api.question.controller;
 import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,12 +12,13 @@ import jakarta.validation.Valid;
 import kea.enter.enterbe.api.question.controller.dto.request.GetQuestionSearchDto;
 import kea.enter.enterbe.api.question.controller.dto.request.QuestionRequestDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetAnswerResponseDto;
+import kea.enter.enterbe.api.question.controller.dto.response.GetQuestionDetailResponseDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetQuestionListResponseDto;
 import kea.enter.enterbe.api.question.service.AnswerService;
 import kea.enter.enterbe.api.question.service.QuestionService;
 import kea.enter.enterbe.api.question.service.dto.CreateQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
-import kea.enter.enterbe.api.question.service.dto.GetAnswerServiceDto;
+import kea.enter.enterbe.api.question.service.dto.GetQuestionDetailServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetQuestionListServiceDto;
 import kea.enter.enterbe.api.question.service.dto.ModifyQuestionServiceDto;
 import lombok.RequiredArgsConstructor;
@@ -111,10 +110,12 @@ public class QuestionController {
         @ApiResponse(responseCode = "QST-ERR-004", description = "삭제된 문의사항입니다.", content = @Content(mediaType = "application/json")),
     })
     @GetMapping("/{questionId}")
-    public ResponseEntity<GetAnswerResponseDto> getDetail(@PathVariable Long questionId) {
+    public ResponseEntity<GetQuestionDetailResponseDto> getDetail(Authentication authentication, @PathVariable Long questionId) {
 
-        GetAnswerResponseDto response =  answerService.getDetail(
-            GetAnswerServiceDto.of(questionId));
+        Long memberId = Long.valueOf(authentication.getName());
+
+        GetQuestionDetailResponseDto response =  questionService.getDetail(
+            GetQuestionDetailServiceDto.of(questionId, memberId));
         return ResponseEntity.ok(response);
     }
 
