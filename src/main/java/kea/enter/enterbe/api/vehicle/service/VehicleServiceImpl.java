@@ -82,7 +82,6 @@ public class VehicleServiceImpl implements VehicleService {
 
         } catch (Exception e) {
             deleteS3Images(images);
-            log.error(e.getMessage(), e);
             throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
         }
     }
