@@ -41,10 +41,7 @@ public class PenaltyController {
                 pageable));
     }
 
-    @Operation(summary = "패널티 상세 정보 조회 API",
-        parameters = {
-            @Parameter(name = "Authorization", description = "Bearer Token", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
-        })
+    @Operation(summary = "패널티 상세 정보 조회 API")
     @GetMapping("/{penaltyId}")
     public GetPenaltyResponse getPenalty(
         Authentication authentication,
