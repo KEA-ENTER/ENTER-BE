@@ -82,6 +82,7 @@ public class ApplyCustomRepositoryImpl implements ApplyCustomRepository {
                 .and(applyRound.state.eq(ApplyRoundState.ACTIVE)
                     .and(member.id.eq(memberId))))
             .offset(pageable.getOffset())
+            .orderBy(applyRound.id.desc())
             .limit(pageable.getPageSize())
             .fetch();
 
