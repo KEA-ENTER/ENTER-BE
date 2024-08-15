@@ -20,5 +20,6 @@ public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
     // 사용자의 페널티 목록을 조회한다
     List<Penalty> findAllByMemberIdAndStateOrderByCreatedAt(Long memberId, PenaltyState state);
 
-    Page<Penalty> findAllByMemberIdAndStateOrderByCreatedAt(Long memberId, PenaltyState state, Pageable pageable);
+    Page<Penalty> findAllByMemberIdAndStateOrderByCreatedAtDesc(Long memberId, PenaltyState state, Pageable pageable);
+
 }

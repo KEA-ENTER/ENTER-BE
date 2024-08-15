@@ -32,7 +32,7 @@ public class PenaltyServiceImpl implements PenaltyService {
         memberRepository.findByIdAndState(dto.getMemberId(), MemberState.ACTIVE)
             .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
 
-        Page<Penalty> penaltyPage = penaltyRepository.findAllByMemberIdAndStateOrderByCreatedAt(dto.getMemberId(), PenaltyState.ACTIVE, dto.getPageable());
+        Page<Penalty> penaltyPage = penaltyRepository.findAllByMemberIdAndStateOrderByCreatedAtDesc(dto.getMemberId(), PenaltyState.ACTIVE, dto.getPageable());
         List<PenaltyInfo> penaltyInfoList = penaltyPage.stream()
             .map(d -> PenaltyInfo.of(d.getId(), d.getReason().toString(), d.getLevel().toString(), d.getCreatedAt().toLocalDate().toString()))
             .toList();
