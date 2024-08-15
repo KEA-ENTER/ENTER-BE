@@ -1,15 +1,20 @@
 package kea.enter.enterbe.api.question.service;
 
+import kea.enter.enterbe.api.question.controller.dto.response.GetQuestionDetailResponseDto;
 import kea.enter.enterbe.api.question.controller.dto.response.GetQuestionListResponseDto;
 import kea.enter.enterbe.api.question.service.dto.CreateQuestionServiceDto;
 import kea.enter.enterbe.api.question.service.dto.DeleteQuestionServiceDto;
+import kea.enter.enterbe.api.question.service.dto.GetQuestionDetailServiceDto;
 import kea.enter.enterbe.api.question.service.dto.GetQuestionListServiceDto;
 import kea.enter.enterbe.api.question.service.dto.ModifyQuestionServiceDto;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
+import kea.enter.enterbe.domain.question.entity.Answer;
 import kea.enter.enterbe.domain.question.entity.Question;
+import kea.enter.enterbe.domain.question.entity.QuestionCategory;
 import kea.enter.enterbe.domain.question.entity.QuestionState;
+import kea.enter.enterbe.domain.question.repository.AnswerRepository;
 import kea.enter.enterbe.domain.question.repository.QuestionRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
@@ -23,9 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final MemberRepository memberRepository;
+    private final AnswerRepository answerRepository;
 
     /* 문의사항 작성 API */
     @Transactional
@@ -76,6 +80,33 @@ public class QuestionService {
 
         // 문의사항 수정
         question.modifyQuestion(modifyDto.getContent(), modifyDto.getCategory(), QuestionState.WAIT);
+    }
+
+    /* 문의사항 상세 내용 조회 API (사용자) */
+    @Transactional
+    public GetQuestionDetailResponseDto getDetail(GetQuestionDetailServiceDto dto) {
+
+        /* 문의사항 조회 */
+        // 삭제 된 문의사항인지 확인 후 조회
+        Question question = getFindByIdAndStateNot(dto.getQuestionId());
+        // 작성자 이름, 컨텐트, 카테고리, 질문 날짜
+        String questionMemberName = question.getMember().getName();
+        String questionContent = question.getContent();
+        QuestionCategory questionCategory = question.getCategory();
+        LocalDateTime questionCreatedAt = question.getCreatedAt();
+
+        boolean myQuestion;
+        myQuestion = Objects.equals(dto.getMemberId(), question.getMember().getId());
+
+        /* 답변 조회 */
+        // 답변 반환
+        Optional<Answer> optionalAnswer = answerRepository.findByQuestionId(dto.getQuestionId());
+        // 답변이 없을 시 null로 반환
+        String answerContent = optionalAnswer.map(Answer::getContent).orElse(null);
+        LocalDateTime answerCreatedAt = optionalAnswer.map(Answer::getCreatedAt).orElse(null);
+
+        return GetQuestionDetailResponseDto.of(questionMemberName, questionContent, questionCategory,
+            localDateTimeToString(questionCreatedAt), answerContent, localDateTimeToString(answerCreatedAt), myQuestion);
     }
 
     /* 문의사항 List 조회 API (사용자) */
@@ -126,8 +157,20 @@ public class QuestionService {
     }
 
     public String localDateTimeToString(LocalDateTime localDateTime) {
+        if (localDateTime == null) {
+            return null;
+        }
         Date date = java.sql.Timestamp.valueOf(localDateTime);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         return format.format(date);
+    }
+
+    // questionId로 문의사항의 상태 확인. 삭제된 문의인 경우 에러발생
+    private Question getFindByIdAndStateNot(Long questionId) {
+        // 문의사항이 있는지 확인
+        questionRepository.findById(questionId)
+            .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_QUESTION));
+        return questionRepository.findByIdAndStateNot(questionId, QuestionState.INACTIVE)
+            .orElseThrow(() -> new CustomException(ResponseCode.INVALID_QUESTION_STATE_DELETE));
     }
 }
