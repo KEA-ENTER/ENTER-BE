@@ -12,12 +12,14 @@ import kea.enter.enterbe.api.penalty.service.PenaltyService;
 import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
 import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyServiceDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "[사용자] 페널티 조회 API", description = "Penalty")
@@ -27,25 +29,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class PenaltyController {
     private final PenaltyService penaltyService;
 
-    @Operation(summary = "패널티 목록 조회 API",
-        parameters = {
-            @Parameter(name = "Authorization", description = "Bearer Token", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
-        })
+    @Operation(summary = "패널티 목록 조회 API")
     @GetMapping("")
     public GetPenaltyListResponse getPenaltyList(
-        @PageableDefault(size = 10) Pageable pageable,
+        @RequestParam int page,
         Authentication authentication) {
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
 
         return penaltyService.getPenaltyList(
             GetPenaltyListServiceDto.of(
                 Long.valueOf(authentication.getName()),
-                pageable));
+                pageRequest));
     }
 
-    @Operation(summary = "패널티 상세 정보 조회 API",
-        parameters = {
-            @Parameter(name = "Authorization", description = "Bearer Token", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
-        })
+    @Operation(summary = "패널티 상세 정보 조회 API")
     @GetMapping("/{penaltyId}")
     public GetPenaltyResponse getPenalty(
         Authentication authentication,
