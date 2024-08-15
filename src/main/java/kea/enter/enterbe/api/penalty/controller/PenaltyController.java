@@ -29,8 +29,7 @@ public class PenaltyController {
 
     @Operation(summary = "패널티 목록 조회 API",
         parameters = {
-            @Parameter(name = "Authorization", description = "Bearer Token", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
-        })
+            @Parameter(name = "Page", description = "페이지 번호", example = "0")})
     @GetMapping("")
     public GetPenaltyListResponse getPenaltyList(
         @PageableDefault(size = 10) Pageable pageable,
