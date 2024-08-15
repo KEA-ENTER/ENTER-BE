@@ -44,7 +44,7 @@ public interface WinningRepository extends JpaRepository<Winning, Long>, Winning
 
     List<Winning> findAllByApplyApplyRoundIdAndState(Long applyRoundId, WinningState state);
 
-    @Query("SELECT new kea.enter.enterbe.api.lottery.service.dto.WeightDto(w.id, COUNT(w.id)) " +
+    @Query("SELECT new kea.enter.enterbe.api.lottery.service.dto.WeightDto(w.apply.member.id, COUNT(w.id)) " +
         "FROM Winning w " +
         "WHERE w.state = 'ACTIVE' " +
         "AND w.createdAt BETWEEN :startDate AND :endDate " +

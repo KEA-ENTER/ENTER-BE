@@ -5,11 +5,17 @@ import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import kea.enter.enterbe.api.lottery.service.dto.WeightDto;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
+import kea.enter.enterbe.domain.member.entity.ScoreHistory;
+import kea.enter.enterbe.domain.member.entity.ScoreHistoryState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
+import kea.enter.enterbe.domain.member.repository.ScoreHistoryRepository;
+import kea.enter.enterbe.global.algorithm.CalculateDto;
+import kea.enter.enterbe.global.algorithm.CalculateMemberDto;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +31,23 @@ public class CalculateWeight implements Job {
 
     private final MemberRepository memberRepository;
     private final WinningRepository winningRepository;
+    private final ScoreHistoryRepository scoreHistoryRepository;
 
     @Override
     public void execute(JobExecutionContext context) {
         calculateYearsScore();
         calculateHistoryScore();
         licenseValidCheck();
+    }
+
+    public CalculateDto calculateWeight() {
+        List<CalculateMemberDto> finalList = Stream.concat(
+            calculateYearsScore().stream(),
+            calculateHistoryScore().stream()
+        ).toList();
+
+        return CalculateDto.of(finalList);
+
     }
 
     public void licenseValidCheck() {
@@ -60,27 +77,51 @@ public class CalculateWeight implements Job {
     }
 
 
-    public void calculateHistoryScore() {
+    public List<CalculateMemberDto> calculateHistoryScore() {
         // 당첨 내역이 있는 멤버를 당첨 횟수와 함께 가져온다.
+
         List<Member> members = new ArrayList<>();
         List<WeightDto> weightDtoList = getApplyMemberList();
+        List<ScoreHistory> histories = new ArrayList<>();
+        List<CalculateMemberDto> calculateMemberDtos = new ArrayList<>();
         for (WeightDto weightDto : weightDtoList) {
             Member member = memberRepository.findByIdAndState(weightDto.getMemberId(), MemberState.ACTIVE)
                 .orElseThrow(() -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
-            member.setScore(member.getScore() + calculateHistoryWeight(weightDto.getWeight()));
+            Integer weight = calculateHistoryWeight(weightDto.getWeight());
+            member.setScore(member.getScore() + weight);
             members.add(member);
+            if (!weight.equals(0)) {
+                histories.add(ScoreHistory.of(member, member.getScore(), String.format("당첨 횟수 가중치 계산 %d", calculateHistoryWeight(weightDto.getWeight())), ScoreHistoryState.ACTIVE));
+                calculateMemberDtos.add(CalculateMemberDto.of(member.getId(), member.getName(), member.getEmail(), String.format("당첨 횟수 가중치 계산 +%d", calculateHistoryWeight(weightDto.getWeight())), member.getScore() - calculateHistoryWeight(weightDto.getWeight()), member.getScore()));
+            }
         }
         memberRepository.saveAll(members);
+        scoreHistoryRepository.saveAll(histories);
+        return calculateMemberDtos;
     }
 
-    public void calculateYearsScore() { // 근속일수로 가중치를 계산한다.
-        List<Member> members = memberRepository.findAllByState(MemberState.ACTIVE).orElseThrow(
-            () -> new CustomException(ResponseCode.MEMBER_NOT_FOUND));
+    public List<CalculateMemberDto> calculateYearsScore() { // 근속일수로 가중치를 계산한다.
+        List<Member> members = memberRepository.findMembersByState(MemberState.ACTIVE);
+        List<ScoreHistory> histories = new ArrayList<>();
+        List<CalculateMemberDto> calculateMemberDtos = new ArrayList<>();
+
 
         for (Member member : members) { // 전체 멤버를 조회하여 가중치를 계산한다.
-            member.setScore(20 + calculateYearsWeight(member));
+            Integer weight = calculateYearsWeight(member);
+            member.setScore(20 + weight);
+            if (!weight.equals(0)) { // 가중치가 0이 아닐 경우
+                histories.add(ScoreHistory.of(member, member.getScore(),
+                    String.format("근속 일수 가중치 계산 +%d", weight),
+                    ScoreHistoryState.ACTIVE));
+                calculateMemberDtos.add(
+                    CalculateMemberDto.of(member.getId(), member.getName(), member.getEmail(),
+                        String.format("근속 일수 가중치 계산 %d", weight), 20,
+                        member.getScore()));
+            }
         }
         memberRepository.saveAll(members);
+        scoreHistoryRepository.saveAll(histories);
+        return calculateMemberDtos;
     }
 
     public int calculateYearsWeight(Member member) {
