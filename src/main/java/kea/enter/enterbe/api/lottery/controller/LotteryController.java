@@ -17,8 +17,12 @@ import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAve
 import kea.enter.enterbe.api.lottery.service.LotteryService;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryResultServiceDto;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
+import kea.enter.enterbe.api.penalty.controller.dto.response.GetPenaltyListResponse;
+import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
 import kea.enter.enterbe.global.common.exception.ErrorResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,8 +69,13 @@ public class LotteryController {
         @Parameter(name = "Authorization", description = "Bearer Token", required = true,
             in = ParameterIn.HEADER, schema = @Schema(type = "string"))})
     @GetMapping("")
-    public ResponseEntity<List<GetLotteryResponse>> getLotteryList(
+    public GetLotteryResponse getLotteryList(
+        @PageableDefault(size = 10) Pageable pageable,
         Authentication authentication) {
-        return ResponseEntity.ok(lotteryService.getLotteryList(GetLotteryServiceDto.of(Long.valueOf(authentication.getName()))));
+
+        return lotteryService.getLotteryList(
+            GetLotteryServiceDto.of(
+                Long.valueOf(authentication.getName()),
+                pageable));
     }
 }

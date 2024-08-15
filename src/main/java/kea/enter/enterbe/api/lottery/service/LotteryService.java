@@ -16,5 +16,5 @@ public interface LotteryService {
     List<GetRecentWaitingAverageNumbersResponse> getAverageWaitingNumbers();
 
     GetLotteryResultResponse getLottery(GetLotteryResultServiceDto dto);
-    List<GetLotteryResponse> getLotteryList(GetLotteryServiceDto dto);
+    GetLotteryResponse getLotteryList(GetLotteryServiceDto dto);
 }

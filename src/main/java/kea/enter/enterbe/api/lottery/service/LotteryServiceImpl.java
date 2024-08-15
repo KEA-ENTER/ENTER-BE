@@ -10,8 +10,10 @@ import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResultResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentCompetitionRateResponse;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAverageNumbersResponse;
+import kea.enter.enterbe.api.lottery.controller.dto.response.LotteryListInfo;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryResultServiceDto;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
+import kea.enter.enterbe.api.penalty.controller.dto.response.PenaltyInfo;
 import kea.enter.enterbe.domain.apply.entity.Apply;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
 import kea.enter.enterbe.domain.apply.entity.ApplyRoundState;
@@ -27,6 +29,7 @@ import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -134,8 +137,17 @@ public class LotteryServiceImpl implements LotteryService {
         }
     }
 
-    public List<GetLotteryResponse> getLotteryList(GetLotteryServiceDto dto) {
-        return applyRepository.findAllLotteryResponsebyId(dto.getMemberId());
+    public GetLotteryResponse getLotteryList(GetLotteryServiceDto dto) {
+        Page<LotteryListInfo> lotteryPage = applyRepository.findAllLotteryResponsebyId(dto.getPageable(), dto.getMemberId());
+
+        return GetLotteryResponse.of(
+            lotteryPage.getContent(),
+            lotteryPage.getNumber(),
+            lotteryPage.getSize(),
+            lotteryPage.getTotalElements(),
+            lotteryPage.getTotalPages(),
+            lotteryPage.hasNext()
+        );
     }
 
     private List<ApplyRound> getApplyRoundByThisWeek() {
