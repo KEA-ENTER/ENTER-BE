@@ -58,7 +58,7 @@ public class VehicleController {
             List.of(front_img, right_img, back_img, left_img, dashboardImg))) {
             throw new CustomException(ResponseCode.NOT_IMAGE_FILE);
         }
-        if(type.equals(VehicleReportType.RETURN) && !StringUtils.hasText(note)){
+        if(type.equals(VehicleReportType.RETURN) && !StringUtils.hasText(parkingLoc)){
             throw new CustomException(ResponseCode.NEED_PARKING_LOC_FOR_RETURN_REPORT);
         }
         vehicleService.postVehicleReport(
