@@ -1,6 +1,7 @@
 package kea.enter.enterbe.api.vehicle.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.GetAdminVehicleListRequest;
@@ -41,7 +42,9 @@ public class AdminVehicleController {
     private final AdminVehicleService adminVehicleService;
     private final FileUtil fileUtil;
 
-    @Operation(summary = "법인 차량 목록 조회 API")
+    @Operation(summary = "법인 차량 목록 조회 API",
+        parameters = {
+        @Parameter(name = "Page", description = "페이지 번호", example = "0")})
     @GetMapping("")
     public GetAdminVehicleListResponse getVehicleList(
         @PageableDefault(size = 4) Pageable pageable,
