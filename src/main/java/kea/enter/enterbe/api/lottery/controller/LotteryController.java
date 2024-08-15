@@ -66,8 +66,7 @@ public class LotteryController {
     }
     @Operation(summary = "사용자의 추첨 참여 내역 조회 API",
         parameters = {
-        @Parameter(name = "Authorization", description = "Bearer Token", required = true,
-            in = ParameterIn.HEADER, schema = @Schema(type = "string"))})
+        @Parameter(name = "Page", description = "페이지 번호", example = "0")})
     @GetMapping("")
     public GetLotteryResponse getLotteryList(
         @PageableDefault(size = 10) Pageable pageable,
