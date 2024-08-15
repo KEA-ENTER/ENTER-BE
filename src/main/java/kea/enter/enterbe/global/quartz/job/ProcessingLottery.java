@@ -17,6 +17,8 @@ import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import kea.enter.enterbe.domain.lottery.repository.WaitingRepository;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.domain.member.entity.Member;
+import kea.enter.enterbe.global.algorithm.LotteryDto;
+import kea.enter.enterbe.global.algorithm.LotteryMemberDto;
 import kea.enter.enterbe.global.algorithm.PercentageMembersDto;
 import kea.enter.enterbe.global.algorithm.ScoreDto;
 import kea.enter.enterbe.global.algorithm.WinnerDto;
@@ -30,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class ProcessingLottery implements Job {
 
     // 동작 시점
@@ -48,6 +50,10 @@ public class ProcessingLottery implements Job {
         processingInitialLottery(WAITING_COUNT + 1);
     }
 
+    public LotteryDto processLottery() {
+        return processingInitialLottery(WAITING_COUNT + 1);
+    }
+
     public List<Long> getApplyRoundIdList() { // 가장 최신 회차 가져오기
         Integer round = applyRoundRepository.findMaxRoundByState(ApplyRoundState.ACTIVE);
         // 가장 최신 회차(round)를 찾는다
@@ -56,7 +62,7 @@ public class ProcessingLottery implements Job {
         // 가장 최신 회차를 가지는 apply round id의 리스트를 반환한다
     }
 
-    public void processingInitialLottery(int winnerCount) {
+    public LotteryDto processingInitialLottery(int winnerCount) {
         // 이번 회차에 신청한 신청 목록 조회
         List<Apply> applies = applyRepository.findByApplyRoundIdInAndState(getApplyRoundIdList(), ApplyState.ACTIVE);
 
@@ -78,6 +84,9 @@ public class ProcessingLottery implements Job {
         List<Waiting> waitingList = new ArrayList<>();
         List<Winning> winningList = new ArrayList<>();
 
+        List<LotteryMemberDto> winners = new ArrayList<>();
+        List<LotteryMemberDto> waiting = new ArrayList<>();
+
         // 당첨자 ID 목록을 추출한다
         List<Long> winnerMemberIds = winnerLists
             .stream()
@@ -97,14 +106,19 @@ public class ProcessingLottery implements Job {
             }
             if (winnerDto.getRank() == 0) { // 최초 당첨자
                 winningList.add(Winning.of(applier, WinningState.ACTIVE));
+                winners.add(LotteryMemberDto.of(Winning.of(applier, WinningState.ACTIVE)));
             } else { // 대기자
                 waitingList.add(Waiting.of(applier, winnerDto.getRank(), WaitingState.ACTIVE));
+                waiting.add(
+                    LotteryMemberDto.of(Waiting.of(applier, winnerDto.getRank(), WaitingState.ACTIVE)));
             }
         }
 
         // 당첨자와 대기자를 저장한다
         winningRepository.saveAll(winningList);
         waitingRepository.saveAll(waitingList);
+
+        return LotteryDto.of(winners, waiting, applyRoundRepository.findMaxRoundByState(ApplyRoundState.ACTIVE));
     }
 
     private List<ScoreDto> getScore(List<Member> memberList) {

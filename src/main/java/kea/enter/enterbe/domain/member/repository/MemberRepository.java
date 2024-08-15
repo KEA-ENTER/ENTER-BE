@@ -16,7 +16,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findMemberByEmailAndState(String email, MemberState state);
 
-    Optional<List<Member>> findAllByState(MemberState state);
+    List<Member> findMembersByState(MemberState state);
 
     @Query("SELECT COUNT(m) "
         + "FROM Member m "
