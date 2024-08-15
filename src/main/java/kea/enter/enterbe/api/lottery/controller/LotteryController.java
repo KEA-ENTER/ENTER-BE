@@ -1,8 +1,6 @@
 package kea.enter.enterbe.api.lottery.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,16 +15,13 @@ import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAve
 import kea.enter.enterbe.api.lottery.service.LotteryService;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryResultServiceDto;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
-import kea.enter.enterbe.api.penalty.controller.dto.response.GetPenaltyListResponse;
-import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
-import kea.enter.enterbe.global.common.exception.ErrorResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "[사용자] 추첨 관련 API", description = "Lottery")
@@ -64,17 +59,17 @@ public class LotteryController {
         Long memberId = Long.valueOf(authentication.getName());
         return ResponseEntity.ok(lotteryService.getLottery(GetLotteryResultServiceDto.of(memberId)));
     }
-    @Operation(summary = "사용자의 추첨 참여 내역 조회 API",
-        parameters = {
-        @Parameter(name = "Page", description = "페이지 번호", example = "0")})
+    @Operation(summary = "사용자의 추첨 참여 내역 조회 API")
     @GetMapping("")
     public GetLotteryResponse getLotteryList(
-        @PageableDefault(size = 10) Pageable pageable,
+        @RequestParam int page,
         Authentication authentication) {
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
 
         return lotteryService.getLotteryList(
             GetLotteryServiceDto.of(
                 Long.valueOf(authentication.getName()),
-                pageable));
+                pageRequest));
     }
 }
