@@ -3,7 +3,11 @@ package kea.enter.enterbe.api.lottery.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
@@ -13,6 +17,7 @@ import kea.enter.enterbe.api.lottery.controller.dto.response.GetRecentWaitingAve
 import kea.enter.enterbe.api.lottery.service.LotteryService;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryResultServiceDto;
 import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
+import kea.enter.enterbe.global.common.exception.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -40,6 +45,16 @@ public class LotteryController {
         return ResponseEntity.ok(lotteryService.getAverageWaitingNumbers());
     }
     @Operation(summary = "당첨 여부 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = GetLotteryResultResponse.class),
+            examples = {
+                @ExampleObject(name = "당첨", value = "{\"winning\": true, \"waitingNumber\": null}"),
+                @ExampleObject(name = "대기", value = "{\"winning\": false, \"waitingNumber\": 5}"),
+                @ExampleObject(name = "탈락", value = "{\"winning\": false, \"waitingNumber\": null}")
+            }
+        ))
+    })
     @GetMapping("result")
     public ResponseEntity<GetLotteryResultResponse> getLottery(Authentication authentication) {
         Long memberId = Long.valueOf(authentication.getName());
