@@ -54,9 +54,9 @@ public class VehicleServiceImpl implements VehicleService {
         List<String> images = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now(clock);
         Winning winning = getWinningByMemberIdThisWeek(dto.getMemberId(), now.toLocalDate());
-        if (!checkTakeReturnTime(winning.getApply().getApplyRound(), now)) {
-            throw new CustomException(ResponseCode.NOT_REPORT_POST_TIME);
-        }
+//        if (!checkTakeReturnTime(winning.getApply().getApplyRound(), now)) {
+//            throw new CustomException(ResponseCode.NOT_REPORT_POST_TIME);
+//        }
         try {
             String frontImg = uploadS3Image(dto.getFrontImg());
             images.add(frontImg);
