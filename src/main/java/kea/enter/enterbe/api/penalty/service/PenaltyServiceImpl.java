@@ -34,7 +34,7 @@ public class PenaltyServiceImpl implements PenaltyService {
 
         Page<Penalty> penaltyPage = penaltyRepository.findAllByMemberIdAndStateOrderByCreatedAt(dto.getMemberId(), PenaltyState.ACTIVE, dto.getPageable());
         List<PenaltyInfo> penaltyInfoList = penaltyPage.stream()
-            .map(d -> PenaltyInfo.of(d.getId(), d.getReason().toString(), d.getLevel().toString(), d.getCreatedAt().toString()))
+            .map(d -> PenaltyInfo.of(d.getId(), d.getReason().toString(), d.getLevel().toString(), d.getCreatedAt().toLocalDate().toString()))
             .toList();
 
         return GetPenaltyListResponse.of(
