@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kea.enter.enterbe.api.lottery.controller.dto.response.GetLotteryResponse;
+import kea.enter.enterbe.api.lottery.service.dto.GetLotteryServiceDto;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.GetAdminVehicleListRequest;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.PostAdminVehicleRequest;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleListResponse;
@@ -18,10 +20,12 @@ import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
 import kea.enter.enterbe.global.util.FileUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,19 +47,19 @@ public class AdminVehicleController {
     private final AdminVehicleService adminVehicleService;
     private final FileUtil fileUtil;
 
-    @Operation(summary = "법인 차량 목록 조회 API",
-        parameters = {
-        @Parameter(name = "Page", description = "페이지 번호", example = "0")})
+    @Operation(summary = "법인 차량 목록 조회 API")
     @GetMapping("")
     public GetAdminVehicleListResponse getVehicleList(
-        @PageableDefault(size = 4) Pageable pageable,
+        @RequestParam int page,
         @ModelAttribute @Valid GetAdminVehicleListRequest request) {
+
+        PageRequest pageRequest = PageRequest.of(page, 4);
 
         return adminVehicleService.getVehicleList(
             GetVehicleListServiceDto.of(
                 request.getWord(),
                 request.getSearchCategory(),
-                pageable));
+                pageRequest));
     }
 
     @Operation(summary = "법인 차량 상세 정보 조회 API")
