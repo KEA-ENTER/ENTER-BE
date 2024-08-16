@@ -1,8 +1,9 @@
 package kea.enter.enterbe.global.quartz.schedule;
 
 import jakarta.annotation.PostConstruct;
-import kea.enter.enterbe.global.quartz.job.ProcessingLottery;
+import kea.enter.enterbe.global.quartz.job.AutoReportJob;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -15,26 +16,29 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class LotteryScheduler {
+@Slf4j
+public class AutoReportScheduler {
 
     private final SchedulerFactoryBean schedulerFactoryBean;
 
     @PostConstruct
     public void init() throws SchedulerException {
-        JobDetail job = JobBuilder.newJob(ProcessingLottery.class)
-            .withIdentity("processingLottery", "Lottery")
-            .withDescription("최초 당첨자를 선정한다.")
+
+        JobDetail job = JobBuilder.newJob(AutoReportJob.class)
+            .withIdentity("AutoReport", "Report")
+            .withDescription("매주 다음주의 휴일을 탐색하여 신청서를 생성한다.")
             .build();
 
+        // 가중치 계산 때 생성한다고 기억해서 매주 수요일 9시로 crone 표현식 작성
         Trigger trigger = TriggerBuilder.newTrigger()
-            .withIdentity("processingLotteryTrigger", "Lottery")
+            .withIdentity("AutoReportTrigger", "Report")
             .startNow()
-            .withSchedule(CronScheduleBuilder.cronSchedule("0 0 9 ? * WED"))
+            .withSchedule(CronScheduleBuilder.cronSchedule("0 0 8.5 ? * WED"))
             .build();
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         if (!scheduler.checkExists(job.getKey())) {
             schedulerFactoryBean.getScheduler().scheduleJob(job, trigger);
         }
-    }   
+    }
 }
