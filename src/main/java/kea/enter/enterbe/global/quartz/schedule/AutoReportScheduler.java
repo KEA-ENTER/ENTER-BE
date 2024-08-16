@@ -33,7 +33,7 @@ public class AutoReportScheduler {
         Trigger trigger = TriggerBuilder.newTrigger()
             .withIdentity("AutoReportTrigger", "Report")
             .startNow()
-            .withSchedule(CronScheduleBuilder.cronSchedule("0 0 9 ? * WED"))
+            .withSchedule(CronScheduleBuilder.cronSchedule("0 0 8.5 ? * WED"))
             .build();
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
