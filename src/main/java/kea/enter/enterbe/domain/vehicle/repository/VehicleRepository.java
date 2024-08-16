@@ -1,5 +1,6 @@
 package kea.enter.enterbe.domain.vehicle.repository;
 
+import java.util.List;
 import java.util.Optional;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.VehicleSearchCategory;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleResponse;
@@ -18,4 +19,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, Vehicle
     Optional<Vehicle> findByIdAndStateNot(Long id, VehicleState vehicleState);
     Page<Vehicle> findBySearchOption(Pageable pageable, VehicleSearchCategory searchCategory, String word);
     GetAdminVehicleResponse findVehicleAndNotebyId(Long id);
+    List<Vehicle> findByStateIn(List<VehicleState> states);
+
 }
