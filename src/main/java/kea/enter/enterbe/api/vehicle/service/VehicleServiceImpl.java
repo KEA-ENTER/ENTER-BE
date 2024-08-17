@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import kea.enter.enterbe.api.vehicle.service.dto.PostVehicleReportServiceDto;
 import kea.enter.enterbe.domain.apply.entity.ApplyRound;
-import kea.enter.enterbe.domain.apply.repository.ApplyRoundRepository;
 import kea.enter.enterbe.domain.lottery.entity.Winning;
 import kea.enter.enterbe.domain.lottery.entity.WinningState;
 import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
@@ -44,7 +43,6 @@ public class VehicleServiceImpl implements VehicleService {
     private final WinningRepository winningRepository;
     private final VehicleReportRepository vehicleReportRepository;
     private final VehicleNoteRepository vehicleNoteRepository;
-    private final ApplyRoundRepository applyRoundRepository;
     private final PenaltyRepository penaltyRepository;
     private final Clock clock;
 
@@ -54,9 +52,9 @@ public class VehicleServiceImpl implements VehicleService {
         List<String> images = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now(clock);
         Winning winning = getWinningByMemberIdThisWeek(dto.getMemberId(), now.toLocalDate());
-//        if (!checkTakeReturnTime(winning.getApply().getApplyRound(), now)) {
-//            throw new CustomException(ResponseCode.NOT_REPORT_POST_TIME);
-//        }
+        if (!checkTakeReturnTime(winning.getApply().getApplyRound(), now)) {
+            throw new CustomException(ResponseCode.NOT_REPORT_POST_TIME);
+        }
         try {
             String frontImg = uploadS3Image(dto.getFrontImg());
             images.add(frontImg);
