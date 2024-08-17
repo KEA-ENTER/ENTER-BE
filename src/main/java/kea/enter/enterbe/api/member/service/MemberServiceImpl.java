@@ -38,6 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static kea.enter.enterbe.global.common.period.PeriodForApplyMenu.APPLICATION_CREATE;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -90,19 +92,52 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public GetRoutingResponse getRoutingInformation(Long memberId) {
-        LocalDateTime now = LocalDateTime.now(clock);
-        PeriodForApplyMenu period = PeriodForApplyMenu.getCurrentPeriod(now);
+//        LocalDateTime now = LocalDateTime.now(clock);
+//        PeriodForApplyMenu period = PeriodForApplyMenu.getCurrentPeriod(now, day);
+//
+//
+//        // 기간에 따라서 사용자의 상태확인 (예를 들어, 신청 기간에는 신청자인지 아닌지 확인)
+//        UserStateForApplyMenu state = switch (period){
+//            case APPLICATION_CREATE, ONLY_APPLICATION_VIEW -> getIsApplicant(memberId);
+//            case LOTTERY_RESULT -> getIsWinner(memberId);
+//            case NOTING_TODO -> UserStateForApplyMenu.EMPLOYEE;
+//        };
+//
+//
+//        // 사용자의 상태와 현재 기간을 통해서 라우팅할 페이지 번호 정함 (페이지 번호는 피그마 참고)
+//        ApplyMenuPage page = ApplyMenuPage.getCurrentPage(state, period);
+//        return GetRoutingResponse.of(page.getRoutingPageNum(), state.name());
 
-        // 기간에 따라서 사용자의 상태확인 (예를 들어, 신청 기간에는 신청자인지 아닌지 확인)
-        UserStateForApplyMenu state = switch (period){
-            case APPLICATION_CREATE, ONLY_APPLICATION_VIEW -> getIsApplicant(memberId);
-            case LOTTERY_RESULT -> getIsWinner(memberId);
-            case NOTING_TODO -> UserStateForApplyMenu.EMPLOYEE;
-        };
+        // 일단 새로운 라운드가 추가되면 막히는 형식이다.
+        // 가장 최신 회차
+        Integer round = applyRoundRepository.findMaxRoundByState(ApplyRoundState.ACTIVE);
+        // 가장 최신 회차의 신청서 조회
+        Optional<Apply> apply = findByMemberIdAndRound(memberId, round);
+        if (apply.isEmpty()) {
+            return GetRoutingResponse.of(1, "EMPLOYEE");
+        } else {
+            Optional<Winning> isWinner = winningRepository.findByApplyAndState(apply.get(),
+                WinningState.ACTIVE);
+            Optional<Waiting> isCandidate = waitingRepository.findByApplyAndState(apply.get(),
+                WaitingState.ACTIVE);
 
-        // 사용자의 상태와 현재 기간을 통해서 라우팅할 페이지 번호 정함 (페이지 번호는 피그마 참고)
-        ApplyMenuPage page = ApplyMenuPage.getCurrentPage(state, period);
-        return GetRoutingResponse.of(page.getRoutingPageNum(), state.name());
+            UserStateForApplyMenu state;
+            Integer routingId;
+            if (isWinner.isPresent()) {
+                state = UserStateForApplyMenu.WINNER;
+                routingId = 4;
+            }
+            // 당첨자가 아니라면
+            else {
+                routingId = 4;
+                if (isCandidate.isPresent()) {
+                    state = UserStateForApplyMenu.CANDIDATE;
+                } else {
+                    state = UserStateForApplyMenu.NON_WINNER;
+                }
+            }
+            return GetRoutingResponse.of(routingId, state.name());
+        }
     }
 
     // 신청 기간에 신청 여부에 따른 사용자의 상태(신청자, 사원)를 반환하는 매서드
