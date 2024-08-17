@@ -81,12 +81,16 @@ public enum PeriodForApplyMenu {
 
     public abstract boolean isActive(LocalDateTime now);
 
-    public static PeriodForApplyMenu getCurrentPeriod(LocalDateTime now) {
-        for (PeriodForApplyMenu period : PeriodForApplyMenu.values()) {
+    public static PeriodForApplyMenu getCurrentPeriod(LocalDateTime now, Integer day) {
+        // 1과 2일 때는 작성 가능한 시간을 제공,
+        if(day.equals(1) || day.equals(2)) return APPLICATION_CREATE;
+        else if(day.equals(3)) return NOTING_TODO;
+        else return LOTTERY_RESULT;
+        /*for (PeriodForApplyMenu period : PeriodForApplyMenu.values()) {
             if (period.isActive(now)) {
                 return period;
             }
         }
-        throw new CustomException(ResponseCode.BAD_REQUEST);
+        throw new CustomException(ResponseCode.BAD_REQUEST);*/
     }
 }
