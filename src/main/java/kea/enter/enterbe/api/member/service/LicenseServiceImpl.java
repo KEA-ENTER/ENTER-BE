@@ -84,7 +84,7 @@ public class LicenseServiceImpl implements LicenseService {
 //            return GetLicenseInformationResponse.of("MEM-001", "신청 기간이 아닙니다.");
 //        }
         // license 데이터가 없으면 Exception
-        if(isStringEmpty(licenseId) && isStringEmpty(licensePassword) && isLicenseValid.equals(Boolean.FALSE)){
+        else if(isStringEmpty(licenseId) && isStringEmpty(licensePassword) && isLicenseValid.equals(Boolean.FALSE)) {
             return GetLicenseInformationResponse.of("MEM-002", "면허증 데이터가 없습니다.");
         }
         // isLicneseValid == false 면 Exception
@@ -105,7 +105,7 @@ public class LicenseServiceImpl implements LicenseService {
         Boolean isAgreeTerms = member.getIsAgreeTerms();
 
         // 데이터 검사
-        if(!isStringEmpty(licenseId) && !isStringEmpty(licensePassword) && isAgreeTerms.equals(Boolean.TRUE)){
+        if(!isStringEmpty(licenseId) && !isStringEmpty(licensePassword) && isAgreeTerms.equals(Boolean.TRUE)) {
             // 면허 진위여부 api 호출
             LicenseValidationResponseDto dto = licenseValidationUtil.checkValidationLicense(
                 LicenseValidationRequestDto.of(
