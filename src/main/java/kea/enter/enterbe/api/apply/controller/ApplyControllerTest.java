@@ -23,44 +23,25 @@ import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 @RequestMapping("/test")
 public class ApplyControllerTest {
     private final ApplyServiceTestImpl applyServiceTest;
-    @Operation(summary = "당첨자 발표 이전 차량 신청 내역 취소 API", description = "패널티 및 재배정 없음")
+    @Operation(summary = "당첨자 발표 이전 차량 신청 내역 취소 API", description = "재배정 및 패널티 없음")
     @DeleteMapping("/detail/before/{applyId}")
     public ResponseEntity<String> deleteApplyDetailBefore(
         @PathVariable Long applyId,
         Authentication authentication
     ) {
         Long memberId = Long.valueOf(authentication.getName());
-        int result = applyServiceTest.deleteApplyDetail(DeleteApplyDetailServiceDto.of(memberId, applyId));
-        if (result==0)
-            return ResponseEntity.ok("성공적으로 삭제되었지만, 이후 대기인원이 존재하지 않습니다.");
-        else if(result==1)
-            return ResponseEntity.ok(SUCCESS.getMessage());
-        else
-            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
+        applyServiceTest.deleteApplyDetailBefore(DeleteApplyDetailServiceDto.of(memberId, applyId));
+
+        return ResponseEntity.ok(SUCCESS.getMessage());
     }
-    @Operation(summary = "당첨자 발표 이전 차량 신청 내역 취소 API", description = "패널티 및 재배정 없음")
+    @Operation(summary = "당첨자 발표 이후 차량 신청 내역 취소 API", description = "재배정 있음, 패널티 없음")
     @DeleteMapping("/detail/after/{applyId}")
     public ResponseEntity<String> deleteApplyDetailAfter(
         @PathVariable Long applyId,
         Authentication authentication
     ) {
         Long memberId = Long.valueOf(authentication.getName());
-        int result = applyServiceTest.deleteApplyDetail(DeleteApplyDetailServiceDto.of(memberId, applyId));
-        if (result==0)
-            return ResponseEntity.ok("성공적으로 삭제되었지만, 이후 대기인원이 존재하지 않습니다.");
-        else if(result==1)
-            return ResponseEntity.ok(SUCCESS.getMessage());
-        else
-            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
-    }
-    @Operation(summary = "당첨자 발표 이전 차량 신청 내역 취소 API", description = "패널티 및 재배정 없음")
-    @DeleteMapping("/detail/penalty/{applyId}")
-    public ResponseEntity<String> deleteApplyDetailPenalty(
-        @PathVariable Long applyId,
-        Authentication authentication
-    ) {
-        Long memberId = Long.valueOf(authentication.getName());
-        int result = applyServiceTest.deleteApplyDetail(DeleteApplyDetailServiceDto.of(memberId, applyId));
+        int result = applyServiceTest.deleteApplyDetailAfter(DeleteApplyDetailServiceDto.of(memberId, applyId));
         if (result==0)
             return ResponseEntity.ok("성공적으로 삭제되었지만, 이후 대기인원이 존재하지 않습니다.");
         else if(result==1)
