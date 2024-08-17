@@ -2,8 +2,7 @@ package kea.enter.enterbe.api.apply.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kea.enter.enterbe.api.apply.service.ApplyService;
-import kea.enter.enterbe.api.apply.service.ApplyServiceTestImpl;
+import kea.enter.enterbe.api.apply.service.TestApplyService;
 import kea.enter.enterbe.api.apply.service.dto.DeleteApplyDetailServiceDto;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
@@ -22,7 +21,7 @@ import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 @RestController
 @RequestMapping("/test")
 public class ApplyControllerTest {
-    private final ApplyServiceTestImpl applyServiceTest;
+    private final TestApplyService applyServiceTest;
     @Operation(summary = "당첨자 발표 이전 차량 신청 내역 취소 API", description = "재배정 및 패널티 없음")
     @DeleteMapping("/applies/detail/before/{applyId}")
     public ResponseEntity<String> deleteApplyDetailBefore(

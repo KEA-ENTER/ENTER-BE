@@ -33,7 +33,7 @@ import static kea.enter.enterbe.global.common.exception.ResponseCode.WAITING_NOT
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ApplyServiceTest implements ApplyServiceTestImpl{
+public class TestApplyServiceImpl implements TestApplyService {
     private final ApplyRepository applyRepository;
     private final ApplyRoundRepository applyRoundRepository;
     private final MemberRepository memberRepository;
