@@ -27,6 +27,10 @@ import kea.enter.enterbe.domain.lottery.repository.WinningRepository;
 import kea.enter.enterbe.domain.member.entity.Member;
 import kea.enter.enterbe.domain.member.entity.MemberState;
 import kea.enter.enterbe.domain.member.repository.MemberRepository;
+import kea.enter.enterbe.domain.penalty.entity.Penalty;
+import kea.enter.enterbe.domain.penalty.entity.PenaltyLevel;
+import kea.enter.enterbe.domain.penalty.entity.PenaltyReason;
+import kea.enter.enterbe.domain.penalty.repository.PenaltyRepository;
 import kea.enter.enterbe.domain.question.entity.Answer;
 import kea.enter.enterbe.domain.question.entity.AnswerState;
 import kea.enter.enterbe.domain.question.entity.Question;
@@ -67,6 +71,7 @@ public class ApplyServiceImpl implements ApplyService{
     private final MemberRepository memberRepository;
     private final WinningRepository winningRepository;
     private final WaitingRepository waitingRepository;
+    private final PenaltyRepository penaltyRepository;
 
     // 신청 가능 날짜 조회 API
     @Transactional(readOnly = true)
@@ -233,10 +238,11 @@ public class ApplyServiceImpl implements ApplyService{
         // 취소 가능 시간 확인
         LocalDateTime now = LocalDateTime.now();
         timeCheck(now);
+        Long memberId = dto.getMemberId();
 
         // 당첨자 발표 이전 취소
         if(timeloop(now)){
-            Apply apply = findByIdAndMemberId(dto.getApplyId(), dto.getMemberId())
+            Apply apply = findByIdAndMemberId(dto.getApplyId(), memberId)
                 .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
             apply.deleteApply();
             return 1;
@@ -244,7 +250,7 @@ public class ApplyServiceImpl implements ApplyService{
         // 당첨자 발표 이후 취소
         else {
             // Apply 존재 여부 확인
-            Apply apply = findByIdAndMemberId(dto.getApplyId(), dto.getMemberId())
+            Apply apply = findByIdAndMemberId(dto.getApplyId(), memberId)
                 .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
 
             Long applyId = dto.getApplyId();
@@ -256,6 +262,7 @@ public class ApplyServiceImpl implements ApplyService{
 
             if (firstWinning == null) {
                 // waiting 테이블에 있을 경우 -> 대기 취소
+                // 대기자는 취소 패널티 x 당첨자만 적용
                 firstWaiting.deleteWaiting();
                 apply.deleteApply();
                 return 1;
@@ -271,20 +278,46 @@ public class ApplyServiceImpl implements ApplyService{
 
                 if (idList.isEmpty()) {
                     // 대기자가 없을 경우 -> Apply 삭제
+                    if(penaltyTimeCheck())
+                        applyPenalty(memberId);
                     apply.deleteApply();
                     return 0;
                 } else {
                     // 대기자가 존재할 경우 -> 다음 대기자를 당첨으로
-                    Long newWinnerId = idList.get(0);
-                    Apply newWinnerApply = findByApplyId(newWinnerId)
-                        .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
-                    winningRepository.save(Winning.of(newWinnerApply, WinningState.ACTIVE));
+                    if(penaltyTimeCheck()){
+                        // 신청 취소기간에는 다음 대기자 당첨 x
+                        applyPenalty(memberId);
+                        apply.deleteApply();
+                        return 1;
+                    }
+                    else{
+                        Long newWinnerId = idList.get(0);
+                        Apply newWinnerApply = findByApplyId(newWinnerId)
+                            .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
+                        winningRepository.save(Winning.of(newWinnerApply, WinningState.ACTIVE));
 
-                    apply.deleteApply();
+                        apply.deleteApply();
+                    }
                     return 1;
                 }
             }
         }
+    }
+    private void applyPenalty(Long memberId){
+        Member member = findById(memberId).get();
+        penaltyRepository.save(Penalty.of(member, PenaltyReason.APPLY, PenaltyLevel.MEDIUM, null));
+    }
+    public boolean penaltyTimeCheck(){
+        LocalDateTime now = LocalDateTime.now();
+        // 토요일
+        LocalDate currentMonday = LocalDate.now().with(DayOfWeek.SATURDAY);
+        LocalDateTime saturday = currentMonday.atTime(LocalTime.of(0, 0, 0));
+
+        // 일요일
+        LocalDate currentTuesday = currentMonday.with(DayOfWeek.SUNDAY);
+        LocalDateTime sunday = currentTuesday.atTime(LocalTime.of(23, 59, 59));
+
+        return now.isAfter(saturday) && now.isBefore(sunday);
     }
     public boolean timeloop(LocalDateTime now){
         // 이번주 월요일 00:00:00
