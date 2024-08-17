@@ -24,7 +24,7 @@ import static kea.enter.enterbe.global.common.api.CustomResponseCode.SUCCESS;
 public class ApplyControllerTest {
     private final ApplyServiceTestImpl applyServiceTest;
     @Operation(summary = "당첨자 발표 이전 차량 신청 내역 취소 API", description = "재배정 및 패널티 없음")
-    @DeleteMapping("/detail/before/{applyId}")
+    @DeleteMapping("/applies/detail/before/{applyId}")
     public ResponseEntity<String> deleteApplyDetailBefore(
         @PathVariable Long applyId,
         Authentication authentication
@@ -35,7 +35,7 @@ public class ApplyControllerTest {
         return ResponseEntity.ok(SUCCESS.getMessage());
     }
     @Operation(summary = "당첨자 발표 이후 차량 신청 내역 취소 API", description = "재배정 있음, 패널티 없음")
-    @DeleteMapping("/detail/after/{applyId}")
+    @DeleteMapping("/applies/detail/after/{applyId}")
     public ResponseEntity<String> deleteApplyDetailAfter(
         @PathVariable Long applyId,
         Authentication authentication
