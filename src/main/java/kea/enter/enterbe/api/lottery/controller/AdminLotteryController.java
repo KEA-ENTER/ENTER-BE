@@ -32,6 +32,7 @@ public class AdminLotteryController {
     /* 추첨 관리 목록 조회 API */
     @Operation(summary = "추첨 관리 목록 조회 API", description = "그동안의 추첨에 대한 통계를 조회합니다.")
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetLotteryListResponse.class))),
         @ApiResponse(responseCode = "AUT-ERR-010", description = "인증되지 않은 사용자입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "GLB-ERR-003", description = "내부 서버 오류입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
@@ -46,6 +47,7 @@ public class AdminLotteryController {
     /* 신청 내역 목록 조회 API */
     @Operation(summary = "신청 내역 목록 조회 API", description = "해당 추첨에 대한 신청자 내역을 조회합니다.")
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetApplicantListResponse.class))),
         @ApiResponse(responseCode = "AUT-ERR-010", description = "인증되지 않은 사용자입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "APR-ERR-001", description = "신청 회차를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "GLB-ERR-003", description = "내부 서버 오류입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))

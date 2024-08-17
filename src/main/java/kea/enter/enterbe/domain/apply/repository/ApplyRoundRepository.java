@@ -22,5 +22,6 @@ public interface ApplyRoundRepository extends JpaRepository<ApplyRound, Long>, A
     List<Long> findIdByStateAndRound(@Param("state") ApplyRoundState state, @Param("round") Integer round);
     @Query("SELECT MAX(ar.round) FROM ApplyRound ar WHERE ar.state = :state")
     Integer findMaxRoundByState(@Param("state") ApplyRoundState state);
-
+    @Query("SELECT COUNT(ar) FROM ApplyRound ar")
+    Integer countAllApplyRounds();
 }

@@ -38,6 +38,7 @@ public class AdminTakeController {
     /* 인수 현황 조회 API */
     @Operation(summary = "인수 현황 조회 API", description = "이전 회차 인수 현황을 조회합니다.")
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetTakeSituationResponse.class))),
         @ApiResponse(responseCode = "AUT-ERR-010", description = "인증되지 않은 사용자입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "GLB-ERR-003", description = "내부 서버 오류입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
@@ -51,6 +52,7 @@ public class AdminTakeController {
     /* 인수 관리 목록 조회 API */
     @Operation(summary = "인수 관리 목록 조회 API", description = "인수 관리 목록을 조회합니다.")
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetReportListResponse.class))),
         @ApiResponse(responseCode = "AUT-ERR-010", description = "인증되지 않은 사용자입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "GLB-ERR-003", description = "내부 서버 오류입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
@@ -65,6 +67,7 @@ public class AdminTakeController {
     /* 차량 인수 보고서 상세 조회 API */
     @Operation(summary = "차량 인수 보고서 상세 조회 API", description = "차량 인수 보고서를 조회합니다.")
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetTakeReportResponse.class))),
         @ApiResponse(responseCode = "AUT-ERR-010", description = "인증되지 않은 사용자입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "VHR-ERR-001", description = "차량 보고서를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "GLB-ERR-003", description = "내부 서버 오류입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
@@ -78,6 +81,7 @@ public class AdminTakeController {
     /* 차량 반납 보고서 상세 조회 API */
     @Operation(summary = "차량 반납 보고서 상세 조회 API", description = "차량 반납 보고서를 조회합니다.")
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetReturnReportResponse.class))),
         @ApiResponse(responseCode = "AUT-ERR-010", description = "인증되지 않은 사용자입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "VHR-ERR-001", description = "차량 보고서를 찾을 수 없습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "GLB-ERR-003", description = "내부 서버 오류입니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),

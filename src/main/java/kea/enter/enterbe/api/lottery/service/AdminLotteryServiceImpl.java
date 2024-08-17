@@ -104,6 +104,10 @@ public class AdminLotteryServiceImpl implements AdminLotteryService {
         }
 
         return GetApplicantListResponse.of(
+            applyRound.getRound(),
+            applyRound.getTakeDate().toString(),
+            applyRound.getVehicle().getModel(),
+            applyRound.getVehicle().getVehicleNo(),
             applicantInfoList,
             applyList.getNumber(),
             applyList.getSize(),
