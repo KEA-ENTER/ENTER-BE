@@ -84,6 +84,7 @@ public class Penalty extends BaseEntity {
             case RETURN -> "기간 내 미반납";
             case BROKEN -> "차량 훼손";
             case FUEL -> "유류 미달";
+            case APPLY -> "취소 기간 미준수";
             case ETC -> "기타";
         };
     }
