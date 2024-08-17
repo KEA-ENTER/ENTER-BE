@@ -230,50 +230,72 @@ public class ApplyServiceImpl implements ApplyService{
 
     @Transactional
     public int deleteApplyDetail(DeleteApplyDetailServiceDto dto) {
-        // 수정 가능 시간 확인
-        timeCheck(LocalDateTime.now());
+        // 취소 가능 시간 확인
+        LocalDateTime now = LocalDateTime.now();
+        timeCheck(now);
 
-        // Apply 존재 여부 확인
-        Apply apply = findByIdAndMemberId(dto.getApplyId(), dto.getMemberId())
-            .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
-
-        Long applyId = dto.getApplyId();
-
-        // 기존 당첨자 혹은 기존 대기자 조회
-        Winning firstWinning = findWinningByApplyId(applyId).orElse(null);
-        Waiting firstWaiting = findWaitingByApplyId(applyId)
-            .orElseThrow(() -> new CustomException(WAITING_NOT_FOUND));
-
-        if (firstWinning == null) {
-            // waiting 테이블에 있을 경우 -> 대기 취소
-            firstWaiting.deleteWaiting();
+        // 당첨자 발표 이전 취소
+        if(timeloop(now)){
+            Apply apply = findByIdAndMemberId(dto.getApplyId(), dto.getMemberId())
+                .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
             apply.deleteApply();
             return 1;
-        } else {
-            // 당첨자와 대기자 모두 취소
-            firstWinning.deleteWinning();
-            firstWaiting.deleteWaiting();
+        }
+        // 당첨자 발표 이후 취소
+        else {
+            // Apply 존재 여부 확인
+            Apply apply = findByIdAndMemberId(dto.getApplyId(), dto.getMemberId())
+                .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
 
-            // 다음 대기자를 찾음
-            Integer waitingNo = firstWaiting.getWaitingNo();
-            // 해당 대기 인원들의 ID를 대기번호를 기준으로 오름차순으로 정렬
-            List<Long> idList = waitingFindIds(apply.getApplyRound().getId(), waitingNo);
+            Long applyId = dto.getApplyId();
 
-            if (idList.isEmpty()) {
-                // 대기자가 없을 경우 -> Apply 삭제
-                apply.deleteApply();
-                return 0;
-            } else {
-                // 대기자가 존재할 경우 -> 다음 대기자를 당첨으로
-                Long newWinnerId = idList.get(0);
-                Apply newWinnerApply = findByApplyId(newWinnerId)
-                    .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
-                winningRepository.save(Winning.of(newWinnerApply, WinningState.ACTIVE));
+            // 기존 당첨자 혹은 기존 대기자 조회
+            Winning firstWinning = findWinningByApplyId(applyId).orElse(null);
+            Waiting firstWaiting = findWaitingByApplyId(applyId)
+                .orElseThrow(() -> new CustomException(WAITING_NOT_FOUND));
 
+            if (firstWinning == null) {
+                // waiting 테이블에 있을 경우 -> 대기 취소
+                firstWaiting.deleteWaiting();
                 apply.deleteApply();
                 return 1;
+            } else {
+                // 당첨자와 대기자 모두 취소
+                firstWinning.deleteWinning();
+                firstWaiting.deleteWaiting();
+
+                // 다음 대기자를 찾음
+                Integer waitingNo = firstWaiting.getWaitingNo();
+                // 해당 대기 인원들의 ID를 대기번호를 기준으로 오름차순으로 정렬
+                List<Long> idList = waitingFindIds(apply.getApplyRound().getId(), waitingNo);
+
+                if (idList.isEmpty()) {
+                    // 대기자가 없을 경우 -> Apply 삭제
+                    apply.deleteApply();
+                    return 0;
+                } else {
+                    // 대기자가 존재할 경우 -> 다음 대기자를 당첨으로
+                    Long newWinnerId = idList.get(0);
+                    Apply newWinnerApply = findByApplyId(newWinnerId)
+                        .orElseThrow(() -> new CustomException(APPLY_NOT_FOUND));
+                    winningRepository.save(Winning.of(newWinnerApply, WinningState.ACTIVE));
+
+                    apply.deleteApply();
+                    return 1;
+                }
             }
         }
+    }
+    public boolean timeloop(LocalDateTime now){
+        // 이번주 월요일 00:00:00
+        LocalDate currentMonday = LocalDate.now().with(DayOfWeek.WEDNESDAY);
+        LocalDateTime monday= currentMonday.atTime(LocalTime.of(0, 0, 0));
+
+        // 이번주 수요일 9:59:59
+        LocalDate currentTuesday = currentMonday.with(DayOfWeek.WEDNESDAY);
+        LocalDateTime tuesday= currentTuesday.atTime(LocalTime.of(23, 59, 59));
+
+        return now.isAfter(monday) && now.isBefore(tuesday);
     }
     public void timeCheck(LocalDateTime now){
         // 이번주 수요일 0:00:00
@@ -281,8 +303,8 @@ public class ApplyServiceImpl implements ApplyService{
         LocalDateTime mondayStart = currentMonday.atTime(LocalTime.of(0, 0, 0));
 
         // 이번주 수요일 9:59:59
-        LocalDate nextTuesday = currentMonday.with(DayOfWeek.WEDNESDAY);
-        LocalDateTime tuesdayEnd = nextTuesday.atTime(LocalTime.of(9, 59, 59));
+        LocalDate currentTuesday = currentMonday.with(DayOfWeek.WEDNESDAY);
+        LocalDateTime tuesdayEnd = currentTuesday.atTime(LocalTime.of(9, 59, 59));
 
         boolean isInRange = now.isAfter(mondayStart) && now.isBefore(tuesdayEnd);
         // 수정 기간이 아닐경우
