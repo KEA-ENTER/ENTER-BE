@@ -99,7 +99,8 @@ public class ApplyCustomRepositoryImpl implements ApplyCustomRepository {
             long applyCount = jpaQueryFactory
                 .selectFrom(apply)
                 .innerJoin(applyRound).on(apply.applyRound.id.eq(applyRound.id))
-                .where(apply.state.eq(ApplyState.ACTIVE))
+                .where(apply.state.eq(ApplyState.ACTIVE)
+                    .and(applyRound.id.eq(round.getId())))
                 .fetchCount();
 
             // 당첨 여부
