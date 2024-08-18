@@ -31,6 +31,7 @@ import kea.enter.enterbe.global.quartz.job.AutoReportJob;
 import kea.enter.enterbe.global.quartz.job.CalculateWeight;
 import kea.enter.enterbe.global.quartz.schedule.AutoReportScheduler;
 import kea.enter.enterbe.global.quartz.schedule.CheckReportScheduler;
+import kea.enter.enterbe.global.util.AESCryptoUtil;
 import kea.enter.enterbe.global.util.FileUtil;
 import kea.enter.enterbe.global.util.LicenseValidationUtil;
 import kea.enter.enterbe.global.util.ObjectStorageUtil;
@@ -111,6 +112,8 @@ public abstract class IntegrationTestSupport {
     protected EmailService emailService;
     @MockBean
     protected CheckReportScheduler checkReportScheduler;
+    @MockBean
+    protected AESCryptoUtil aesCryptoUtil;
 
     @AfterEach
     void tearDown() {

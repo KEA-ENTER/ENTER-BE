@@ -29,6 +29,7 @@ import kea.enter.enterbe.global.security.JwtAccessDeniedHandler;
 import kea.enter.enterbe.global.security.JwtAuthenticationEntryPoint;
 import kea.enter.enterbe.global.security.JwtUtil;
 import kea.enter.enterbe.global.security.SecurityConfig;
+import kea.enter.enterbe.global.util.AESCryptoUtil;
 import kea.enter.enterbe.global.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -87,6 +88,8 @@ public abstract class ControllerTestSupport {
     protected JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @MockBean
     protected JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    @MockBean
+    protected AESCryptoUtil aesCryptoUtil;
     @Autowired
     protected MockMvc mockMvc;
     @Autowired
