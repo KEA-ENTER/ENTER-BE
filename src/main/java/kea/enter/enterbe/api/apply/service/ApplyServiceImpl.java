@@ -130,6 +130,7 @@ public class ApplyServiceImpl implements ApplyService{
                 //지원자 없을 경우
                     if(applyList.isEmpty()) {
                         return GetApplyVehicleResponse.builder()
+                            .applyRoundId(applyRound.getId())
                             .vehicleId(vehicle.getId())
                             .round(applyRound.getRound())
                             .competition(0)
@@ -144,6 +145,7 @@ public class ApplyServiceImpl implements ApplyService{
                     else{
                         int competition = applyList.size();
                         return GetApplyVehicleResponse.builder()
+                            .applyRoundId(applyRound.getId())
                             .vehicleId(vehicle.getId())
                             .round(applyRound.getRound())
                             .competition(competition)
