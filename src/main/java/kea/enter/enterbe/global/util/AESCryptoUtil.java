@@ -16,10 +16,10 @@ import java.util.Base64;
 public class AESCryptoUtil {
     @Value("${aes.key}")
     private String key;
-    @Value("${aes.algorithm}")
-    private String algorithm;
     @Value("${aes.iv}")
     private String iv;
+
+    private String algorithm = "AES/CBC/PKCS5Padding";
 
     // 암호화
     public String encrypt_AES(String plainText){

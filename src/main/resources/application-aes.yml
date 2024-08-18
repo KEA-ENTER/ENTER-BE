@@ -4,7 +4,6 @@ spring:
             on-profile: local
 aes:
     key: "aeskey991128789876543morodoro987"
-    algorithm: "AES/CBC/PKCS5Padding"
     iv: "morodoro12moroth"
 ---
 spring:
@@ -13,7 +12,6 @@ spring:
             on-profile: test
 aes:
     key: "aeskey991128789876543morodoro987"
-    algorithm: "AES/CBC/PKCS5Padding"
     iv: "morodoro12moroth"
 ---
 spring:
@@ -21,6 +19,5 @@ spring:
         activate:
             on-profile: dev
 aes:
-    key: "aeskey991128789876543morodoro987"
-    algorithm: "AES/CBC/PKCS5Padding"
-    iv: "morodoro12moroth"
+    key: ${aes-key}
+    iv:  ${aes-iv}
