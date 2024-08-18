@@ -10,6 +10,7 @@ import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleServiceDto;
 import kea.enter.enterbe.api.vehicle.service.dto.GetVehicleListServiceDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleServiceDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
+import kea.enter.enterbe.domain.vehicle.entity.VehicleNoteState;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
@@ -56,7 +57,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     @Override
     public GetAdminVehicleResponse getVehicle(Long id) {
         if (vehicleRepository.findByIdAndStateNot(id, VehicleState.INACTIVE).isPresent())
-            return vehicleRepository.findVehicleAndNotebyId(id);
+            return vehicleRepository.findVehicleAndNotebyIdAndState(id, VehicleNoteState.ACTIVE);
 
         else
             throw new CustomException(ResponseCode.VEHICLE_NOT_VALID);
@@ -84,7 +85,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     @Override
     @Transactional
     public void modifyVehicle(ModifyVehicleServiceDto dto) {
-        Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
+        Optional<Vehicle> vehicle = vehicleRepository.findByIdAndStateNot(dto.getId(), VehicleState.INACTIVE);
 
         if (vehicle.isPresent()) {
             if (!vehicle.get().getVehicleNo().equals(dto.getVehicleNo()))
@@ -111,7 +112,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     @Override
     @Transactional
     public void deleteVehicle(DeleteVehicleServiceDto dto) {
-        Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
+        Optional<Vehicle> vehicle = vehicleRepository.findByIdAndStateNot(dto.getId(), VehicleState.INACTIVE);
         if (vehicle.isPresent()) {
             vehicle.get().deleteVehicle();
         }
