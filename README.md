@@ -1,4 +1,4 @@
-# 🚗탈까? (TalCar?) -Backend
+# 🚗 탈까? (TalCar?) -Backend
 기간 : 24.07.01 ~ 24.08.19
 
 팀원 : 7명
@@ -14,7 +14,7 @@
 <br>
 
 ## 관리자 Page 
-| <img src="https://github.com/user-attachments/assets/63ec43d7-9273-4fb7-803a-94411bc359cb" height="300" width="500"> | <img src="https://github.com/user-attachments/assets/c3ae3814-424c-4aec-bd41-d0abb1d38f7d" height="300" width="500"> |
+| <img src="https://github.com/user-attachments/assets/63ec43d7-9273-4fb7-803a-94411bc359cb" height="350" width="600"> | <img src="https://github.com/user-attachments/assets/c3ae3814-424c-4aec-bd41-d0abb1d38f7d" height="350" width="600"> |
 |:--------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------:|
 
 <br>
@@ -81,6 +81,30 @@
 ![Static Badge](https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=black&labelColor=white)
 ![Static Badge](https://img.shields.io/badge/google%20sheets-34A853?style=for-the-badge&logo=googlesheets&logoColor=black&labelColor=white)
 ![Static Badge](https://img.shields.io/badge/erd%20cloud-2C39BD?style=for-the-badge&logo=iCloud&logoColor=black&labelColor=white)
+
+<br>
+
+## Setup
+### 1.Git Clone
+```
+git clone https://github.com/KEA-ENTER/ENTER-BE.git
+cd ENTER-BE
+```
+### 2. IDE 환경설정
+사용하는 **IDE**의 환경 설정을 아래와 같이 설정합니다.
+<br>
+**Build Tool** : Gradle
+<br>
+**Java Version** : Java17
+<br>
+**JDK Version** : OpenJDK17
+<br>
+### 3. 환경변수를 설정합니다.
+```
+jwt-secret = "jwt key값"
+mail.password = "Google에서 발급 받은 App Password"
+mail.username = "Gmail 계정 ID"
+```
 
 <br>
 
