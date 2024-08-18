@@ -122,14 +122,15 @@ public class ApplyServiceImpl implements ApplyService{
 
         return applyRoundList.stream()
             .map(applyRound ->{
-                // 각 ApplyRound에 종속된 Vehicle을 가져온다.
-                Vehicle vehicle = applyRound.getVehicle();
-                // 각 ApplyRound를 신청한 모든 Apply들을 가져온다. 몇명이 지원했는지를 알기 위해서
-                List<Apply> applyList = findAllByApplyRoundId(applyRound.getId());
+                    // 각 ApplyRound에 종속된 Vehicle을 가져온다.
+                    Vehicle vehicle = applyRound.getVehicle();
+                    // 각 ApplyRound를 신청한 모든 Apply들을 가져온다. 몇명이 지원했는지를 알기 위해서
+                    List<Apply> applyList = findAllByApplyRoundId(applyRound.getId());
 
-                //지원자 없을 경우
+                    //지원자 없을 경우
                     if(applyList.isEmpty()) {
                         return GetApplyVehicleResponse.builder()
+                            .applyRoundId(applyRound.getId())
                             .vehicleId(vehicle.getId())
                             .round(applyRound.getRound())
                             .competition(0)
@@ -144,6 +145,7 @@ public class ApplyServiceImpl implements ApplyService{
                     else{
                         int competition = applyList.size();
                         return GetApplyVehicleResponse.builder()
+                            .applyRoundId(applyRound.getId())
                             .vehicleId(vehicle.getId())
                             .round(applyRound.getRound())
                             .competition(competition)

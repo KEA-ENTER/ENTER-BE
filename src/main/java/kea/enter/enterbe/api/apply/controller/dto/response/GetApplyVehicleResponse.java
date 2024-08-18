@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class GetApplyVehicleResponse {
+    private Long applyRoundId;
     private Long vehicleId;
     private int round;
     private int competition;
@@ -18,8 +19,9 @@ public class GetApplyVehicleResponse {
     private String img;
 
     @Builder
-    public GetApplyVehicleResponse(Long vehicleId, int round, int competition, String model, VehicleFuel fuel,
+    public GetApplyVehicleResponse(Long applyRoundId, Long vehicleId, int round, int competition, String model, VehicleFuel fuel,
         String company, int seat, String img){
+        this.applyRoundId = applyRoundId;
         this.vehicleId = vehicleId;
         this.round = round;
         this.competition = competition;
@@ -30,9 +32,10 @@ public class GetApplyVehicleResponse {
         this.img = img;
     }
 
-    public static GetApplyVehicleResponse of(Long vehicleId, int round, int competition, String model, VehicleFuel fuel,
+    public static GetApplyVehicleResponse of(Long applyRoundId, Long vehicleId, int round, int competition, String model, VehicleFuel fuel,
         String company, int seat, String img){
         return GetApplyVehicleResponse.builder()
+            .applyRoundId(applyRoundId)
             .vehicleId(vehicleId)
             .round(round)
             .competition(competition)
