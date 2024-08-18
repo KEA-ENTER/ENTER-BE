@@ -1,6 +1,7 @@
 package kea.enter.enterbe.domain.member.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,6 +13,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import kea.enter.enterbe.domain.penalty.entity.Penalty;
 import kea.enter.enterbe.global.common.entity.BaseEntity;
+import kea.enter.enterbe.global.common.entity.CryptoConverter;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,9 +39,11 @@ public class Member extends BaseEntity {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
+    @Convert(converter = CryptoConverter.class)
     @Column(name = "license_id")
     private String licenseId;
 
+    @Convert(converter = CryptoConverter.class)
     @Column(name = "license_password")
     private String licensePassword;
 
