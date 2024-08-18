@@ -45,11 +45,15 @@ public class VehicleController {
         @RequestPart(value = "back_img") MultipartFile back_img,
         @RequestPart(value = "left_img") MultipartFile left_img,
         @RequestPart(value = "dashboard_img") MultipartFile dashboardImg,
-        @RequestPart(value = "note",required = false) String note,
-        @RequestPart(value = "parking_loc",required = false) String parkingLoc,
-        @RequestParam(name = "type") @NotNull(message = "보고서 종류를 입력해주세요")
-        @Schema(description = "보고서 종류 TAKE, RETURN", example = "TAKE")
-        VehicleReportType type
+
+        @Schema(description = "보고서 특이 사항", example = "문이 안열려요")
+        @RequestPart(value = "note", required = false) String note,
+
+        @Schema(description = "주차 위치", example = "옥상 근처 어딘가")
+        @RequestPart(value = "parking_loc", required = false) String parkingLoc,
+
+        @NotNull(message = "보고서 종류를 입력해주세요") @Schema(description = "보고서 종류 TAKE, RETURN", example = "TAKE")
+        @RequestParam(name = "type") VehicleReportType type
     ) {
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
         Long memberId = Long.valueOf(loggedInUser.getName());
@@ -58,7 +62,7 @@ public class VehicleController {
             List.of(front_img, right_img, back_img, left_img, dashboardImg))) {
             throw new CustomException(ResponseCode.NOT_IMAGE_FILE);
         }
-        if(type.equals(VehicleReportType.RETURN) && !StringUtils.hasText(parkingLoc)){
+        if (type.equals(VehicleReportType.RETURN) && !StringUtils.hasText(parkingLoc)) {
             throw new CustomException(ResponseCode.NEED_PARKING_LOC_FOR_RETURN_REPORT);
         }
         vehicleService.postVehicleReport(
