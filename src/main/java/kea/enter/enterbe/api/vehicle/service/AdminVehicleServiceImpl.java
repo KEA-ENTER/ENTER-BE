@@ -10,7 +10,6 @@ import kea.enter.enterbe.api.vehicle.service.dto.DeleteVehicleServiceDto;
 import kea.enter.enterbe.api.vehicle.service.dto.GetVehicleListServiceDto;
 import kea.enter.enterbe.api.vehicle.service.dto.ModifyVehicleServiceDto;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
-import kea.enter.enterbe.domain.vehicle.entity.VehicleNoteState;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.domain.vehicle.repository.VehicleRepository;
 import kea.enter.enterbe.global.common.exception.CustomException;
@@ -57,7 +56,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     @Override
     public GetAdminVehicleResponse getVehicle(Long id) {
         if (vehicleRepository.findByIdAndStateNot(id, VehicleState.INACTIVE).isPresent())
-            return vehicleRepository.findVehicleAndNotebyIdAndState(id, VehicleNoteState.ACTIVE);
+            return vehicleRepository.findVehicleAndNotebyId(id);
 
         else
             throw new CustomException(ResponseCode.VEHICLE_NOT_VALID);
