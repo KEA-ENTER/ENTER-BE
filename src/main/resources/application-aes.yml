@@ -1,0 +1,23 @@
+spring:
+    config:
+        activate:
+            on-profile: local
+aes:
+    key: "aeskey991128789876543morodoro987"
+    iv: "morodoro12moroth"
+---
+spring:
+    config:
+        activate:
+            on-profile: test
+aes:
+    key: "aeskey991128789876543morodoro987"
+    iv: "morodoro12moroth"
+---
+spring:
+    config:
+        activate:
+            on-profile: dev
+aes:
+    key: ${aes-key}
+    iv:  ${aes-iv}

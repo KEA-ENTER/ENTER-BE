@@ -19,6 +19,7 @@ spring:
       - monitoring
       - quartz
       - redis
+      - aes
     active: local
   servlet:
       multipart:
