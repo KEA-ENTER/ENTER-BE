@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class GetMemberPostReportTypeResponse {
-    @Schema(description = "보고서 종류 반환 (TAKE, RETURN. NONE)",example = "TAKE")
+    @Schema(description = "보고서 종류 반환 (TAKE(인수), RETURN(반납), NONE(아무것도 해당이 안됨))",example = "TAKE")
     private String reportType;
 
     @Builder

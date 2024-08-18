@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class GetMemberScoreResponse {
-    @Schema(description = "가중취 상위 몇 퍼센트인지 확인 ", example = "41.39281839")
+    @Schema(description = "가중치 상위 몇 퍼센트인지 확인 ", example = "41.39281839")
     private Double scorePercentile;
 
     @Builder
