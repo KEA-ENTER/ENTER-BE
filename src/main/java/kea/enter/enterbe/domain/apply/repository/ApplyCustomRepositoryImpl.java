@@ -115,7 +115,8 @@ public class ApplyCustomRepositoryImpl implements ApplyCustomRepository {
                 .leftJoin(winning).on(winning.apply.id.eq(apply.id))
                 .where(
                     apply.state.eq(ApplyState.ACTIVE)
-                        .and(apply.member.id.eq(memberId))
+                        .and(apply.member.id.eq(memberId)
+                            .and(applyRound.id.eq(round.getId())))
                 )
                 .fetchFirst();
 
