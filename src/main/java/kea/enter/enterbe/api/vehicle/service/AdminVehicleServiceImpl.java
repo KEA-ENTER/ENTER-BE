@@ -85,7 +85,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     @Override
     @Transactional
     public void modifyVehicle(ModifyVehicleServiceDto dto) {
-        Optional<Vehicle> vehicle = vehicleRepository.findByIdAndStateNot(dto.getId(), VehicleState.INACTIVE);
+        Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
 
         if (vehicle.isPresent()) {
             if (!vehicle.get().getVehicleNo().equals(dto.getVehicleNo()))
@@ -112,7 +112,7 @@ public class AdminVehicleServiceImpl implements AdminVehicleService {
     @Override
     @Transactional
     public void deleteVehicle(DeleteVehicleServiceDto dto) {
-        Optional<Vehicle> vehicle = vehicleRepository.findByIdAndStateNot(dto.getId(), VehicleState.INACTIVE);
+        Optional<Vehicle> vehicle = vehicleRepository.findById(dto.getId());
         if (vehicle.isPresent()) {
             vehicle.get().deleteVehicle();
         }
