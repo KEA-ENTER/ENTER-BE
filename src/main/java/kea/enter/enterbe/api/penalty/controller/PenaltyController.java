@@ -1,11 +1,8 @@
 package kea.enter.enterbe.api.penalty.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
+import kea.enter.enterbe.api.penalty.controller.dto.response.GetMemberInPenaltyPeriodResponse;
 import kea.enter.enterbe.api.penalty.controller.dto.response.GetPenaltyListResponse;
 import kea.enter.enterbe.api.penalty.controller.dto.response.GetPenaltyResponse;
 import kea.enter.enterbe.api.penalty.service.PenaltyService;
@@ -13,8 +10,7 @@ import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyListServiceDto;
 import kea.enter.enterbe.api.penalty.service.dto.GetPenaltyServiceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,5 +46,12 @@ public class PenaltyController {
         @PathVariable Long penaltyId) {
 
         return penaltyService.getPenalty(GetPenaltyServiceDto.of(Long.valueOf(authentication.getName()), penaltyId));
+    }
+
+    @Operation(summary = "패널티로 인해 제한 기간에 접속한 사용자인지 확인")
+    @GetMapping("/in-progress")
+    public ResponseEntity<GetMemberInPenaltyPeriodResponse> getMemberPenalties(Authentication authentication) {
+        Long memberId = Long.valueOf(authentication.getName());
+        return ResponseEntity.ok(penaltyService.getMemberInPenaltyPeriod(memberId));
     }
 }
