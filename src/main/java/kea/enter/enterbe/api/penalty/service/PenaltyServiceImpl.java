@@ -85,12 +85,12 @@ public class PenaltyServiceImpl implements PenaltyService {
         Deque<LocalDate> createdAtStack = new LinkedList<>();
         // 기간 자체에 대한 스택
         Deque<Long> periodStack = new LinkedList<>();
-        // 패널티 종료일을 쌓는 스택 -> 솔직히 스택 안써도 될 것 같긴한데 그냥 변수를 쓰기가 싫어
+        // 패널티 종료일을 쌓는 스택
         Deque<LocalDate> endStack = new LinkedList<>();
 
         // 각 패널티를 조회하며 연산
         for(Penalty penalty : penaltyList) {
-            // 블랙리스트를 보게 되면 연산 종료 및 return 할 수 있도록 진행 (뭔가 변수가 필요할 듯)
+            // 블랙리스트를 보게 되면 연산 종료 및 return 할 수 있도록 진행
             if(penalty.getLevel().equals(PenaltyLevel.BLACKLIST)){
                 return GetMemberInPenaltyPeriodResponse.of(true, 9999, 12,30);
             }
@@ -124,6 +124,7 @@ public class PenaltyServiceImpl implements PenaltyService {
         return GetMemberInPenaltyPeriodResponse.of(inProgress, restOfPenalties.getYears(), restOfPenalties.getMonths(), restOfPenalties.getDays());
     }
 
+    // ENUM 값을 기획상 기간 값으로 전환
     private Long penaltyConvertToPeriod(PenaltyLevel level){
         return switch (level) {
             case MINIMUM -> 2L;
