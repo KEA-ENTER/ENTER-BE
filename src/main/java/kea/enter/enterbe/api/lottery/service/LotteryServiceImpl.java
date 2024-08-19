@@ -87,9 +87,6 @@ public class LotteryServiceImpl implements LotteryService {
         }
         // 한 일주일에 관해서는 회차가 같다.
         int round = thisWeekApplyRound.get(0).getRound();
-
-        log.info("\nround: " + String.valueOf(round));
-
         //최근 5회차
         List<Winning> winnings;
         int sum;
@@ -98,21 +95,11 @@ public class LotteryServiceImpl implements LotteryService {
             if (i < 1) {
                 break;
             }
-
-            log.info("\ni: " + String.valueOf(i));
-
             //라운드의 모든 당첨자 조회
             winnings = winningRepository.findAllByApplyApplyRoundRoundAndState(
                 i, WinningState.ACTIVE);
             sum = 0;
-
-            log.info("\nwinnings: " + winnings);
-
             for (Winning winning : winnings) {
-
-                log.info("\nwinning: " + winning);
-                log.info("\nwinning apply id: " + winning.getApply().getId());
-
                 //당첨자의 대기번호 더하기
                 sum += finWaitingByApplyId(winning.getApply().getId()).getWaitingNo();
             }
@@ -164,16 +151,11 @@ public class LotteryServiceImpl implements LotteryService {
     }
 
     private List<ApplyRound> getApplyRoundByThisWeek() {
-
-        log.info("\nTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAY");
-
         // 오늘을 기준으로 이번주 기간을 구한다
         // 이번주에 인수 반납하는 회차이면 이미 당첨자가 나온 상황이므로 이번회차부터 5회차 확인
         LocalDate today = LocalDate.now(clock);
         LocalDate thisMonday = today.with(DayOfWeek.MONDAY);  // 이번주 월요일
         LocalDate thisSunday = today.with(DayOfWeek.SUNDAY);  // 이번주 일요일
-
-        log.info("\nDate: " + today);
 
         return applyRoundRepository.findAllApplyRoundsByTakeDateBetweenAndState(
             thisMonday, thisSunday, ApplyRoundState.ACTIVE);
