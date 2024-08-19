@@ -17,6 +17,7 @@ import java.util.List;
 import kea.enter.enterbe.api.vehicle.controller.dto.request.VehicleSearchCategory;
 import kea.enter.enterbe.api.vehicle.controller.dto.response.GetAdminVehicleResponse;
 import kea.enter.enterbe.domain.vehicle.entity.Vehicle;
+import kea.enter.enterbe.domain.vehicle.entity.VehicleNoteState;
 import kea.enter.enterbe.domain.vehicle.entity.VehicleState;
 import kea.enter.enterbe.global.common.exception.CustomException;
 import kea.enter.enterbe.global.common.exception.ResponseCode;
@@ -98,7 +99,8 @@ public class VehicleRepositoryCustomImpl extends QuerydslRepositorySupport imple
             .leftJoin(winning).on(vehicleReport.winning.id.eq(winning.id))
             .leftJoin(apply).on(winning.apply.id.eq(apply.id))
             .leftJoin(member).on(apply.member.id.eq(member.id))
-            .where(vehicle.id.eq(id))
+            .where(vehicle.id.eq(id)
+                .and(vehicleNote.state.eq(VehicleNoteState.ACTIVE)))
             .fetch();
 
         List<String> names = new ArrayList<>();
