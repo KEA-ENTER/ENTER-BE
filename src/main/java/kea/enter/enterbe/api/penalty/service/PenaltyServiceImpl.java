@@ -1,6 +1,7 @@
 package kea.enter.enterbe.api.penalty.service;
 
 import java.util.List;
+import kea.enter.enterbe.api.penalty.controller.dto.response.GetMemberInPenaltyPeriodResponse;
 import kea.enter.enterbe.api.penalty.controller.dto.response.GetPenaltyListResponse;
 import kea.enter.enterbe.api.penalty.controller.dto.response.GetPenaltyResponse;
 import kea.enter.enterbe.api.penalty.controller.dto.response.PenaltyInfo;
@@ -61,5 +62,10 @@ public class PenaltyServiceImpl implements PenaltyService {
             .etc(penalty.getEtc())
             .createdAt(penalty.getCreatedAt().toLocalDate().toString())
             .build();
+    }
+
+    @Override
+    public GetMemberInPenaltyPeriodResponse getMemberInPenaltyPeriod(Long memberId) {
+        return null;
     }
 }
