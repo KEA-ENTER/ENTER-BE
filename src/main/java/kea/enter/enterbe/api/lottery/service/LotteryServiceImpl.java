@@ -164,11 +164,17 @@ public class LotteryServiceImpl implements LotteryService {
     }
 
     private List<ApplyRound> getApplyRoundByThisWeek() {
+
+        log.info("\nTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAYTODAY");
+
         // 오늘을 기준으로 이번주 기간을 구한다
         // 이번주에 인수 반납하는 회차이면 이미 당첨자가 나온 상황이므로 이번회차부터 5회차 확인
         LocalDate today = LocalDate.now(clock);
         LocalDate thisMonday = today.with(DayOfWeek.MONDAY);  // 이번주 월요일
         LocalDate thisSunday = today.with(DayOfWeek.SUNDAY);  // 이번주 일요일
+
+        log.info("\nDate: " + today);
+
         return applyRoundRepository.findAllApplyRoundsByTakeDateBetweenAndState(
             thisMonday, thisSunday, ApplyRoundState.ACTIVE);
     }
