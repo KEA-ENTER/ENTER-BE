@@ -87,6 +87,9 @@ public class LotteryServiceImpl implements LotteryService {
         }
         // 한 일주일에 관해서는 회차가 같다.
         int round = thisWeekApplyRound.get(0).getRound();
+
+        log.info("\nround: " + String.valueOf(round));
+
         //최근 5회차
         List<Winning> winnings;
         int sum;
@@ -95,11 +98,21 @@ public class LotteryServiceImpl implements LotteryService {
             if (i < 1) {
                 break;
             }
+
+            log.info("\ni: " + String.valueOf(i));
+
             //라운드의 모든 당첨자 조회
             winnings = winningRepository.findAllByApplyApplyRoundRoundAndState(
                 i, WinningState.ACTIVE);
             sum = 0;
+
+            log.info("\nwinnings: " + winnings);
+
             for (Winning winning : winnings) {
+
+                log.info("\nwinning: " + winning);
+                log.info("\nwinning apply id: " + winning.getApply().getId());
+
                 //당첨자의 대기번호 더하기
                 sum += finWaitingByApplyId(winning.getApply().getId()).getWaitingNo();
             }
