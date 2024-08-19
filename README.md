@@ -48,7 +48,7 @@
 ![Static Badge](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=Git&logoColor=black&labelColor=white)
 <br>
 ![Static Badge](https://img.shields.io/badge/ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=black&labelColor=white)
-![Static Badge](https://img.shields.io/badge/jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=black&labelColor=white)
+![Static Badge](https://img.shields.io/badge/jenkins%202.469-D24939?style=for-the-badge&logo=jenkins&logoColor=black&labelColor=white)
 ![Static Badge](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=black&labelColor=white)
 <br>
 ![Static Badge](https://img.shields.io/badge/vault-FFEC6E?style=for-the-badge&logo=vault&logoColor=black&labelColor=white)
@@ -60,18 +60,18 @@
 ![Static Badge](https://img.shields.io/badge/Java17-FC390E?style=for-the-badge&logo=Java&logoColor=black&labelColor=white)
 ![Static Badge](https://img.shields.io/badge/OpenJDK17-FC390E?style=for-the-badge&logo=Java&logoColor=black&labelColor=white)
 <br>
-![Static Badge](https://img.shields.io/badge/springboot3.2.5-DB33F?style=for-the-badge&logo=springboot&logoColor=black&labelColor=white)
+![Static Badge](https://img.shields.io/badge/springboot%203.2.5-DB33F?style=for-the-badge&logo=springboot&logoColor=black&labelColor=white)
 ![Static Badge](https://img.shields.io/badge/spring%20security-DB33F?style=for-the-badge&logo=springsecurity&logoColor=black&labelColor=white)
-![Static Badge](https://img.shields.io/badge/swagger2.2.0-DB33F?style=for-the-badge&logo=swagger&logoColor=black&labelColor=white)
+![Static Badge](https://img.shields.io/badge/swagger%202.2.0-DB33F?style=for-the-badge&logo=swagger&logoColor=black&labelColor=white)
 ![Static Badge](https://img.shields.io/badge/spring%20data%20jpa-DB33F?style=for-the-badge&logo=Java&logoColor=black&labelColor=white)
 <br>
 ![Static Badge](https://img.shields.io/badge/junit5-25A162?style=for-the-badge&logo=junit5&logoColor=black&labelColor=white)
 ![Static Badge](https://img.shields.io/badge/Mockito-25A162?style=for-the-badge&logo=Mockito&logoColor=black&labelColor=white)
 ![Static Badge](https://img.shields.io/badge/apache%20jmeter-D22128?style=for-the-badge&logo=apachejmeter&logoColor=black&labelColor=white)
-![Static Badge](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=black&labelColor=white)
+![Static Badge](https://img.shields.io/badge/Gradle%208.5-02303A?style=for-the-badge&logo=Gradle&logoColor=black&labelColor=white)
 <br>
-![Static Badge](https://img.shields.io/badge/mysql8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=black&labelColor=white)
-![Static Badge](https://img.shields.io/badge/Redis-FF4438?style=for-the-badge&logo=Redis&logoColor=black&labelColor=white)
+![Static Badge](https://img.shields.io/badge/mysql%208.0.39-4479A1?style=for-the-badge&logo=mysql&logoColor=black&labelColor=white)
+![Static Badge](https://img.shields.io/badge/Redis7.2.5-FF4438?style=for-the-badge&logo=Redis&logoColor=black&labelColor=white)
 ![Static Badge](https://img.shields.io/badge/H2-2C3FBF?style=for-the-badge&logo=H2&logoColor=black&labelColor=white)
 <br>
 ![Static Badge](https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=black&labelColor=white)
@@ -98,14 +98,40 @@ cd ENTER-BE
 **Java Version** : Java17
 <br>
 **JDK Version** : OpenJDK17
-<br>
-### 3. 환경변수를 설정합니다.
-```
-jwt-secret = "jwt key값"
-mail.password = "Google에서 발급 받은 App Password"
-mail.username = "Gmail 계정 ID"
-```
 
+<br>
+
+아래에 명시되어 있는 환경변수를 설정합니다.
+```
+mail.username = "dongkwan9721@gmail.com"
+mail.password = "inrfwymnpfisnrtw"
+```
+<br>
+
+추가적으로 제출 파일에 있는 서버 환경 변수를 입력합니다.
+
+Example Values
+```
+-Dkakao-cloud-access=
+-Dkakao-cloud-secret=
+-Dkakao-cloud-region=
+-Dkakao-cloud-bucket-name=
+-Dkakao-cloud-bucket-endpoint=
+-Dkakao-cloud-cdn-endpoint=
+-Dlicense-client-id=
+-Dlicense-client-secret=
+-Dlicense-public-key=
+-Dlicense-url-demo=
+-Dkakao-cloud-database-url=
+-Dkakao-cloud-database-username=
+-Dkakao-cloud-database-password=
+-Dkakao-cloud-redis-url=
+-Dkakao-cloud-port=
+```
+### 4. Redis
+Background에 Redis를 실행시킵니다.
+
+### 5. EnterBeApplication 실행
 <br>
 
 ## ERD
