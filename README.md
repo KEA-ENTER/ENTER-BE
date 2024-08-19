@@ -51,10 +51,10 @@
 ![Static Badge](https://img.shields.io/badge/jenkins%202.469-D24939?style=for-the-badge&logo=jenkins&logoColor=black&labelColor=white)
 ![Static Badge](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=black&labelColor=white)
 <br>
-![Static Badge](https://img.shields.io/badge/vault-FFEC6E?style=for-the-badge&logo=vault&logoColor=black&labelColor=white)
-![Static Badge](https://img.shields.io/badge/prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=black&labelColor=white)
-![Static Badge](https://img.shields.io/badge/grafana-F46800?style=for-the-badge&logo=grafana&logoColor=black&labelColor=white)
-![Static Badge](https://img.shields.io/badge/loki-F46800?style=for-the-badge&logo=loki&logoColor=black&labelColor=white)
+![Static Badge](https://img.shields.io/badge/vault%201.13.3-FFEC6E?style=for-the-badge&logo=vault&logoColor=black&labelColor=white)
+![Static Badge](https://img.shields.io/badge/prometheus%202.53.1-E6522C?style=for-the-badge&logo=prometheus&logoColor=black&labelColor=white)
+![Static Badge](https://img.shields.io/badge/grafana%2011.1.3-F46800?style=for-the-badge&logo=grafana&logoColor=black&labelColor=white)
+![Static Badge](https://img.shields.io/badge/loki%202.8.0-F46800?style=for-the-badge&logo=loki&logoColor=black&labelColor=white)
 
 ### Development
 ![Static Badge](https://img.shields.io/badge/Java17-FC390E?style=for-the-badge&logo=Java&logoColor=black&labelColor=white)
