@@ -103,8 +103,8 @@ cd ENTER-BE
 
 아래에 명시되어 있는 환경변수를 설정합니다.
 ```
-mail.username = "dongkwan9721@gmail.com"
-mail.password = "inrfwymnpfisnrtw"
+mail.username = "YOUR_EMAIL"
+mail.password = "YOUR_PASSWORD"
 ```
 <br>
 
